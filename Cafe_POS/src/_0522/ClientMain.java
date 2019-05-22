@@ -1,24 +1,60 @@
 package _0522;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientMain {
 	public static void main(String[] args) {
 		Socket socket;
-		BufferedReader br;
-		PrintWriter pw;
+		
+		try {
+			socket = new Socket("127.0.0.1", 10001);
+			SendThread send = new SendThread(socket);
+			ReceiveThread rec = new ReceiveThread(socket);
+			send.start();
+			rec.start();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		
 	}
 }
 
-class receiveThread extends Thread{
+class SendThread extends Thread{
+	PrintWriter pw;
 	Socket socket;
 	
-	receiveThread(Socket socket){
+	SendThread(Socket socket){
 		this.socket = socket;
+		try {
+			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public void run() {
+		
+	}
+}
+
+class ReceiveThread extends Thread{
+	BufferedReader br;
+	Socket socket;
+	
+	ReceiveThread(Socket socket){
+		this.socket = socket;
+		try {
+			br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	public void run() {
