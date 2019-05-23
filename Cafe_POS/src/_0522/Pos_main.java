@@ -8,6 +8,16 @@ public class Pos_main extends Thread {
 	Socket socket;
 	Pos_controller posControl;
 	Scripts scripts;
+	private static boolean clientAccess = true;
+	
+	public static boolean isClientAccess() {
+		return clientAccess;
+	}
+
+	public static void setClientAccess(boolean clientAccess) {
+		Pos_main.clientAccess = clientAccess;
+	}
+
 	public Pos_main(Socket socket) {
 		this.socket = socket;
 		scripts = new Scripts(socket);
@@ -16,6 +26,7 @@ public class Pos_main extends Thread {
 	}
 	
 	public void run() {
+		System.out.println("pos_main start");
 		posControl.start();
 	}
 	

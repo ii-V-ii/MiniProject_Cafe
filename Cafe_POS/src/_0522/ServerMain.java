@@ -17,9 +17,11 @@ public class ServerMain {
 		
 		try {
 			serversocket = new ServerSocket(10001);
+			System.out.println("Server Start");
 			while(true) {
 			// 유저가 접속하면, 해당 유저 전담의 pos 프로그램의 메인 객체를 생성합니다
 			socket = serversocket.accept();
+			System.out.println("Client accept");
 			Pos_main main = new Pos_main(socket);
 			main.start();
 			}

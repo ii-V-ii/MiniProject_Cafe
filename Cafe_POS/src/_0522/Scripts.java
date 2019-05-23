@@ -63,8 +63,8 @@ public class Scripts {
 			if((line=br.readLine())!=null)
 				return line;
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("유저의 입력을 받아오지 못했습니다");
+			System.out.println("Client Exit");
+			Pos_main.setClientAccess(false);
 		}
 		return null;
 	}
@@ -77,7 +77,7 @@ public class Scripts {
 		send("카페관리 프로그램을 시작합니다");
 		send("아이디를 입력하세요");
 		String id = receive();
-		send("아이디를 입력하세요");
+		send("패스워드를 입력하세요");
 		String password = receive();
 		//유저의 입력을 controller 소속의 적절한 메소드로 넘긴다
 		posControl.checkLogin(id, password);
@@ -102,6 +102,10 @@ public class Scripts {
 	public void logInFailTypePassword() {
 		send("password가 일치하지 않습니다");
 		// 실패시 첫화면으로 돌아간다
+	}
+	public void noData() {
+		send("정보가 없습니다");
+		send("관리자에게 문의 바랍니다");
 	}
 	
 	
