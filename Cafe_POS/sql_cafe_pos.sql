@@ -24,6 +24,7 @@ DROP TABLE orderList;
 DROP TABLE staff_all;
 DROP TABLE staff_part;
 DROP TABLE staff;
+DROP TABLE masterList;
 DROP TABLE storeInfo;
 
 
@@ -36,6 +37,14 @@ closedate DATE,
 phone NUMBER,
 address VARCHAR2(30),
 CONSTRAINT storeInfo_pk_storeno PRIMARY KEY(storeno)
+);
+
+CREATE TABLE masterList(
+storeno VARCHAR2(30),
+masterID VARCHAR2(30),
+masterPassword VARCHAR2(30) CONSTRAINT masterList_nu_password NOT NULL,
+CONSTRAINT masterList_pk_masterID PRIMARY KEY(masterID),
+CONSTRAINT masterList_fk_storeno FOREIGN KEY (storeno) REFERENCES storeInfo(storeno)
 );
 
 CREATE TABLE member(
