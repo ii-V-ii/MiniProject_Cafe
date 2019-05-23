@@ -1,4 +1,4 @@
-﻿package _0522;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +36,7 @@ public class Scripts {
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
+
 	public void setPosControl(Pos_controller posControl) {
 		this.posControl = posControl;
 	}
@@ -54,12 +55,13 @@ public class Scripts {
 		pw.println(msg);
 		pw.flush();
 	}
+
 	// 유저에게서 선택 받아오는 용도의 br 메서드
 	// Scanner 대신 쓰세요!
 	public String receive() {
 		String line = null;
 		try {
-			if((line=br.readLine())!=null)
+			if ((line = br.readLine()) != null)
 				return line;
 		} catch (IOException e) {
 			System.out.println("Client Exit");
@@ -68,17 +70,32 @@ public class Scripts {
 		return null;
 	}
 
+	
+	public int receiveInt() {
+		int line = -1;
+		try {
+			line = br.read();
+				return line;
+		} catch (IOException e) {
+			System.out.println("Client Exit");
+			Pos_main.setClientAccess(false);
+		}
+		return -1;
+	}
+
+
 	// 최초 프로그램 실행시 로그인 기능
 	// 메서드 완성할 떄의 예시로 봐주세요
 	public void logIn() {
-		//유저에게 메세지를 전달하고 유저의 입력을 받는다
+		// 유저에게 메세지를 전달하고 유저의 입력을 받는다
 		send("카페관리 프로그램을 시작합니다");
 		send("아이디를 입력하세요");
 		String id = receive();
 		send("패스워드를 입력하세요");
 		String password = receive();
-		//유저의 입력을 controller 소속의 적절한 메소드로 넘긴다
+		// 유저의 입력을 controller 소속의 적절한 메소드로 넘긴다
 		posControl.checkLogin(id, password);
+
 	}
 
 	public void logInSuccess() {
@@ -87,28 +104,116 @@ public class Scripts {
 		// 편의를 위해 view 메서드 -> view 메서드 의 이동은 scripts 클래스내에서
 		// 직접적으로 이루어지도록 하겠습니다
 		mainMenu();
+
 	}
-	public void logInFail() {
-		send("ID 또는 PASSWORD를 다시 확인하세요");
+
+	public void logInFailTypeId() {
+		send("id가 없습니다");
+		// 실패시 첫화면으로 돌아간다
+
+	}
+
+	public void logInFailTypePassword() {
+		send("password가 일치하지 않습니다");
 		// 실패시 첫화면으로 돌아간다
 
 
 	}
 
 
+
+	public void noData() {
+		send("정보가 없습니다");
+		send("관리자에게 문의 바랍니다");
+	}
+
 	// 유저에게서 메인메뉴를 보여주고 선택받는다
 	public void mainMenu() {
-
-	}
+		send("1. 매장관리");
+		send("2. 메뉴관리");
+		send("3. 고객관리");
+		send("4. 직원관리");
+		send("5. 프로그램 종료");
+		send(">>선택 :");
+		int choose = receiveInt();
+		
+		
+		while(true) {
+			switch(choose){
+				case MainMenu.STORE:
+					storeMenu();
+					break;
+				case MainMenu.MENU:
+					menuMenu();
+					break;
+				case MainMenu.CUSTOMER:
+					customerMenu();
+					break;
+				case MainMenu.STAFF:
+					staffMenu();
+					break;
+				case 5:
+					br.close();
+					break;
+				default:
+					send("다시선택하세요~");
+					break;
+			}//switch
+		}//while
+	}// mainMenu
 
 	// 유저에게서 매장관리 메뉴를 보여주고 선택받는다
 	public void storeMenu() {
-
+		send("1. 매장정보");
+		send("2. 매출정보");
+		send("3. 재고관리");
+		send("선택>>");
+		int choose = receiveInt();
+		
+		while(true) {
+			switch(choose){
+				case StoreMenu.STOREINFO:
+					
+					break;
+				case StoreMenu.SALESINFO:
+				
+					break;
+				case StoreMenu.STOCK:
+					
+					break;
+				default:
+					send("다시선택하세요~");
+					storeMenu();
+					break;
+			}//switch
+		}//while
 	}
 
 	// 유저에게서 메뉴관리 메뉴를 보여주고 선택받는다
 	public void menuMenu() {
-
+		send("1. 메뉴정보");
+		send("2. 메뉴등록");
+		send("3. 메뉴검색");
+		send("선택>>");
+		String choose = receive();
+		
+		while(true) {
+			switch(choose){
+				case menuMenu.:
+					
+					break;
+				case StoreMenu.SALESINFO:
+				
+					break;
+				case StoreMenu.STOCK:
+					
+					break;
+				default:
+					send("다시선택하세요~");
+					storeMenu();
+					break;
+			}//switch
+		}//while
 	}
 
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
@@ -179,12 +284,15 @@ public class Scripts {
 	public void menuInfoDefault() {
 
 	}
+
 	public void menuModify() {
 
 	}
+
 	public void menuDelete() {
 
 	}
+
 	public void menuOnOff() {
 
 	}
@@ -193,48 +301,59 @@ public class Scripts {
 	public void searchMenuName() {
 
 	}
+
 	public void searchMenuCategory() {
 
 	}
+
 	// 고객관리>회원정보 내부 메뉴
 	public void showMembers() {
 
 	}
+
 	public void searchMember() {
 
 	}
+
 	public void showMemberDetail() {
 
 	}
+
 	// 고객관리>회원정보>정보보기 내부 메뉴
 	public void showMemberDetailModify() {
 
 	}
+
 	public void showMemberDetailDelete() {
 
 	}
+
 	// 고객관리>고객구매이력 내부 메뉴
 	public void lastBuyingRecord() {
 
 	}
+
 	public void MostBuyingRecord() {
 
 	}
+
 	// 직원관리>직원정보 내부 메뉴
 	public void staffInfoDefault() {
 
 	}
+
 	public void staffInfoModify() {
 
 	}
+
 	public void staffInfoDelete() {
 
 	}
+
 	// 직원관리>급여관리 내부 메뉴
 	public void staffSalaryManage() {
 
+
 	}
-
-
 
 }
