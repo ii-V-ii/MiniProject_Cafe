@@ -82,7 +82,7 @@ public class ConnectionPool {
 	private Connection getNewConnection() throws SQLException {
 		Connection con = null;
 		con = DriverManager.getConnection(this.url, this.user, this.password);
-		System.out.println("About to connect to " + con);
+		// System.out.println("About to connect to " + con);
 		++this.numCons;
 
 		return con;
@@ -99,7 +99,7 @@ public class ConnectionPool {
 		Connection _con = free.get(free.size() - 1);
 		free.remove(_con);
 		used.add(_con);
-		System.out.println("겟커넥션:"+used.size());
+		// System.out.println("겟커넥션:"+used.size());
 		return _con;
 	}// getConnection()
 
