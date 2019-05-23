@@ -14,22 +14,19 @@ import java.net.Socket;
  */
 
 // 유저에게 보여줄 메뉴 인터페이스(1차, 2차 메뉴)
-interface MainMenu {
-	int STORE = 1, MENU = 2, CUSTOMER = 3, STAFF = 4;
-}
-
+/*매장관리*/
 interface StoreMenu {
 	int STOREINFO = 1, SALESINFO = 2, STOCK = 3;
 }
-
+/*메뉴관리*/
 interface menuMenu {
 	int MENUINFO = 1, MENUENROLL = 2, SEARCH = 3;
 }
-
+/*고객관리*/
 interface customerMenu {
 	int CUSTINFO = 1, CUSTENROLL = 2, HISTORY = 3;
 }
-
+/*직원관리*/
 interface staffMenu {
 	int STAFFINFO = 1, STAFFENROLL = 2, SCHEDULE = 3;
 }
@@ -72,6 +69,7 @@ public class Scripts {
 		}
 		return null;
 	}
+
 	
 	public int receiveInt() {
 		int line = -1;
@@ -84,6 +82,7 @@ public class Scripts {
 		}
 		return -1;
 	}
+
 
 	// 최초 프로그램 실행시 로그인 기능
 	// 메서드 완성할 떄의 예시로 봐주세요
@@ -117,7 +116,11 @@ public class Scripts {
 	public void logInFailTypePassword() {
 		send("password가 일치하지 않습니다");
 		// 실패시 첫화면으로 돌아간다
+
+
 	}
+
+
 
 	public void noData() {
 		send("정보가 없습니다");
@@ -215,7 +218,20 @@ public class Scripts {
 
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
-
+		
+		send("1.회원정보");
+		send("2.회원등록");
+		send("3.고객구매이력");
+		String select = receive();
+		
+		while(true) {
+//			case 1:
+//				mainMenu().CUSTINFO=1
+//				break;
+//			case 2:
+//				
+//			case 3:
+		}
 	}
 
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
@@ -336,6 +352,7 @@ public class Scripts {
 
 	// 직원관리>급여관리 내부 메뉴
 	public void staffSalaryManage() {
+
 
 	}
 
