@@ -1,12 +1,19 @@
-package _0522;
+ï»¿package _0522;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 /*
- * 1Â÷¸Þ´º (¸ÅÀå,¸Þ´º,°í°´,Á÷¿ø°ü¸®)¿Í 2Â÷ ¸Þ´º(¸ÅÀå°ü¸®>¸ÅÀåÁ¤º¸, ¸ÅÃâÁ¤º¸, Àç°í°ü¸®) ´Â ÀÎÅÍÆäÀÌ½º·Î °ü¸®
- * 3Â÷¸Þ´º (¸ÅÀåÁ¤º¸>±âº»Á¤º¸, ¼öÁ¤, ¼öÀÔÈ®ÀÎ, ÁöÃâÈ®ÀÎ)´Â scripts Å¬·¡½º ³»ÀÇ ¸Þ¼Òµå·Î °ü¸®ÇÕ´Ï´Ù
+ * 1ì°¨ë©”ë‰´ (ë§¤ìž¥,ë©”ë‰´,ê³ ê°,ì§ì›ê´€ë¦¬)ì™€ 2ì°¨ ë©”ë‰´(ë§¤ìž¥ê´€ë¦¬>ë§¤ìž¥ì •ë³´, ë§¤ì¶œì •ë³´, ìž¬ê³ ê´€ë¦¬) ëŠ” ì¸í„°íŽ˜ì´ìŠ¤ë¡œ ê´€ë¦¬
+ * 3ì°¨ë©”ë‰´ (ë§¤ìž¥ì •ë³´>ê¸°ë³¸ì •ë³´, ìˆ˜ì •, ìˆ˜ìž…í™•ì¸, ì§€ì¶œí™•ì¸)ëŠ” scripts í´ëž˜ìŠ¤ ë‚´ì˜ ë©”ì†Œë“œë¡œ ê´€ë¦¬í•©ë‹ˆë‹¤
  * 
  */
 
-// À¯Àú¿¡°Ô º¸¿©ÁÙ ¸Þ´º ÀÎÅÍÆäÀÌ½º(1Â÷, 2Â÷ ¸Þ´º)
+// ìœ ì €ì—ê²Œ ë³´ì—¬ì¤„ ë©”ë‰´ ì¸í„°íŽ˜ì´ìŠ¤(1ì°¨, 2ì°¨ ë©”ë‰´)
 interface MainMenu {
 	int STORE = 1, MENU = 2, CUSTOMER = 3, STAFF = 4;
 }
@@ -28,34 +35,108 @@ interface staffMenu {
 }
 
 public class Scripts {
-	// À¯Àú¿¡°Ô¼­ ¸ÞÀÎ¸Þ´º¸¦ º¸¿©ÁÖ°í ¼±ÅÃ¹Þ´Â´Ù
+	Socket socket;
+	BufferedReader br;
+	PrintWriter pw;
+	Pos_controller posControl;
+	Scripts(Socket socket){
+		this.socket = socket;
+		try {
+			this.br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			this.pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.posControl = Pos_controller.getPosInstance();
+	}
+	
+	// ìœ ì €ì—ê²Œ ë©”ì„¸ì§€ ë³´ë‚´ëŠ” ìš©ë„ì˜ pw ë©”ì„œë“œ
+	public void send(String msg) {
+		pw.println(msg);
+		pw.flush();
+	}
+	// ìœ ì €ì—ê²Œì„œ ì„ íƒ ë°›ì•„ì˜¤ëŠ” ìš©ë„ì˜ br ë©”ì„œë“œ
+	// Scanner ëŒ€ì‹  ì“°ì„¸ìš”!
+	public String receive() {
+		String line = null;
+		try {
+			if((line=br.readLine())!=null)
+				return line;
+		} catch (IOException e) {
+			System.out.println("Client Exit");
+			Pos_main.setClientAccess(false);
+		}
+		return null;
+	}
+	
+	
+	// ìµœì´ˆ í”„ë¡œê·¸ëž¨ ì‹¤í–‰ì‹œ ë¡œê·¸ì¸ ê¸°ëŠ¥
+	// ë©”ì„œë“œ ì™„ì„±í•  ë–„ì˜ ì˜ˆì‹œë¡œ ë´ì£¼ì„¸ìš”
+	public void logIn() {
+		//ìœ ì €ì—ê²Œ ë©”ì„¸ì§€ë¥¼ ì „ë‹¬í•˜ê³  ìœ ì €ì˜ ìž…ë ¥ì„ ë°›ëŠ”ë‹¤
+		send("ì¹´íŽ˜ê´€ë¦¬ í”„ë¡œê·¸ëž¨ì„ ì‹œìž‘í•©ë‹ˆë‹¤");
+		send("ì•„ì´ë””ë¥¼ ìž…ë ¥í•˜ì„¸ìš”");
+		String id = receive();
+		send("íŒ¨ìŠ¤ì›Œë“œë¥¼ ìž…ë ¥í•˜ì„¸ìš”");
+		String password = receive();
+		//ìœ ì €ì˜ ìž…ë ¥ì„ controller ì†Œì†ì˜ ì ì ˆí•œ ë©”ì†Œë“œë¡œ ë„˜ê¸´ë‹¤
+		posControl.checkLogin(id, password);
+		
+		
+	}
+	
+	public void logInSuccess() {
+		send("ë¡œê·¸ì¸ì— ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤");
+		// ì›ëž˜ë¼ë©´ controllerì˜ ë©”ì„œë“œë¥¼ í˜¸ì¶œí•´ì•¼í•˜ë‚˜
+		// íŽ¸ì˜ë¥¼ ìœ„í•´ view ë©”ì„œë“œ -> view ë©”ì„œë“œ ì˜ ì´ë™ì€ scripts í´ëž˜ìŠ¤ë‚´ì—ì„œ
+		// ì§ì ‘ì ìœ¼ë¡œ ì´ë£¨ì–´ì§€ë„ë¡ í•˜ê² ìŠµë‹ˆë‹¤
+		mainMenu();
+		
+		
+	}
+	public void logInFailTypeId() {
+		send("idê°€ ì—†ìŠµë‹ˆë‹¤");
+		// ì‹¤íŒ¨ì‹œ ì²«í™”ë©´ìœ¼ë¡œ ëŒì•„ê°„ë‹¤
+		
+	}
+	public void logInFailTypePassword() {
+		send("passwordê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
+		// ì‹¤íŒ¨ì‹œ ì²«í™”ë©´ìœ¼ë¡œ ëŒì•„ê°„ë‹¤
+	}
+	public void noData() {
+		send("ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤");
+		send("ê´€ë¦¬ìžì—ê²Œ ë¬¸ì˜ ë°”ëžë‹ˆë‹¤");
+	}
+	
+	
+	// ìœ ì €ì—ê²Œì„œ ë©”ì¸ë©”ë‰´ë¥¼ ë³´ì—¬ì£¼ê³  ì„ íƒë°›ëŠ”ë‹¤
 	public void mainMenu() {
 
 	}
 
-	// À¯Àú¿¡°Ô¼­ ¸ÅÀå°ü¸® ¸Þ´º¸¦ º¸¿©ÁÖ°í ¼±ÅÃ¹Þ´Â´Ù
+	// ìœ ì €ì—ê²Œì„œ ë§¤ìž¥ê´€ë¦¬ ë©”ë‰´ë¥¼ ë³´ì—¬ì£¼ê³  ì„ íƒë°›ëŠ”ë‹¤
 	public void storeMenu() {
 
 	}
 
-	// À¯Àú¿¡°Ô¼­ ¸Þ´º°ü¸® ¸Þ´º¸¦ º¸¿©ÁÖ°í ¼±ÅÃ¹Þ´Â´Ù
+	// ìœ ì €ì—ê²Œì„œ ë©”ë‰´ê´€ë¦¬ ë©”ë‰´ë¥¼ ë³´ì—¬ì£¼ê³  ì„ íƒë°›ëŠ”ë‹¤
 	public void menuMenu() {
 
 	}
 
-	// À¯Àú¿¡°Ô¼­ °í°´°ü¸® ¸Þ´º¸¦ º¸¿©ÁÖ°í ¼±ÅÃ¹Þ´Â´Ù
+	// ìœ ì €ì—ê²Œì„œ ê³ ê°ê´€ë¦¬ ë©”ë‰´ë¥¼ ë³´ì—¬ì£¼ê³  ì„ íƒë°›ëŠ”ë‹¤
 	public void customerMenu() {
 
 	}
 
-	// À¯Àú¿¡°Ô¼­ Á÷¿ø°ü¸® ¸Þ´º¸¦ º¸¿©ÁÖ°í ¼±ÅÃ¹Þ´Â´Ù
+	// ìœ ì €ì—ê²Œì„œ ì§ì›ê´€ë¦¬ ë©”ë‰´ë¥¼ ë³´ì—¬ì£¼ê³  ì„ íƒë°›ëŠ”ë‹¤
 	public void staffMenu() {
 
 	}
 
 	// -----------------------------
-	// -----------------------------¿©±âºÎÅÍ 3Â÷¸Þ´º °ü¸®
-	// ¸ÅÀå°ü¸®>¸ÅÀåÁ¤º¸ ³»ºÎ ¸Þ´º
+	// -----------------------------ì—¬ê¸°ë¶€í„° 3ì°¨ë©”ë‰´ ê´€ë¦¬
+	// ë§¤ìž¥ê´€ë¦¬>ë§¤ìž¥ì •ë³´ ë‚´ë¶€ ë©”ë‰´
 	public void storeInfoDefault() {
 
 	}
@@ -72,7 +153,7 @@ public class Scripts {
 
 	}
 
-	// ¸ÅÀå°ü¸®>¸ÅÃâÁ¤º¸ ³»ºÎ ¸Þ´º
+	// ë§¤ìž¥ê´€ë¦¬>ë§¤ì¶œì •ë³´ ë‚´ë¶€ ë©”ë‰´
 	public void salesInfoDefault() {
 
 	}
@@ -85,7 +166,7 @@ public class Scripts {
 
 	}
 
-	// ¸ÅÀå°ü¸®>Àç°í°ü¸® ³»ºÎ ¸Þ´º
+	// ë§¤ìž¥ê´€ë¦¬>ìž¬ê³ ê´€ë¦¬ ë‚´ë¶€ ë©”ë‰´
 	public void stockNow() {
 
 	}
@@ -94,7 +175,7 @@ public class Scripts {
 
 	}
 
-	// ¸Þ´º°ü¸®>¸Þ´ºÁ¤º¸ ³»ºÎ ¸Þ´º
+	// ë©”ë‰´ê´€ë¦¬>ë©”ë‰´ì •ë³´ ë‚´ë¶€ ë©”ë‰´
 	public void menuInfoDefault() {
 
 	}
@@ -108,14 +189,14 @@ public class Scripts {
 		
 	}
 
-	// ¸Þ´º°Ë»ö>¸Þ´º°Ë»ö ³»ºÎ ¸Þ´º
+	// ë©”ë‰´ê²€ìƒ‰>ë©”ë‰´ê²€ìƒ‰ ë‚´ë¶€ ë©”ë‰´
 	public void searchMenuName() {
 
 	}
 	public void searchMenuCategory() {
 
 	}
-	// °í°´°ü¸®>È¸¿øÁ¤º¸ ³»ºÎ ¸Þ´º
+	// ê³ ê°ê´€ë¦¬>íšŒì›ì •ë³´ ë‚´ë¶€ ë©”ë‰´
 	public void showMembers() {
 		
 	}
@@ -125,21 +206,21 @@ public class Scripts {
 	public void showMemberDetail() {
 		
 	}
-	// °í°´°ü¸®>È¸¿øÁ¤º¸>Á¤º¸º¸±â ³»ºÎ ¸Þ´º
+	// ê³ ê°ê´€ë¦¬>íšŒì›ì •ë³´>ì •ë³´ë³´ê¸° ë‚´ë¶€ ë©”ë‰´
 	public void showMemberDetailModify() {
 		
 	}
 	public void showMemberDetailDelete() {
 		
 	}
-	// °í°´°ü¸®>°í°´±¸¸ÅÀÌ·Â ³»ºÎ ¸Þ´º
+	// ê³ ê°ê´€ë¦¬>ê³ ê°êµ¬ë§¤ì´ë ¥ ë‚´ë¶€ ë©”ë‰´
 	public void lastBuyingRecord() {
 		
 	}
 	public void MostBuyingRecord() {
 		
 	}
-	// Á÷¿ø°ü¸®>Á÷¿øÁ¤º¸ ³»ºÎ ¸Þ´º
+	// ì§ì›ê´€ë¦¬>ì§ì›ì •ë³´ ë‚´ë¶€ ë©”ë‰´
 	public void staffInfoDefault() {
 		
 	}
@@ -149,7 +230,7 @@ public class Scripts {
 	public void staffInfoDelete() {
 		
 	}
-	// Á÷¿ø°ü¸®>±Þ¿©°ü¸® ³»ºÎ ¸Þ´º
+	// ì§ì›ê´€ë¦¬>ê¸‰ì—¬ê´€ë¦¬ ë‚´ë¶€ ë©”ë‰´
 	public void staffSalaryManage() {
 		
 	}
