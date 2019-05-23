@@ -1,8 +1,41 @@
-﻿CREATE TABLE customer(
-customID VARCHAR2(30),
-MemberID VARCHAR2(30),
-CONSTRAINT customer_pk_customID PRIMARY KEY(customID),
-CONSTRAINT customer_fk_member FOREIGN KEY(MemberID) REFERENCES member(MemberID)
+/* 0523 소미의 SQL 문*/
+/* 0523 +menu table에 recipe 컬럼이 생성되지 않도록 변경함
+        +customer 테이블 삭제
+*/
+
+DROP USER cafe_pos CASCADE;
+
+CREATE USER cafe_pos IDENTIFIED BY cafe_pos DEFAULT TABLESPACE users TEMPORARY TABLESPACE temp PROFILE DEFAULT;
+
+GRANT CONNECT, RESOURCE TO cafe_pos;
+ALTER USER cafe_pos ACCOUNT UNLOCK;
+
+conn cafe_pos/cafe_pos;
+
+DROP TABLE buyingdata;
+DROP TABLE customer;
+DROP TABLE recipe;
+DROP TABLE rawmaterial;
+DROP TABLE material;
+DROP TABLE member;
+DROP TABLE menu;
+DROP TABLE orderdetail;
+DROP TABLE orderList;
+DROP TABLE staff_all;
+DROP TABLE staff_part;
+DROP TABLE staff;
+DROP TABLE storeInfo;
+
+
+CREATE TABLE storeInfo(
+storeno VARCHAR2(30),
+name VARCHAR2(30) CONSTRAINT storeInfo_nu_name NOT NULL,
+owner VARCHAR2(30) CONSTRAINT storeInfo_nu_owner NOT NULL,
+opendate DATE CONSTRAINT storeInfo_nu_opendate NOT NULL,
+closedate DATE,
+phone NUMBER,
+address VARCHAR2(30),
+CONSTRAINT storeInfo_pk_storeno PRIMARY KEY(storeno)
 );
 
 CREATE TABLE member(
@@ -15,13 +48,23 @@ CONSTRAINT member_pk_MemberID PRIMARY KEY(MemberID),
 CONSTRAINT member_ch_sex CHECK(sex IN('여','남'))
 );
 
+CREATE TABLE menu(
+menuID VARCHAR2(30),
+name VARCHAR2(30) CONSTRAINT menu_nu_name NOT NULL,
+price NUMBER CONSTRAINT menu_nu_price NOT NULL,
+--recipe VARCHAR2(30) CONSTRAINT menu_nu_recipe NOT NULL,
+category VARCHAR2(30),  
+CONSTRAINT menu_pk_menuID PRIMARY KEY(menuID),
+CONSTRAINT menu_ch_price CHECK(price>0)
+);
+
 CREATE TABLE orderList(
 orderID VARCHAR2(30),
-customID VARCHAR2(30),
+memberID VARCHAR2(30),
 orderDate DATE,
 orderPrice NUMBER CONSTRAINT orderList_nu_orderPrice NOT NULL,
 CONSTRAINT orderList_pk_orderID PRIMARY KEY(orderID),
-CONSTRAINT orderList_fk_customer FOREIGN KEY(customID)REFERENCES customer(customID),
+CONSTRAINT orderList_fk_member FOREIGN KEY(memberID) REFERENCES member(memberID),
 CONSTRAINT orderList_ch_orderPrice CHECK(orderPrice>0)
 );
 
@@ -73,16 +116,7 @@ CONSTRAINT staff_all_pk_staffno PRIMARY KEY(staffno),
 CONSTRAINT staff_all_fk_staff FOREIGN KEY (staffno)REFERENCES staff(staffno)
 );
 
-CREATE TABLE storeInfo(
-storeno VARCHAR2(30),
-name VARCHAR2(30) CONSTRAINT storeInfo_nu_name NOT NULL,
-owner VARCHAR2(30) CONSTRAINT storeInfo_nu_owner NOT NULL,
-opendate DATE CONSTRAINT storeInfo_nu_opendate NOT NULL,
-closedate DATE,
-phone NUMBER,
-address VARCHAR2(30),
-CONSTRAINT storeInfo_pk_storeno PRIMARY KEY(storeno)
-);
+
 
 CREATE TABLE rawmaterial(
 rawmateID VARCHAR2(30),
@@ -103,15 +137,7 @@ CONSTRAINT Material_pk_MateID PRIMARY KEY(MateID),
 CONSTRAINT Material_ch_cost CHECK(cost>0)
 );
 
-CREATE TABLE menu(
-menuID VARCHAR2(30),
-name VARCHAR2(30) CONSTRAINT menu_nu_name NOT NULL,
-price NUMBER CONSTRAINT menu_nu_price NOT NULL,
-recipe VARCHAR2(30) CONSTRAINT menu_nu_recipe NOT NULL,
-category VARCHAR2(30),  
-CONSTRAINT menu_pk_menuID PRIMARY KEY(menuID),
-CONSTRAINT menu_ch_price CHECK(price>0)
-);
+
 
 CREATE TABLE recipe(
 menuID VARCHAR2(30),
@@ -133,6 +159,8 @@ CONSTRAINT buyingData_fk_Material FOREIGN KEY (MateID) REFERENCES Material(MateI
 CONSTRAINT buyingData_ch_MateID CHECK((MateID!=NULL AND rawmateId=null)OR((MateID=NULL AND rawmateId!=null))),
 CONSTRAINT buyingData_ch_amount CHECK(amount >=0)
 );
+
+commit;
 
 
 
