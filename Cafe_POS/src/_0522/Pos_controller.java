@@ -26,9 +26,12 @@ public class Pos_controller {
 	
 	// pos_main 클래스가 가동하면 프로그램 최초로 실행되는 메소드
 	public void start() {
+		System.out.println("Pos_controller.start() start");
 		//view 역할인 scripts에서 적절한 메소드를 호출한다
 		//(로그인이 성공할 때까지 반복되도록 while문을 걸어주었다)
 		while(true) {
+			if(Pos_main.isClientAccess() == false)
+				break;
 		scripts.logIn();
 		}
 	}
@@ -45,15 +48,21 @@ public class Pos_controller {
 			if(temp.getId().equals(id)) {
 				if(temp.getPassword().equals(password)) {
 					//성공시 유저에게 성공 메세지 보내는 View 메서드를 실행
+					System.out.println("Client logIn success");
 					scripts.logInSuccess();
 				}else {
 					//실패시 유저에게 실패메세지 보내는 View 메서드를 실행
+					System.out.println("Client logIn Fail:type_password");
 					scripts.logInFailTypePassword();
+
 				}
 				//실패시 유저에게 실패메세지 보내는 View 메서드를 실행
-				scripts.logInFailTypeId();
 			}			
+			System.out.println("Client logIn Fail:type_id");
+			scripts.logInFailTypeId();
 		}
+		System.out.println("No More data");
+		scripts.noData();
 	}
 
 }
