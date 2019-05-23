@@ -9,7 +9,6 @@ import _0522.DTO.IdVO;
  * View에 해당하는 Scripts 클래스와 실제로 각종 기능을 수행하는 QueryList 클래스를 연결해주는 클래스입니다 
  */
 public class Pos_controller {
-	static Pos_controller posControl = null;
 	Scripts scripts;
 	QueryList query;
 	
@@ -21,14 +20,9 @@ public class Pos_controller {
 		this.query = new QueryList(con);
 	}
 
-	private Pos_controller(){
+	public Pos_controller(){
 	}
 	
-	public static Pos_controller getPosInstance() {
-		if(posControl==null)
-			posControl = new Pos_controller();
-		return posControl;		
-	}
 	
 	// pos_main 클래스가 가동하면 프로그램 최초로 실행되는 메소드
 	public void start() {
