@@ -78,7 +78,7 @@ class ReceiveThread extends Thread{
 					System.out.println(line);
 				}
 			} catch (IOException e) {
-				// 서버와 연결이 끊기면 IOException 이 생깁ㄴ디ㅏ
+				// 서버와 연결이 끊기면 IOException 이 생깁니다
 				System.out.println("서버와의 연결 종료");
 				// system.exit(0) : 프로그램 종료 명령입니다
 				System.exit(0);

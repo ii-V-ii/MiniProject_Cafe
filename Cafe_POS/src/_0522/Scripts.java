@@ -39,6 +39,9 @@ public class Scripts {
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
+	public void setPosControl(Pos_controller posControl) {
+		this.posControl = posControl;
+	}
 	Scripts(Socket socket){
 		this.socket = socket;
 		try {
@@ -47,7 +50,6 @@ public class Scripts {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.posControl = Pos_controller.getPosInstance();
 	}
 	
 	// 유저에게 메세지 보내는 용도의 pw 메서드
