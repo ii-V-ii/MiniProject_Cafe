@@ -34,8 +34,9 @@ public class Pos_main extends Thread {
 	public Pos_main(Socket socket) {
 		this.socket = socket;
 		scripts = new Scripts(socket);
-		posControl = Pos_controller.getPosInstance();
+		posControl = new Pos_controller();
 		posControl.setScripts(scripts);
+		scripts.setPosControl(posControl);
 		
 		// DB와 연결
 		cp = ConnectionPool.getInstance(url, user, password, -1, -1);
