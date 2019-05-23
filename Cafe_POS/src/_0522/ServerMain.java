@@ -12,6 +12,15 @@ import _0522.DTO.IdVO;
 public class ServerMain {
 	static HashSet<IdVO> list = new HashSet<>();
 	public static void main(String[] args) {
+		ConnectionPool cp = null;
+		String url = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
+		String user = "cafe_pos";
+		String password = "cafe_pos";
+		int initCons = 5;
+		int maxCons = 10;
+		cp = ConnectionPool.getInstance(url, user, password, initCons, maxCons);
+		
+		
 		ServerSocket serversocket;
 		Socket socket;
 		

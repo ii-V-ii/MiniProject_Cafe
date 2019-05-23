@@ -36,6 +36,9 @@ public class Scripts {
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
+	public void setPosControl(Pos_controller posControl) {
+		this.posControl = posControl;
+	}
 	Scripts(Socket socket){
 		this.socket = socket;
 		try {
@@ -44,7 +47,6 @@ public class Scripts {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.posControl = Pos_controller.getPosInstance();
 	}
 
 	// 유저에게 메세지 보내는 용도의 pw 메서드
@@ -86,18 +88,11 @@ public class Scripts {
 		// 직접적으로 이루어지도록 하겠습니다
 		mainMenu();
 	}
-	public void logInFailTypeId() {
-		send("id가 없습니다");
+	public void logInFail() {
+		send("ID 또는 PASSWORD를 다시 확인하세요");
 		// 실패시 첫화면으로 돌아간다
 
-	}
-	public void logInFailTypePassword() {
-		send("password가 일치하지 않습니다");
-		// 실패시 첫화면으로 돌아간다
-	}
-	public void noData() {
-		send("정보가 없습니다");
-		send("관리자에게 문의 바랍니다");
+
 	}
 
 
