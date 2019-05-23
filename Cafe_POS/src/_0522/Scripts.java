@@ -94,18 +94,9 @@ public class Scripts {
 		
 		
 	}
-	public void logInFailTypeId() {
-		send("id가 없습니다");
+	public void logInFail() {
+		send("ID 또는 PASSWORD를 다시 확인하세요");
 		// 실패시 첫화면으로 돌아간다
-		
-	}
-	public void logInFailTypePassword() {
-		send("password가 일치하지 않습니다");
-		// 실패시 첫화면으로 돌아간다
-	}
-	public void noData() {
-		send("정보가 없습니다");
-		send("관리자에게 문의 바랍니다");
 	}
 	
 	
