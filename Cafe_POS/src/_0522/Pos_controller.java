@@ -1,8 +1,18 @@
 package _0522;
 
 import java.sql.Connection;
-import java.util.Iterator;
+
 import _0522.DTO.IdVO;
+import _0522.DTO.MaterialDTO;
+import _0522.DTO.MemberDTO;
+import _0522.DTO.MenuDTO;
+import _0522.DTO.MenuItemDTO;
+import _0522.DTO.PartTimeStaffDTO;
+import _0522.DTO.RawMaterialDTO;
+import _0522.DTO.RegularStaffDTO;
+import _0522.DTO.StaffDTO;
+import _0522.DTO.StockDTO;
+import _0522.DTO.StoreDTO;
 
 /*
  * View에 해당하는 Scripts 클래스와 실제로 각종 기능을 수행하는 QueryList 클래스를 연결해주는 클래스입니다 
@@ -10,6 +20,17 @@ import _0522.DTO.IdVO;
 public class Pos_controller {
 	Scripts scripts;
 	QueryList query;
+	IdVO userId;
+	MaterialDTO material;
+	MemberDTO member;
+	MenuDTO menu;
+	MenuItemDTO menuItem;
+	PartTimeStaffDTO part;
+	RegularStaffDTO regular;
+	RawMaterialDTO raw;
+	StaffDTO staff;
+	StockDTO stock;
+	StoreDTO store;
 	
 	public void setScripts(Scripts scripts) {
 		this.scripts = scripts;
@@ -17,6 +38,21 @@ public class Pos_controller {
 	
 	public void setQueryList(Connection con) {
 		this.query = new QueryList(con);
+		query.setDTO(userId, material, member, menu, menuItem, part, regular, raw, staff, stock, store);
+	}
+
+	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem, PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw,StaffDTO staff,StockDTO stock,StoreDTO store) {
+		this.userId=userId;
+		this.material=material;
+		this.member=member;
+		this.menu=menu;
+		this.menuItem=menuItem;
+		this.part=part;
+		this.regular=regular;
+		this.raw=raw;
+		this.staff=staff;
+		this.stock=stock;
+		this.store=store;
 	}
 	
 	// pos_main 클래스가 가동하면 프로그램 최초로 실행되는 메소드

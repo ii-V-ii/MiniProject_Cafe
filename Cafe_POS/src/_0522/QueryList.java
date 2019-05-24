@@ -17,17 +17,34 @@ public class QueryList {
 	String sb = null;
 
 	// DTO 클래스들 선언
-	IdVO userId = new IdVO();
-	MaterialDTO material = new MaterialDTO();
-	MemberDTO member = new MemberDTO();
-	MenuDTO menu = new MenuDTO();
-	MenuItemDTO menuItem = new MenuItemDTO();
-	PartTimeStaffDTO part = new PartTimeStaffDTO();
-	RegularStaffDTO regular = new RegularStaffDTO();
-	RawMaterialDTO raw = new RawMaterialDTO();
-	StaffDTO staff = new StaffDTO();
-	StockDTO stock = new StockDTO();
-	StoreDTO store = new StoreDTO();
+	IdVO userId;
+	MaterialDTO material;
+	MemberDTO member;
+	MenuDTO menu;
+	MenuItemDTO menuItem;
+	PartTimeStaffDTO part;
+	RegularStaffDTO regular;
+	RawMaterialDTO raw;
+	StaffDTO staff;
+	StockDTO stock;
+	StoreDTO store;
+
+	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
+			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
+			StoreDTO store) {
+		this.userId=userId;
+		this.material=material;
+		this.member=member;
+		this.menu=menu;
+		this.menuItem=menuItem;
+		this.part=part;
+		this.regular=regular;
+		this.raw=raw;
+		this.staff=staff;
+		this.stock=stock;
+		this.store=store;
+
+	}
 
 	QueryList(Connection con) {
 		this.con = con;
@@ -49,8 +66,10 @@ public class QueryList {
 			while (rs.next()) {
 				check = rs.getInt("rownum");
 				storeID = rs.getString("storeNo");
-				System.out.println(check+"/"+storeID);
-				System.out.println("check03");
+
+				System.out.println(check + "/" + storeID);
+
+
 			}
 
 			if (check == 1) {
@@ -92,10 +111,12 @@ public class QueryList {
 		
 		
 	}
-	
+
 	public void setDTOData() {
-		
+
 	}
+
 	
 	
+
 }

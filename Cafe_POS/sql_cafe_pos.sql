@@ -67,10 +67,12 @@ CONSTRAINT menu_ch_price CHECK(price>0)
 );
 
 CREATE TABLE orderList(
+storeno VARCHAR2(30),
 orderID VARCHAR2(30),
 memberID VARCHAR2(30),
 orderDate DATE,
 orderPrice NUMBER CONSTRAINT orderList_nu_orderPrice NOT NULL,
+CONSTRAINT orderList_fk_storeNo FOREIGN KEY(storeno), REFERENCES storeInfo(storeno),
 CONSTRAINT orderList_pk_orderID PRIMARY KEY(orderID),
 CONSTRAINT orderList_fk_member FOREIGN KEY(memberID) REFERENCES member(memberID),
 CONSTRAINT orderList_ch_orderPrice CHECK(orderPrice>0)
@@ -211,8 +213,8 @@ Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me8','스콘',3500,'베�
 
 REM INSERTING into ORDERLIST
 SET DEFINE OFF;
-Insert into ORDERLIST (ORDERID,ORDERDATE,ORDERPRICE,MEMBERID) values ('or01',to_date('19/02/02','RR/MM/DD'),25000,'c0001');
-Insert into ORDERLIST (ORDERID,ORDERDATE,ORDERPRICE,MEMBERID) values ('or02',to_date('19/02/03','RR/MM/DD'),45000,'c0001');
+Insert into ORDERLIST (STORENO, ORDERID,ORDERDATE,ORDERPRICE,MEMBERID) values ('01', 'or01',to_date('19/02/02','RR/MM/DD'),25000,'c0001');
+Insert into ORDERLIST (STORENO, ORDERID,ORDERDATE,ORDERPRICE,MEMBERID) values ('01', 'or02',to_date('19/02/03','RR/MM/DD'),45000,'c0001');
 
 REM INSERTING into ORDERDETAIL
 SET DEFINE OFF;
