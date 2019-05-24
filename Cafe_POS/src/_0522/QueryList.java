@@ -132,8 +132,8 @@ public class QueryList {
 			{
 				orderList.setId(rs.getString(2));
 				orderList.setMemberId(rs.getString(3));
-				orderList.setOrderdate(rs.getInt(4));
-				orderList.setOrderprice(rs.getInt(5));
+				orderList.setOrderDate(rs.getInt(4));
+				orderList.setOrderPrice(rs.getInt(5));
 
 			}
 			
