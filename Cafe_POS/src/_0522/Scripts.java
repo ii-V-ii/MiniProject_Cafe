@@ -50,7 +50,9 @@ interface customerMenu {
 
 /* 직원관리 */
 interface staffMenu {
-	String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
+
+	String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3", PAY = "4";
+
 }
 
 public class Scripts {
@@ -61,6 +63,10 @@ public class Scripts {
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
+
+
+	Scripts scripts;
+
 	QueryList query;
 	IdVO userId;
 	MaterialDTO material;
@@ -135,6 +141,21 @@ public class Scripts {
 		return null;
 	}
 
+	
+	public int receiveInt() {
+		int line = -1;
+		try {
+			line = br.read();
+				return line;
+		} catch (IOException e) {
+			System.out.println("Client Exit");
+			Pos_main.setClientAccess(false);
+		}
+		return -1;
+	}
+
+
+
 //	public int receiveInt() {
 //		int line = -1;
 //		try {
@@ -147,6 +168,7 @@ public class Scripts {
 //		return -1;
 //	}
 
+
 	// 최초 프로그램 실행시 로그인 기능
 	// 메서드 완성할 떄의 예시로 봐주세요
 	public void logIn() {
@@ -158,7 +180,6 @@ public class Scripts {
 		String password = receive();
 		// 유저의 입력을 controller 소속의 적절한 메소드로 넘긴다
 		posControl.checkLogin(id, password);
-
 	}
 
 	public void logInSuccess() {
@@ -168,7 +189,6 @@ public class Scripts {
 		// 직접적으로 이루어지도록 하겠습니다
 		posControl.setDTOdata();
 		mainMenu();
-
 	}
 
 	public void logInFail() {
@@ -184,6 +204,7 @@ public class Scripts {
 		send("4. 직원관리");
 		send("5. 프로그램 종료");
 		send(">>선택 :");
+
 
 		choose = receive();
 
@@ -213,6 +234,11 @@ public class Scripts {
 			break;
 		}// switch
 
+
+
+	
+
+
 	}// mainMenu
 
 	// 유저에게서 매장관리 메뉴를 보여주고 선택받는다
@@ -222,6 +248,7 @@ public class Scripts {
 		send("3. 재고관리");
 		send("선택>>");
 		choose = receive();
+
 
 		switch (choose) {
 		case StoreMenu.STOREINFO:
@@ -249,6 +276,7 @@ public class Scripts {
 		send("선택>>");
 		choose = receive();
 
+
 		switch (choose) {
 		case menuMenu.MENUINFO:
 			menuInfo();
@@ -265,32 +293,76 @@ public class Scripts {
 			break;
 		}// switch
 
-	}
 
+	}
+/////////////////////////////////////////////////////////////////////
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
 
 		send("1.회원정보");
 		send("2.회원등록");
 		send("3.고객구매이력");
-		String select = receive();
+		choose = receive();
 
 		while (true) {
-//			case 1:
-//				mainMenu().CUSTINFO=1
-//				break;
-//			case 2:
-//				
-//			case 3:
+			switch (choose) {
+			case customerMenu.CUSTINFO:
+				custInfo();//1.회원정보>1.모두보기
+				break;
+			case customerMenu.CUSTENROLL:
+				searchMember();//1.회원정보>2.고객정보
+				break;	
+			case customerMenu.HISTORY:
+				showMemberDetail();//1.회원정보>3.정보보기
+				break;	
+			}
 		}
 	}
+	
+	public void custInfo() {
+		send("1.모두보기");
+		send("2.고객검색");
+		send("3.정보보기");
+		choose = receive();
+		switch (choose) {
+		case customerMenu.CUSTINFO:
+			custInfo();
+			break;
+		}
+	}
+	public void custenroll() {
+		send("1.모두보기");
+		send("2.고객검색");
+		send("3.정보보기");
+		choose = receive();
+		switch (choose){
+		case customerMenu.CUSTENROLL:
+			searchMember();
+			break;
+		}
+	}
+	public void history() {
+		send("1.모두보기");
+		send("2.고객검색");
+		send("3.정보보기");
+		choose = receive();
+		
+		switch (choose) {
+		case customerMenu.HISTORY:
+			showMemberDetail();
+			break;
 
+		}
+	}
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
+
+
 	public void staffMenu() {
 		// String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
 		send("1. 직원정보 확인");
 		send("2. 직원 등록");
 		send("3. 스케쥴 관리");
+		send("4.급여관리");//보류
 		choose = receive();
 
 		switch (choose) {
@@ -303,6 +375,8 @@ public class Scripts {
 		case staffMenu.SCHEDULE:
 			posControl.staffSchedule();
 			break;
+//		case staffMenu.PAY:
+//		break;
 		default:
 			break;
 		}
@@ -323,6 +397,7 @@ public class Scripts {
 	}	
 	
 	
+
 	// ==2차메뉴
 	// 메서드=====================================================================
 	// 매장관리 > 매장정보
@@ -460,6 +535,7 @@ public class Scripts {
 		}// switch
 
 	}// search
+
 
 	// -----------------------------여기부터 3차메뉴 관리
 	// 매장관리>매장정보>기본정보
@@ -619,21 +695,35 @@ public class Scripts {
 
 	}
 
-	// 소미 =======================
+
+///////////////////////////////////////////////////////
+
 	// 고객관리>회원정보 내부 메뉴
 	public void showMembers() {
-
+		send("1.모두보기");
+		send("2.고객검색");
+		send("3.정보보기");
+		
+		while(true) {
+			//QueryList.member();
+			
+		}
+		
+		
 	}
 
 	public void searchMember() {
-
+	
+		
+		
 	}
 
 	public void showMemberDetail() {
-
+		
+		
 	}
 
-	// 고객관리>회원정보>정보보기 내부 메뉴
+	// 고객관리>회원정보>정보보기 내부 메뉴(1.수정)
 	public void showMemberDetailModify() {
 
 	}
