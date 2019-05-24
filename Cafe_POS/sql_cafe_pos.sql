@@ -72,7 +72,7 @@ orderID VARCHAR2(30),
 memberID VARCHAR2(30),
 orderDate DATE,
 orderPrice NUMBER CONSTRAINT orderList_nu_orderPrice NOT NULL,
-CONSTRAINT orderList_fk_storeNo FOREIGN KEY(storeno), REFERENCES storeInfo(storeno),
+CONSTRAINT orderList_fk_storeNo FOREIGN KEY(storeno) REFERENCES storeInfo(storeno),
 CONSTRAINT orderList_pk_orderID PRIMARY KEY(orderID),
 CONSTRAINT orderList_fk_member FOREIGN KEY(memberID) REFERENCES member(memberID),
 CONSTRAINT orderList_ch_orderPrice CHECK(orderPrice>0)
