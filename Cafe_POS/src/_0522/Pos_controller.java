@@ -2,7 +2,6 @@ package _0522;
 
 import java.sql.Connection;
 import java.util.Iterator;
-
 import _0522.DTO.IdVO;
 
 /*
@@ -20,7 +19,6 @@ public class Pos_controller {
 		this.query = new QueryList(con);
 	}
 	
-	
 	// pos_main 클래스가 가동하면 프로그램 최초로 실행되는 메소드
 	public void start() {
 		System.out.println("Pos_controller.start() start");
@@ -32,7 +30,6 @@ public class Pos_controller {
 		scripts.logIn();
 		}
 	}
-	
 	
 	// scripts.logIn()의 실행결과 호출되는 메소드
 	public void checkLogin(String id, String password) {
