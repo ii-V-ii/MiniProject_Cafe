@@ -1,4 +1,4 @@
-
+package _0522;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +14,9 @@ import java.net.Socket;
  */
 
 // 유저에게 보여줄 메뉴 인터페이스(1차, 2차 메뉴)
+interface MainMenu {
+	int STORE = 1, MENU = 2, CUSTOMER = 3, STAFF = 4;
+}
 /*매장관리*/
 interface StoreMenu {
 	int STOREINFO = 1, SALESINFO = 2, STOCK = 3;
@@ -107,24 +110,9 @@ public class Scripts {
 
 	}
 
-	public void logInFailTypeId() {
-		send("id가 없습니다");
-		// 실패시 첫화면으로 돌아간다
-
-	}
-
-	public void logInFailTypePassword() {
-		send("password가 일치하지 않습니다");
-		// 실패시 첫화면으로 돌아간다
-
-
-	}
-
-
-
-	public void noData() {
-		send("정보가 없습니다");
-		send("관리자에게 문의 바랍니다");
+	public void logInFail() {
+		send("로그인에 실패했습니다");
+		send("id 또는 password를 확인해주세요");
 	}
 
 	// 유저에게서 메인메뉴를 보여주고 선택받는다
@@ -153,7 +141,11 @@ public class Scripts {
 					staffMenu();
 					break;
 				case 5:
+				try {
 					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 					break;
 				default:
 					send("다시선택하세요~");
@@ -195,17 +187,17 @@ public class Scripts {
 		send("2. 메뉴등록");
 		send("3. 메뉴검색");
 		send("선택>>");
-		String choose = receive();
+		int choose = receiveInt();
 		
 		while(true) {
 			switch(choose){
-				case menuMenu.:
+				case menuMenu.MENUINFO:
 					
 					break;
-				case StoreMenu.SALESINFO:
+				case menuMenu.MENUENROLL:
 				
 					break;
-				case StoreMenu.STOCK:
+				case menuMenu.SEARCH:
 					
 					break;
 				default:

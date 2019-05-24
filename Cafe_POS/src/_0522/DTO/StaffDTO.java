@@ -6,6 +6,29 @@ public class StaffDTO {
 	private int joinDate;
 	private int leaveDate;
 	private int phone;
+	public String getSex() {
+		return sex;
+	}
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+	public String getWorkstyle() {
+		return workstyle;
+	}
+	public void setWorkstyle(String workstyle) {
+		this.workstyle = workstyle;
+	}
+	public String getStoreId() {
+		return storeId;
+	}
+	public void setStoreId(String storeId) {
+		this.storeId = storeId;
+	}
+	private String sex;
+	private String workstyle;
+	private String storeId;
+	
+	
 	public String getId() {
 		return id;
 	}

@@ -1,6 +1,7 @@
-/* 0523 소미의 SQL 문*/
+/* 0523 소미와 혜영의 SQL 문*/
 /* 0523 +menu table에 recipe 컬럼이 생성되지 않도록 변경함
         +customer 테이블 삭제
+        +insert 문 추가
 */
 DROP USER cafe_pos CASCADE;
 
@@ -154,12 +155,14 @@ CONSTRAINT recipe_fk_rawmaterial FOREIGN KEY(rawmateID) REFERENCES rawmaterial(r
 );
 
 CREATE TABLE buyingData(
+STORENO VARCHAR(30),
 onebiID VARCHAR2(30),
 rawmateID VARCHAR2(30),
 MateID VARCHAR2(30),
 inputdate DATE,
 sellbydate DATE,
 amount NUMBER CONSTRAINT buyingData_nu_amount NOT NULL,
+CONSTRAINT byingData_fk_STORENO FOREIGN KEY(storeno) REFERENCES storeInfo(STORENO),
 CONSTRAINT buyingData_pk_onebiID PRIMARY KEY(onebiID),
 CONSTRAINT buyingData_fk_rawmaterial FOREIGN KEY (rawmateID) REFERENCES rawmaterial(rawmateID),
 CONSTRAINT buyingData_fk_Material FOREIGN KEY (MateID) REFERENCES Material(MateID),
@@ -280,22 +283,22 @@ Insert into RECIPE (RAWMATEID,MENUID) values ('raw08','me6');
 
 REM INSERTING into BUYINGDATA
 SET DEFINE OFF;
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob01','mate01',to_date('19/01/01','RR/MM/DD'),to_date('19/12/12','RR/MM/DD'),5,'raw01');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob02','mate02',to_date('19/01/01','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),7,'raw02');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob03','mate03',to_date('19/01/05','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),8,'raw03');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob04','mate04',to_date('19/01/05','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),99,'raw04');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob05','mate05',to_date('19/01/06','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),110,'raw05');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob06','mate06',to_date('19/01/08','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),5,'raw06');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob07','mate07',to_date('19/01/08','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),5,'raw07');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob08','mate08',to_date('19/10/11','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),7,'raw08');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob09','mate01',to_date('19/11/11','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),10,'raw01');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob10','mate02',to_date('19/12/12','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),5,'raw02');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob11','mate03',to_date('19/12/12','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),3,'raw03');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob12','mate04',to_date('19/12/12','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),7,'raw04');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob13','mate05',to_date('19/12/12','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),4,'raw05');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob14','mate06',to_date('19/12/12','RR/MM/DD'),to_date('19/11/23','RR/MM/DD'),6,'raw06');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob15','mate07',to_date('19/12/12','RR/MM/DD'),to_date('19/11/23','RR/MM/DD'),10,'raw07');
-Insert into BUYINGDATA (ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('ob16','mate08',to_date('19/12/12','RR/MM/DD'),to_date('19/11/23','RR/MM/DD'),8,'raw08');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob01','mate01',to_date('19/01/01','RR/MM/DD'),to_date('19/12/12','RR/MM/DD'),5,'raw01');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob02','mate02',to_date('19/01/01','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),7,'raw02');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob03','mate03',to_date('19/01/05','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),8,'raw03');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob04','mate04',to_date('19/01/05','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),99,'raw04');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob05','mate05',to_date('19/01/06','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),110,'raw05');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob06','mate06',to_date('19/01/08','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),5,'raw06');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob07','mate07',to_date('19/01/08','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),5,'raw07');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob08','mate08',to_date('19/10/11','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),7,'raw08');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob09','mate01',to_date('19/11/11','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),10,'raw01');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob10','mate02',to_date('19/12/12','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),5,'raw02');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob11','mate03',to_date('19/12/12','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),3,'raw03');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob12','mate04',to_date('19/12/12','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),7,'raw04');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob13','mate05',to_date('19/12/12','RR/MM/DD'),to_date('19/12/31','RR/MM/DD'),4,'raw05');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob14','mate06',to_date('19/12/12','RR/MM/DD'),to_date('19/11/23','RR/MM/DD'),6,'raw06');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob15','mate07',to_date('19/12/12','RR/MM/DD'),to_date('19/11/23','RR/MM/DD'),10,'raw07');
+Insert into BUYINGDATA (STORENO, ONEBIID,MATEID,INPUTDATE,SELLBYDATE,AMOUNT,RAWMATEID) values ('01', 'ob16','mate08',to_date('19/12/12','RR/MM/DD'),to_date('19/11/23','RR/MM/DD'),8,'raw08');
 
 
 COMMIT;
