@@ -19,9 +19,6 @@ public class Pos_controller {
 	public void setQueryList(Connection con) {
 		this.query = new QueryList(con);
 	}
-
-	public Pos_controller(){
-	}
 	
 	
 	// pos_main 클래스가 가동하면 프로그램 최초로 실행되는 메소드
@@ -76,6 +73,10 @@ public class Pos_controller {
 		System.out.println("No More data");
 		scripts.noData();
 		*/
+	}
+	
+	public void setDTOdata() {
+		query.setDTOData();
 	}
 
 	

@@ -15,7 +15,7 @@ import java.net.Socket;
 
 // 유저에게 보여줄 메뉴 인터페이스(1차, 2차 메뉴)
 interface MainMenu {
-	int STORE = 1, MENU = 2, CUSTOMER = 3, STAFF = 4;
+	String STORE = "1", MENU = "2", CUSTOMER = "3", STAFF = "4";
 }
 /*매장관리*/
 interface StoreMenu {
@@ -106,6 +106,7 @@ public class Scripts {
 		// 원래라면 controller의 메서드를 호출해야하나
 		// 편의를 위해 view 메서드 -> view 메서드 의 이동은 scripts 클래스내에서
 		// 직접적으로 이루어지도록 하겠습니다
+		posControl.setDTOdata();
 		mainMenu();
 
 	}
@@ -123,7 +124,7 @@ public class Scripts {
 		send("4. 직원관리");
 		send("5. 프로그램 종료");
 		send(">>선택 :");
-		int choose = receiveInt();
+		String choose = receive();
 		
 		
 		while(true) {
@@ -140,7 +141,7 @@ public class Scripts {
 				case MainMenu.STAFF:
 					staffMenu();
 					break;
-				case 5:
+				case "5":
 				try {
 					br.close();
 				} catch (IOException e) {
@@ -148,7 +149,7 @@ public class Scripts {
 				}
 					break;
 				default:
-					send("다시선택하세요~");
+					send(""+choose);
 					break;
 			}//switch
 		}//while
