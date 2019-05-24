@@ -1,4 +1,5 @@
 package _0522;
+
 // 동기화 확인용 주석
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +7,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+
+import _0522.DTO.IdVO;
+import _0522.DTO.MaterialDTO;
+import _0522.DTO.MemberDTO;
+import _0522.DTO.MenuDTO;
+import _0522.DTO.MenuItemDTO;
+import _0522.DTO.PartTimeStaffDTO;
+import _0522.DTO.RawMaterialDTO;
+import _0522.DTO.RegularStaffDTO;
+import _0522.DTO.StaffDTO;
+import _0522.DTO.StockDTO;
+import _0522.DTO.StoreDTO;
 
 /*
  * 1차메뉴 (매장,메뉴,고객,직원관리)와 2차 메뉴(매장관리>매장정보, 매출정보, 재고관리) 는 인터페이스로 관리
@@ -17,19 +30,23 @@ import java.net.Socket;
 interface MainMenu {
 	String STORE = "1", MENU = "2", CUSTOMER = "3", STAFF = "4";
 }
-/*매장관리*/
+
+/* 매장관리 */
 interface StoreMenu {
 	int STOREINFO = 1, SALESINFO = 2, STOCK = 3;
 }
-/*메뉴관리*/
+
+/* 메뉴관리 */
 interface menuMenu {
 	int MENUINFO = 1, MENUENROLL = 2, SEARCH = 3;
 }
-/*고객관리*/
+
+/* 고객관리 */
 interface customerMenu {
 	int CUSTINFO = 1, CUSTENROLL = 2, HISTORY = 3;
 }
-/*직원관리*/
+
+/* 직원관리 */
 interface staffMenu {
 	int STAFFINFO = 1, STAFFENROLL = 2, SCHEDULE = 3;
 }
@@ -39,11 +56,42 @@ public class Scripts {
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
+	Scripts scripts;
+	QueryList query;
+	IdVO userId;
+	MaterialDTO material;
+	MemberDTO member;
+	MenuDTO menu;
+	MenuItemDTO menuItem;
+	PartTimeStaffDTO part;
+	RegularStaffDTO regular;
+	RawMaterialDTO raw;
+	StaffDTO staff;
+	StockDTO stock;
+	StoreDTO store;
+
+	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
+			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
+			StoreDTO store) {
+		this.userId=userId;
+		this.material=material;
+		this.member=member;
+		this.menu=menu;
+		this.menuItem=menuItem;
+		this.part=part;
+		this.regular=regular;
+		this.raw=raw;
+		this.staff=staff;
+		this.stock=stock;
+		this.store=store;
+
+	}
 
 	public void setPosControl(Pos_controller posControl) {
 		this.posControl = posControl;
 	}
-	Scripts(Socket socket){
+
+	Scripts(Socket socket) {
 		this.socket = socket;
 		try {
 			this.br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -73,19 +121,17 @@ public class Scripts {
 		return null;
 	}
 
-	
 	public int receiveInt() {
 		int line = -1;
 		try {
 			line = br.read();
-				return line;
+			return line;
 		} catch (IOException e) {
 			System.out.println("Client Exit");
 			Pos_main.setClientAccess(false);
 		}
 		return -1;
 	}
-
 
 	// 최초 프로그램 실행시 로그인 기능
 	// 메서드 완성할 떄의 예시로 봐주세요
@@ -125,34 +171,33 @@ public class Scripts {
 		send("5. 프로그램 종료");
 		send(">>선택 :");
 		String choose = receive();
-		
-		
-		while(true) {
-			switch(choose){
-				case MainMenu.STORE:
-					storeMenu();
-					break;
-				case MainMenu.MENU:
-					menuMenu();
-					break;
-				case MainMenu.CUSTOMER:
-					customerMenu();
-					break;
-				case MainMenu.STAFF:
-					staffMenu();
-					break;
-				case "5":
+
+		while (true) {
+			switch (choose) {
+			case MainMenu.STORE:
+				storeMenu();
+				break;
+			case MainMenu.MENU:
+				menuMenu();
+				break;
+			case MainMenu.CUSTOMER:
+				customerMenu();
+				break;
+			case MainMenu.STAFF:
+				staffMenu();
+				break;
+			case "5":
 				try {
 					br.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-					break;
-				default:
-					send(""+choose);
-					break;
-			}//switch
-		}//while
+				break;
+			default:
+				send("" + choose);
+				break;
+			}// switch
+		} // while
 	}// mainMenu
 
 	// 유저에게서 매장관리 메뉴를 보여주고 선택받는다
@@ -162,24 +207,24 @@ public class Scripts {
 		send("3. 재고관리");
 		send("선택>>");
 		int choose = receiveInt();
-		
-		while(true) {
-			switch(choose){
-				case StoreMenu.STOREINFO:
-					
-					break;
-				case StoreMenu.SALESINFO:
-				
-					break;
-				case StoreMenu.STOCK:
-					
-					break;
-				default:
-					send("다시선택하세요~");
-					storeMenu();
-					break;
-			}//switch
-		}//while
+
+		while (true) {
+			switch (choose) {
+			case StoreMenu.STOREINFO:
+
+				break;
+			case StoreMenu.SALESINFO:
+
+				break;
+			case StoreMenu.STOCK:
+
+				break;
+			default:
+				send("다시선택하세요~");
+				storeMenu();
+				break;
+			}// switch
+		} // while
 	}
 
 	// 유저에게서 메뉴관리 메뉴를 보여주고 선택받는다
@@ -189,35 +234,35 @@ public class Scripts {
 		send("3. 메뉴검색");
 		send("선택>>");
 		int choose = receiveInt();
-		
-		while(true) {
-			switch(choose){
-				case menuMenu.MENUINFO:
-					
-					break;
-				case menuMenu.MENUENROLL:
-				
-					break;
-				case menuMenu.SEARCH:
-					
-					break;
-				default:
-					send("다시선택하세요~");
-					storeMenu();
-					break;
-			}//switch
-		}//while
+
+		while (true) {
+			switch (choose) {
+			case menuMenu.MENUINFO:
+
+				break;
+			case menuMenu.MENUENROLL:
+
+				break;
+			case menuMenu.SEARCH:
+
+				break;
+			default:
+				send("다시선택하세요~");
+				storeMenu();
+				break;
+			}// switch
+		} // while
 	}
 
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
-		
+
 		send("1.회원정보");
 		send("2.회원등록");
 		send("3.고객구매이력");
 		String select = receive();
-		
-		while(true) {
+
+		while (true) {
 //			case 1:
 //				mainMenu().CUSTINFO=1
 //				break;
@@ -345,7 +390,6 @@ public class Scripts {
 
 	// 직원관리>급여관리 내부 메뉴
 	public void staffSalaryManage() {
-
 
 	}
 
