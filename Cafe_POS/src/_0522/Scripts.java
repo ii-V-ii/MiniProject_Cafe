@@ -13,6 +13,7 @@ import _0522.DTO.MaterialDTO;
 import _0522.DTO.MemberDTO;
 import _0522.DTO.MenuDTO;
 import _0522.DTO.MenuItemDTO;
+import _0522.DTO.OrderListDTO;
 import _0522.DTO.PartTimeStaffDTO;
 import _0522.DTO.RawMaterialDTO;
 import _0522.DTO.RegularStaffDTO;
@@ -69,12 +70,13 @@ Socket socket;
 	StaffDTO staff;
 	StockDTO stock;
 	StoreDTO store;
+	OrderListDTO orderList;
 
 	String choose;
   
 public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
-			StoreDTO store) {
+			StoreDTO store, OrderListDTO orderList) {
 		this.userId=userId;
 		this.material=material;
 		this.member=member;
@@ -86,6 +88,7 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 		this.staff=staff;
 		this.stock=stock;
 		this.store=store;
+		this.orderList = orderList;
 
 	}
 	public void setPosControl(Pos_controller posControl) {

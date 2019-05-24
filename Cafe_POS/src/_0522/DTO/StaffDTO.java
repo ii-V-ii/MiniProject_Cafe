@@ -6,6 +6,11 @@ public class StaffDTO {
 	private int joinDate;
 	private int leaveDate;
 	private int phone;
+	private String sex;
+	private String workstyle;
+	private String storeId;
+	
+	
 	public String getSex() {
 		return sex;
 	}
@@ -24,9 +29,7 @@ public class StaffDTO {
 	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
-	private String sex;
-	private String workstyle;
-	private String storeId;
+
 	
 	
 	public String getId() {
