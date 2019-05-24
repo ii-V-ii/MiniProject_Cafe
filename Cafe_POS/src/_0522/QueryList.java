@@ -65,14 +65,17 @@ public class QueryList {
 			pps.setString(1, id);
 			pps.setString(2, password);
 			rs = pps.executeQuery();
-
 			while (rs.next()) {
 				check = rs.getInt("rownum");
 				storeID = rs.getString("storeNo");
+
 				System.out.println(check + "/" + storeID);
 
+
 			}
+
 			if (check == 1) {
+
 				// userId.setId(id);
 				userId.setPassword(password);
 				userId.setStoreId(storeID);
@@ -85,7 +88,32 @@ public class QueryList {
 		} catch (SQLException e) {
 			return false;
 		}
-
+	}
+	
+	public void member() {
+		String memberid;
+		String name;
+		String sex;
+		int birth;
+		int phone;
+		
+		sb=("select  memberid, name, phone, sex, birth from member");
+		try {
+			while (rs.next()) {
+				rs.getString("memberid");
+				rs.getString("name");
+				rs.getString("phone");
+				rs.getString("sex");
+				rs.getInt("birth");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
 	}
 
 	public void setDTOData() {
@@ -176,6 +204,9 @@ public class QueryList {
 		}
 		return null;
 	}
+	
+
+	
 	
 
 }
