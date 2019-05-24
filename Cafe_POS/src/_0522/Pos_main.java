@@ -3,13 +3,13 @@ package _0522;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashSet;
 
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
 import _0522.DTO.MemberDTO;
 import _0522.DTO.MenuDTO;
 import _0522.DTO.MenuItemDTO;
+import _0522.DTO.OrderListDTO;
 import _0522.DTO.PartTimeStaffDTO;
 import _0522.DTO.RawMaterialDTO;
 import _0522.DTO.RegularStaffDTO;
@@ -42,7 +42,8 @@ public class Pos_main extends Thread {
 	StaffDTO staff = new StaffDTO();
 	StockDTO stock = new StockDTO();
 	StoreDTO store = new StoreDTO();
-
+	OrderListDTO orderList = new OrderListDTO();
+	
 	// (IdVo userId, MaterialDTO material, MemberDTO member, MenuDTO menu,
 	// MenuItemDTO menuItem, PartTiemStaffDTO part, RegularStaffDTO
 	// regular,RawMeterialDTO raw,StaffDTO staff,StockDTO stock,StoreDTO store)
@@ -63,8 +64,8 @@ public class Pos_main extends Thread {
 		posControl = new Pos_controller();
 		posControl.setScripts(scripts);
 		scripts.setPosControl(posControl);
-		posControl.setDTO(userId, material, member, menu, menuItem, part, regular, raw, staff, stock, store);
-		scripts.setDTO(userId, material, member, menu, menuItem, part, regular, raw, staff, stock, store);
+		posControl.setDTO(userId, material, member, menu, menuItem, part, regular, raw, staff, stock, store, orderList);
+		scripts.setDTO(userId, material, member, menu, menuItem, part, regular, raw, staff, stock, store, orderList);
 		// DB와 연결
 		cp = ConnectionPool.getInstance(url, user, password, -1, -1);
 		try {

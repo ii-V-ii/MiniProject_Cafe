@@ -1,5 +1,6 @@
 
 package _0522;
+
 // 동기화 확인용 주석
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import _0522.DTO.MaterialDTO;
 import _0522.DTO.MemberDTO;
 import _0522.DTO.MenuDTO;
 import _0522.DTO.MenuItemDTO;
+import _0522.DTO.OrderListDTO;
 import _0522.DTO.PartTimeStaffDTO;
 import _0522.DTO.RawMaterialDTO;
 import _0522.DTO.RegularStaffDTO;
@@ -49,12 +51,12 @@ interface customerMenu {
 /* 직원관리 */
 interface staffMenu {
 
-	String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3", PAY = "4"; 
+	String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3", PAY = "4";
 
 }
 
 public class Scripts {
-Socket socket;
+	Socket socket;
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
@@ -72,26 +74,29 @@ Socket socket;
 	StaffDTO staff;
 	StockDTO stock;
 	StoreDTO store;
+	OrderListDTO orderList;
 
 	String choose;
-  
-public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
+
+	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
-			StoreDTO store) {
-		this.userId=userId;
-		this.material=material;
-		this.member=member;
-		this.menu=menu;
-		this.menuItem=menuItem;
-		this.part=part;
-		this.regular=regular;
-		this.raw=raw;
-		this.staff=staff;
-		this.stock=stock;
-		this.store=store;
+			StoreDTO store, OrderListDTO orderList) {
+		this.userId = userId;
+		this.material = material;
+		this.member = member;
+		this.menu = menu;
+		this.menuItem = menuItem;
+		this.part = part;
+		this.regular = regular;
+		this.raw = raw;
+		this.staff = staff;
+		this.stock = stock;
+		this.store = store;
+		this.orderList = orderList;
 
 
 	}
+
 	public void setPosControl(Pos_controller posControl) {
 		this.posControl = posControl;
 	}
@@ -220,7 +225,9 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 		}// switch
 
 
+
 	
+
 
 	}// mainMenu
 
@@ -338,84 +345,48 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 		}
 	}
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
-public void staffMenu() {
-		
-		send("1.직원정보");
-		send("2.직원 등록");
-		send("3.스케줄 관리");
+
+
+	public void staffMenu() {
+		// String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
+		send("1. 직원정보 확인");
+		send("2. 직원 등록");
+		send("3. 스케쥴 관리");
 		send("4.급여관리");//보류
 		choose = receive();
-		
-		while(true) {
-			switch(choose) {
-			case staffMenu.STAFFINFO:
-				staffinfo();
-				break;
-			case staffMenu.STAFFENROLL:
-				staffenroll();
-				break;
-			case staffMenu.SCHEDULE:
-				schedule();
-				break;
-//			case staffMenu.PAY:
-//				break;
-			}
-		}
-	}
-	public void staffinfo() {
-		send("1.직원정보");
-		send("2.직원 등록");
-		send("3.스케줄 관리");
-		send("4.급여관리");
-		choose = receive();
-		
+
 		switch (choose) {
 		case staffMenu.STAFFINFO:
-			staffInfoDefault();
+			staffDefaultInfo();
 			break;
-		}
-	}
-	public void staffenroll() {
-		send("1.직원정보");
-		send("2.직원 등록");
-		send("3.스케줄 관리");
-		send("4.급여관리");
-		choose = receive();
-		
-		switch (choose) {
 		case staffMenu.STAFFENROLL:
-			staffInfoModify();
+			posControl.staffEnroll();
 			break;
-		}
-	}
-	public void schedule() {
-		send("1.직원정보");
-		send("2.직원 등록");
-		send("3.스케줄 관리");
-		send("4.급여관리");
-		choose = receive();
-		
-		switch (choose) {
 		case staffMenu.SCHEDULE:
-			staffInfoDelete();
+			posControl.staffSchedule();
+			break;
+//		case staffMenu.PAY:
+//		break;
+		default:
 			break;
 		}
 	}
-	/*보류*/
-	public void pay() {
-		send("1.직원정보");
-		send("2.직원 등록");
-		send("3.스케줄 관리");
-		send("4.급여관리");
-		choose = receive();
-		
-		switch (choose) {
-//		case staffMenu.:
-//			staffSalaryManage();
-//			break;
+	
+	public void staffDefaultInfo() {
+		StaffDTO[] staffList = posControl.showStaffList();
+		send("=====직원 명단 =====");
+		for(int i = 0;i<staffList.length;i++) {
+			send(""+staffList[i].getName());
+			send(""+staffList[i].getPhone());
+			send(""+staffList[i].getSex());
+			send(""+staffList[i].getBirth());
+			send(""+staffList[i].getJoinDate());
+			send(""+staffList[i].getLeaveDate());
+			send(""+staffList[i].getWorkstyle());
 		}
-	}
-
+	}	
+	
+	
 
 	// ==2차메뉴
 	// 메서드=====================================================================
