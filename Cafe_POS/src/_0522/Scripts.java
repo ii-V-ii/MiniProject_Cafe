@@ -1,5 +1,5 @@
 package _0522;
-
+// 동기화 확인용 주석
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -110,6 +110,7 @@ public class Scripts {
 		// 원래라면 controller의 메서드를 호출해야하나
 		// 편의를 위해 view 메서드 -> view 메서드 의 이동은 scripts 클래스내에서
 		// 직접적으로 이루어지도록 하겠습니다
+		posControl.setDTOdata();
 		mainMenu();
 
 	}
@@ -127,6 +128,7 @@ public class Scripts {
 		send("4. 직원관리");
 		send("5. 프로그램 종료");
 		send(">>선택 :");
+
 		choose = receive();
 
 		switch (choose) {
@@ -155,6 +157,8 @@ public class Scripts {
 			break;
 		}// switch
 
+
+	
 	}// mainMenu
 
 	// 유저에게서 매장관리 메뉴를 보여주고 선택받는다
