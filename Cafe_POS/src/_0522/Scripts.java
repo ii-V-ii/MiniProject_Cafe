@@ -1,5 +1,6 @@
 
 package _0522;
+
 // 동기화 확인용 주석
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,11 +53,11 @@ interface staffMenu {
 }
 
 public class Scripts {
-Socket socket;
+	private static final String String = null;
+	Socket socket;
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
-	Scripts scripts;
 	QueryList query;
 	IdVO userId;
 	MaterialDTO material;
@@ -71,23 +72,25 @@ Socket socket;
 	StoreDTO store;
 
 	String choose;
-  
-public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
+	String text;
+
+	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
 			StoreDTO store) {
-		this.userId=userId;
-		this.material=material;
-		this.member=member;
-		this.menu=menu;
-		this.menuItem=menuItem;
-		this.part=part;
-		this.regular=regular;
-		this.raw=raw;
-		this.staff=staff;
-		this.stock=stock;
-		this.store=store;
+		this.userId = userId;
+		this.material = material;
+		this.member = member;
+		this.menu = menu;
+		this.menuItem = menuItem;
+		this.part = part;
+		this.regular = regular;
+		this.raw = raw;
+		this.staff = staff;
+		this.stock = stock;
+		this.store = store;
 
 	}
+
 	public void setPosControl(Pos_controller posControl) {
 		this.posControl = posControl;
 	}
@@ -200,8 +203,6 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 			break;
 		}// switch
 
-
-	
 	}// mainMenu
 
 	// 유저에게서 매장관리 메뉴를 보여주고 선택받는다
@@ -391,7 +392,6 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 
 	// 메뉴관리 > 메뉴등록
 	public void menuEnroll() {
-		// sql이랑 연결해야해 ========================================
 
 	}// menuEnroll
 
@@ -419,71 +419,164 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 	}// search
 
 	// -----------------------------여기부터 3차메뉴 관리
-	// 매장관리>매장정보 내부 메뉴
+	// 매장관리>매장정보>기본정보
 	public void storeInfoDefault() {
-
+		send("지점번호 : " + store.getStoreId());
+		send("지점명 : " + store.getName());
+		send("지점담당자 : " + store.getOwner());
+		send("개업일 : " + store.getOpendate());
+		send("폐업일 : " + store.getClosedate());
+		send("매장전화번호 : " + store.getPhone());
+		send("매장주소 : " + store.getAddress());
 	}
 
+	// 매장관리>매장정보>수정
 	public void storeInfoMotify() {
+		// 매장 정보 수정 합니다~
+
+		send("매장 정보 수정해주세요.");
+		send("지점번호 : "); 		String num = receive();
+		send("지점명 : "); 		String name = receive();
+		send("지점담당자 : "); 		String owner = receive();
+		send("개업일 : "); 		String open = receive(); // *** int로 입력되야함
+		send("폐업일 : "); 		String close = receive(); // *** int로 입력되야함
+		send("매장전화번호 : ");		String phone = receive(); // *** int로 입력되야함
+		send("매장주소 : "); 		String addr = receive();
+		send("입력완료");
+
+		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
+		posControl.storeInfoMotify(num, name, owner, open, close, phone, addr);
+
+		// 메뉴로 다시 돌아가기
+		storeMenu();
+	}
+
+	// 매장관리>매장정보>수입확인
+	public void checkIncome() {// 쿼리에서 작성해서 보여야함
 
 	}
 
-	public void checkIncome() {
+	// 매장관리>매장정보>지출확인
+	public void checkOutcome() {// 쿼리에서 작성해서 보여야함
 
 	}
 
-	public void checkOutcome() {
+	// 매장관리>매출정보>기본정보
+	public void salesInfoDefault() {// 쿼리에서 작성해서 보여야함
 
 	}
 
-	// 매장관리>매출정보 내부 메뉴
-	public void salesInfoDefault() {
+	// 매장관리>매출정보>시간별 검색
+	public void salesSearchTimes() {// 쿼리에서 작성해서 보여야함
 
 	}
 
-	public void salesSearchTimes() {
+	// 매장관리>매출정보>메뉴별 검색
+	public void salesSearchMenus() {// 쿼리에서 작성해서 보여야함
 
 	}
 
-	public void salesSearchMenus() {
-
-	}
-
-	// 매장관리>재고관리 내부 메뉴
+	// 매장관리>재고관리>현재 비품 재고
 	public void stockNow() {
+		send("지점번호 : " + stock.getStoreId());
+		send("재고일렬번호 : " + stock.getStockId());
+		send("입고날짜 : " + stock.getInputDate());
+		send("유통기한 : " + stock.getSellByDate());
+		send("재고 량 : " + stock.getAmount());
+		send("뒤로가까? y/n");
+		String yon = receive();
+		if (yon == "y")
+			storeMenu();
+		else
+			storeMenu();
 
 	}
 
-	public void stockManage() {
+	// 매장관리>매출정보>입고관리
+	public void stockManage() { // 수량 입력 후에 쿼리에서 합하는거 ? 그거 해줘야지
+		// 입고관리 후에 잘 들어갔는지 확인하고
+		// 싶어!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!==========
+		String id;
+		String name;
+		String category;
+		String stock;
+		String cost;
+		send("1. 원재료 입고");
+		send("2. 비품입고");
+		choose = receive();
 
-	}
+		if (choose == "1") {
+			send("원재료 입고를 작성하세요.");
+			send("원재료 ID : ");			id = receive();
+			send("원재료명 : ");			name = receive();
+			send("분류 : ");				category = receive();
+			send("수량 : ");				stock = receive(); // *** int로 입력되야함
+			send("원가 : ");				cost = receive(); // *** int로 입력되야함
 
-	// 메뉴관리>메뉴정보 내부 메뉴
+			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
+			posControl.rawstock(id, name, category, stock, cost);
+			
+			// 메뉴로 다시 돌아가기
+			send("뒤로가까? y/n");
+			String yon = receive();
+			if (yon == "y")
+				stockNow();
+			else
+				stockNow();
+
+		} else if (choose == "2") { //
+			send("비품 입고를 작성하세요.");
+			send("비품 ID : ");			id = receive();
+			send("비품명 : ");				name = receive();
+			send("수량 : ");				stock = receive(); // *** int로 입력되야함
+			send("원가 : ");				cost = receive(); // *** int로 입력되야함
+
+			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
+			posControl.matestock(id, name, stock, cost);
+
+			// 메뉴로 다시 돌아가기
+			send("뒤로가까? y/n");
+			String yon = receive();
+			if (yon == "y")
+				stockNow();
+			else
+				stockNow();
+
+		} // else
+
+	}// stockManage
+
+	// 메뉴관리>메뉴정보>기본정보
 	public void menuInfoDefault() {
 
 	}
 
+	// 메뉴관리>메뉴정보>수정
 	public void menuModify() {
 
 	}
 
+	// 메뉴관리>메뉴정보>삭제
 	public void menuDelete() {
 
 	}
 
+	// 메뉴관리>메뉴정보>활성화,비활성화
 	public void menuOnOff() {
 
 	}
 
-	// 메뉴검색>메뉴검색 내부 메뉴
+	// 메뉴검색>메뉴검색>이름
 	public void searchMenuName() {
 
 	}
 
+	// 메뉴검색>메뉴검색>종류
 	public void searchMenuCategory() {
 
 	}
 
+	// 소미 =======================
 	// 고객관리>회원정보 내부 메뉴
 	public void showMembers() {
 
@@ -532,6 +625,5 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 	public void staffSalaryManage() {
 
 	}
-
 
 }

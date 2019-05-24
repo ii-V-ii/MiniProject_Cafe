@@ -8,6 +8,7 @@ public class RawMaterialDTO {
 	private int cost;
 	
 	
+	
 	public String getId() {
 		return id;
 	}

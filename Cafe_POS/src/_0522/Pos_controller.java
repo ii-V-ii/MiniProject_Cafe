@@ -31,44 +31,44 @@ public class Pos_controller {
 	StaffDTO staff;
 	StockDTO stock;
 	StoreDTO store;
-	
+
 	public void setScripts(Scripts scripts) {
 		this.scripts = scripts;
 	}
-	
+
 	public void setQueryList(Connection con) {
 		this.query = new QueryList(con);
 		query.setDTO(userId, material, member, menu, menuItem, part, regular, raw, staff, stock, store);
 	}
 
-	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem, PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw,StaffDTO staff,StockDTO stock,StoreDTO store) {
-		this.userId=userId;
-		this.material=material;
-		this.member=member;
-		this.menu=menu;
-		this.menuItem=menuItem;
-		this.part=part;
-		this.regular=regular;
-		this.raw=raw;
-		this.staff=staff;
-		this.stock=stock;
-		this.store=store;
+	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
+			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
+			StoreDTO store) {
+		this.userId = userId;
+		this.material = material;
+		this.member = member;
+		this.menu = menu;
+		this.menuItem = menuItem;
+		this.part = part;
+		this.regular = regular;
+		this.raw = raw;
+		this.staff = staff;
+		this.stock = stock;
+		this.store = store;
 	}
-	
-	
+
 	// pos_main 클래스가 가동하면 프로그램 최초로 실행되는 메소드
 	public void start() {
 		System.out.println("Pos_controller.start() start");
-		//view 역할인 scripts에서 적절한 메소드를 호출한다
-		//(로그인이 성공할 때까지 반복되도록 while문을 걸어주었다)
-		while(true) {
-			if(Pos_main.isClientAccess() == false)
+		// view 역할인 scripts에서 적절한 메소드를 호출한다
+		// (로그인이 성공할 때까지 반복되도록 while문을 걸어주었다)
+		while (true) {
+			if (Pos_main.isClientAccess() == false)
 				break;
-		scripts.logIn();
+			scripts.logIn();
 		}
 	}
-	
-	
+
 	// scripts.logIn()의 실행결과 호출되는 메소드
 	public void checkLogin(String id, String password) {
 		// ID 및 Password 정보를 QueryList 클래스의 getLogInInfo 메서드로 넘깁니다
@@ -78,7 +78,7 @@ public class Pos_controller {
 			scripts.logInSuccess();
 		else if(!logInResult)
 			scripts.logInFail();
-		
+
 	/*	죽은 코드입니다.
 	 *  필요없는 부분이나, 혹시 몰라 주석으로 남겨두어습니다.
 	 * 
@@ -109,34 +109,20 @@ public class Pos_controller {
 		scripts.noData();
 		*/
 	}
-	
+
 	public void setDTOdata() {
 		query.setDTOData();
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//매장정보>정보수정
+	public void storeInfoMotify(String num, String name, String owner, String open, String close, String phone, String addr) {
+		
+	}
+	//매장관리>재고관리>입고(원재료)
+	public void rawstock(String id, String name, String category, String stock, String cost) {
+		
+	}
+	//매장관리>재고관리>입고(비품)
+	public void matestock(String id, String name, String stock, String cost) {
+		
+	}
 }
