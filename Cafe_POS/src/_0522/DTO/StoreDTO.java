@@ -4,8 +4,8 @@ public class StoreDTO {
 	private String storeId;
 	private String name;
 	private String owner;
-	private int opendate;
-	private int closedate;
+	private String opendate;
+	private String closedate;
 	private int phone;
 	private String address;
 
@@ -28,16 +28,16 @@ public class StoreDTO {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
-	public int getOpendate() {
+	public String getOpendate() {
 		return opendate;
 	}
-	public void setOpendate(int opendate) {
+	public void setOpendate(String opendate) {
 		this.opendate = opendate;
 	}
-	public int getClosedate() {
+	public String getClosedate() {
 		return closedate;
 	}
-	public void setClosedate(int closedate) {
+	public void setClosedate(String closedate) {
 		this.closedate = closedate;
 	}
 	public int getPhone() {

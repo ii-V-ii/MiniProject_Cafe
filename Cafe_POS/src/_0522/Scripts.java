@@ -14,6 +14,7 @@ import _0522.DTO.MaterialDTO;
 import _0522.DTO.MemberDTO;
 import _0522.DTO.MenuDTO;
 import _0522.DTO.MenuItemDTO;
+import _0522.DTO.OrderListDTO;
 import _0522.DTO.PartTimeStaffDTO;
 import _0522.DTO.RawMaterialDTO;
 import _0522.DTO.RegularStaffDTO;
@@ -53,7 +54,9 @@ interface staffMenu {
 }
 
 public class Scripts {
+
 	private static final String String = null;
+
 	Socket socket;
 	BufferedReader br;
 	PrintWriter pw;
@@ -70,13 +73,17 @@ public class Scripts {
 	StaffDTO staff;
 	StockDTO stock;
 	StoreDTO store;
+	OrderListDTO orderList;
 
 	String choose;
+
 	String text;
+
 
 	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
-			StoreDTO store) {
+			StoreDTO store, OrderListDTO orderList) {
+
 		this.userId = userId;
 		this.material = material;
 		this.member = member;
@@ -88,6 +95,9 @@ public class Scripts {
 		this.staff = staff;
 		this.stock = stock;
 		this.store = store;
+
+		this.orderList = orderList;
+
 
 	}
 
@@ -277,9 +287,42 @@ public class Scripts {
 
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
 	public void staffMenu() {
+		// String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
+		send("1. 직원정보 확인");
+		send("2. 직원 등록");
+		send("3. 스케쥴 관리");
+		choose = receive();
 
+		switch (choose) {
+		case staffMenu.STAFFINFO:
+			staffDefaultInfo();
+			break;
+		case staffMenu.STAFFENROLL:
+			posControl.staffEnroll();
+			break;
+		case staffMenu.SCHEDULE:
+			posControl.staffSchedule();
+			break;
+		default:
+			break;
+		}
 	}
-
+	
+	public void staffDefaultInfo() {
+		StaffDTO[] staffList = posControl.showStaffList();
+		send("=====직원 명단 =====");
+		for(int i = 0;i<staffList.length;i++) {
+			send(""+staffList[i].getName());
+			send(""+staffList[i].getPhone());
+			send(""+staffList[i].getSex());
+			send(""+staffList[i].getBirth());
+			send(""+staffList[i].getJoinDate());
+			send(""+staffList[i].getLeaveDate());
+			send(""+staffList[i].getWorkstyle());
+		}
+	}	
+	
+	
 	// ==2차메뉴
 	// 메서드=====================================================================
 	// 매장관리 > 매장정보

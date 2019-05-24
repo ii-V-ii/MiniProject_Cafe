@@ -3,9 +3,32 @@ package _0522.DTO;
 public class StaffDTO {
 	private String id;
 	private String name;
-	private int joinDate;
-	private int leaveDate;
+	private String joinDate;
+	private String leaveDate;
 	private int phone;
+	private String birth;
+	private String sex;
+	private String workstyle;
+	private String storeId;
+	
+	public StaffDTO(){}
+	public StaffDTO(String id, String name, String joinDate, String leaveDate, int phone, String birth, String sex, String workstyle){
+		this.id = id;
+		this.name = name;
+		this.joinDate = joinDate;
+		this.leaveDate = leaveDate;
+		this.phone = phone;
+		this.birth = birth;
+		this.sex = sex;
+		this.workstyle = workstyle;
+	}
+	
+	public String getBirth() {
+		return birth;
+	}
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
 	public String getSex() {
 		return sex;
 	}
@@ -24,9 +47,7 @@ public class StaffDTO {
 	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
-	private String sex;
-	private String workstyle;
-	private String storeId;
+
 	
 	
 	public String getId() {
@@ -41,16 +62,16 @@ public class StaffDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getJoinDate() {
+	public String getJoinDate() {
 		return joinDate;
 	}
-	public void setJoinDate(int joinDate) {
+	public void setJoinDate(String joinDate) {
 		this.joinDate = joinDate;
 	}
-	public int getLeaveDate() {
+	public String getLeaveDate() {
 		return leaveDate;
 	}
-	public void setLeaveDate(int leaveDate) {
+	public void setLeaveDate(String leaveDate) {
 		this.leaveDate = leaveDate;
 	}
 	public int getPhone() {

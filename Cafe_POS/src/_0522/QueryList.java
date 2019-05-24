@@ -28,10 +28,11 @@ public class QueryList {
 	StaffDTO staff;
 	StockDTO stock;
 	StoreDTO store;
+	OrderListDTO orderList;
 
 	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
-			StoreDTO store) {
+			StoreDTO store, OrderListDTO orderList) {
 		this.userId=userId;
 		this.material=material;
 		this.member=member;
@@ -43,6 +44,7 @@ public class QueryList {
 		this.staff=staff;
 		this.stock=stock;
 		this.store=store;
+		this.orderList = orderList;
 
 	}
 
@@ -74,6 +76,8 @@ public class QueryList {
 				// userId.setId(id);
 				userId.setPassword(password);
 				userId.setStoreId(storeID);
+				store.setStoreId(storeID);
+				setDTOData();
 				return true;
 			} else
 				return false;
@@ -85,9 +89,95 @@ public class QueryList {
 	}
 
 	public void setDTOData() {
+		String getStoreInfo = "SELECT * FROM STOREINFO WHERE STORENO = ?";
+		String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
+		String getOrderListInfo = "SELECT * FROM ORDERLIST WHERE STORENO = ?";
+		
+		try {
+			pps = con.prepareStatement(getStoreInfo);
+			pps.setString(1, store.getStoreId());
+			rs = pps.executeQuery();
+			while(rs.next())
+			{
+				store.setName(rs.getString(2));
+				store.setOwner(rs.getString(3));
+				store.setOpendate(rs.getString(4));
+				store.setClosedate(rs.getString(5));
+				store.setPhone(rs.getInt(6));
+				store.setAddress(rs.getString(7));
+			}
+			System.out.println("store 정보 갱신완료");
+			
+			
+			pps = con.prepareStatement(getStaffInfo);
+			pps.setString(1, store.getStoreId());
+			rs = pps.executeQuery();
+			while(rs.next())
+			{
+				staff.setId(rs.getString(1));
+				staff.setName(rs.getString(2));
+				staff.setJoinDate(rs.getString(3));
+				staff.setLeaveDate(rs.getString(4));
+				staff.setPhone(rs.getInt(5));
+				staff.setSex(rs.getString(7));
+				staff.setWorkstyle(rs.getString(8));
+			}
+			
+			System.out.println("staff 정보 갱신완료");
+			
+			pps = con.prepareStatement(getOrderListInfo);
+			pps.setString(1, store.getStoreId());
+			rs = pps.executeQuery();
+			while(rs.next())
+			{
+				orderList.setId(rs.getString(2));
+				orderList.setMemberId(rs.getString(3));
+				orderList.setOrderDate(rs.getString(4));
+				orderList.setOrderPrice(rs.getInt(5));
 
+			}
+			
+			System.out.println("orderList 정보 갱신완료");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
+	
+	public StaffDTO[] showStaffList() {
+		try {
+			pps = con.prepareStatement( "SELECT COUNT(rownum) FROM STAFF WHERE STORENO = ?");
+			pps.setString(1, store.getStoreId());
+			rs = pps.executeQuery();
+			rs.next();
+			int staffCount = rs.getInt(1);
+			StaffDTO[] staffList = new StaffDTO[staffCount];
+			String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
+			pps = con.prepareStatement(getStaffInfo);
+			pps.setString(1, store.getStoreId());
+			rs = pps.executeQuery();
+			for(int i =0;rs.next();i++)
+			{	
+				staff.setId(rs.getString(1));
+				staff.setName(rs.getString(2));
+				staff.setJoinDate(rs.getString(3));
+				staff.setLeaveDate(rs.getString(4));
+				staff.setPhone(rs.getInt(5));
+				staff.setBirth(rs.getString(6));
+				staff.setSex(rs.getString(7));
+				staff.setWorkstyle(rs.getString(8));
+				staffList[i]=new StaffDTO(staff.getId(), staff.getName(), staff.getJoinDate(), staff.getLeaveDate(),staff.getPhone(),staff.getBirth(),staff.getSex(),staff.getWorkstyle());
+				
+			}
+			return staffList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+
 	// 혜영===========================================
 
 	//매장정보>정보수정
