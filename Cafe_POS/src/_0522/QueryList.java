@@ -206,7 +206,20 @@ public class QueryList {
 	}
 	
 
-	
-	
+	// 혜영===========================================
+
+	//매장정보>정보수정
+	public void storeInfoMotify(String num, String name, String owner, String open, String close, String phone, String addr) {
+		//update 할 내용 적어주기 동시 에 업데이트 됐어도 
+	}
+	//매장관리>재고관리>입고(원재료)
+	public void rawstock(String id, String name, String category, String stock, String cost) {
+		
+	}
+	//매장관리>재고관리>입고(비품)
+	public void matestock(String id, String name, String stock, String cost) {
+		
+	}
+
 
 }

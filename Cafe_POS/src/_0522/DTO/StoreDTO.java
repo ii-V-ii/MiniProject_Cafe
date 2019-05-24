@@ -8,7 +8,7 @@ public class StoreDTO {
 	private String closedate;
 	private int phone;
 	private String address;
-	
+
 	
 	public String getStoreId() {
 		return storeId;
@@ -52,4 +52,5 @@ public class StoreDTO {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+	
 }

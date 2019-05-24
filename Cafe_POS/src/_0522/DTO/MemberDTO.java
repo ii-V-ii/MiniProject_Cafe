@@ -37,6 +37,6 @@ public class MemberDTO{
 	public void setBirth(int birth) {
 		this.birth = birth;
 	}
-	
+
 	
 }

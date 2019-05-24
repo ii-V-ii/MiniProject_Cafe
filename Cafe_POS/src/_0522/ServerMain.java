@@ -19,7 +19,7 @@ public class ServerMain {
 		int initCons = 5;
 		int maxCons = 10;
 		cp = ConnectionPool.getInstance(url, user, password, initCons, maxCons);
-		
+	
 		
 		ServerSocket serversocket;
 		Socket socket;

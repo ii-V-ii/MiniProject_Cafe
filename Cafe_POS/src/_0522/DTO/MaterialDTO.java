@@ -29,5 +29,7 @@ public class MaterialDTO extends StockDTO{
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
+	
 
 }
+
