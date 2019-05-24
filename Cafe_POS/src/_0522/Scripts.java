@@ -8,6 +8,18 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import _0522.DTO.IdVO;
+import _0522.DTO.MaterialDTO;
+import _0522.DTO.MemberDTO;
+import _0522.DTO.MenuDTO;
+import _0522.DTO.MenuItemDTO;
+import _0522.DTO.PartTimeStaffDTO;
+import _0522.DTO.RawMaterialDTO;
+import _0522.DTO.RegularStaffDTO;
+import _0522.DTO.StaffDTO;
+import _0522.DTO.StockDTO;
+import _0522.DTO.StoreDTO;
+
 /*
  * 1차메뉴 (매장,메뉴,고객,직원관리)와 2차 메뉴(매장관리>매장정보, 매출정보, 재고관리) 는 인터페이스로 관리
  * 3차메뉴 (매장정보>기본정보, 수정, 수입확인, 지출확인)는 scripts 클래스 내의 메소드로 관리합니다
