@@ -3,7 +3,7 @@ package _0522.DTO;
 public class OrderListDTO {
 private String id;
 private String memberId;
-private int orderDate;
+private String orderDate;
 private int orderPrice;
 public String getId() {
 	return id;
@@ -17,10 +17,10 @@ public String getMemberId() {
 public void setMemberId(String memberId) {
 	this.memberId = memberId;
 }
-public int getOrderDate() {
+public String getOrderDate() {
 	return orderDate;
 }
-public void setOrderDate(int orderDate) {
+public void setOrderDate(String orderDate) {
 	this.orderDate = orderDate;
 }
 public int getOrderPrice() {

@@ -101,8 +101,8 @@ public class QueryList {
 			{
 				store.setName(rs.getString(2));
 				store.setOwner(rs.getString(3));
-				store.setOpendate(rs.getInt(4));
-				store.setClosedate(rs.getInt(5));
+				store.setOpendate(rs.getString(4));
+				store.setClosedate(rs.getString(5));
 				store.setPhone(rs.getInt(6));
 				store.setAddress(rs.getString(7));
 			}
@@ -116,8 +116,8 @@ public class QueryList {
 			{
 				staff.setId(rs.getString(1));
 				staff.setName(rs.getString(2));
-				staff.setJoinDate(rs.getInt(3));
-				staff.setLeaveDate(rs.getInt(4));
+				staff.setJoinDate(rs.getString(3));
+				staff.setLeaveDate(rs.getString(4));
 				staff.setPhone(rs.getInt(5));
 				staff.setSex(rs.getString(7));
 				staff.setWorkstyle(rs.getString(8));
@@ -132,7 +132,7 @@ public class QueryList {
 			{
 				orderList.setId(rs.getString(2));
 				orderList.setMemberId(rs.getString(3));
-				orderList.setOrderDate(rs.getInt(4));
+				orderList.setOrderDate(rs.getString(4));
 				orderList.setOrderPrice(rs.getInt(5));
 
 			}
@@ -145,32 +145,36 @@ public class QueryList {
 	}
 	
 	
-	public void showStaffList() {
+	public StaffDTO[] showStaffList() {
 		try {
 			pps = con.prepareStatement( "SELECT COUNT(rownum) FROM STAFF WHERE STORENO = ?");
 			pps.setString(1, store.getStoreId());
 			rs = pps.executeQuery();
+			rs.next();
 			int staffCount = rs.getInt(1);
+			StaffDTO[] staffList = new StaffDTO[staffCount];
 			String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
 			pps = con.prepareStatement(getStaffInfo);
 			pps.setString(1, store.getStoreId());
 			rs = pps.executeQuery();
-			while(rs.next())
-			{
+			for(int i =0;rs.next();i++)
+			{	
 				staff.setId(rs.getString(1));
 				staff.setName(rs.getString(2));
-				staff.setJoinDate(rs.getInt(3));
-				staff.setLeaveDate(rs.getInt(4));
+				staff.setJoinDate(rs.getString(3));
+				staff.setLeaveDate(rs.getString(4));
 				staff.setPhone(rs.getInt(5));
+				staff.setBirth(rs.getString(6));
 				staff.setSex(rs.getString(7));
 				staff.setWorkstyle(rs.getString(8));
+				staffList[i]=new StaffDTO(staff.getId(), staff.getName(), staff.getJoinDate(), staff.getLeaveDate(),staff.getPhone(),staff.getBirth(),staff.getSex(),staff.getWorkstyle());
 				
 			}
-			System.out.println("staff 정보 갱신완료");
+			return staffList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+		return null;
 	}
 	
 

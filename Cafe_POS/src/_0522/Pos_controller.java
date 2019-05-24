@@ -102,8 +102,8 @@ public class Pos_controller {
 		 */
 	}
 
-	public void showStaffList() {
-		query.showStaffList();
+	public StaffDTO[] showStaffList() {
+		return query.showStaffList();
 	};
 	public void staffEnroll() {
 		//직원관리>직원 등록

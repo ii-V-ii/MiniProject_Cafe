@@ -301,9 +301,17 @@ public class Scripts {
 	}
 	
 	public void staffDefaultInfo() {
+		StaffDTO[] staffList = posControl.showStaffList();
 		send("=====직원 명단 =====");
-		//posController.showStaffList();
-		
+		for(int i = 0;i<staffList.length;i++) {
+			send(""+staffList[i].getName());
+			send(""+staffList[i].getPhone());
+			send(""+staffList[i].getSex());
+			send(""+staffList[i].getBirth());
+			send(""+staffList[i].getJoinDate());
+			send(""+staffList[i].getLeaveDate());
+			send(""+staffList[i].getWorkstyle());
+		}
 	}	
 	
 	
