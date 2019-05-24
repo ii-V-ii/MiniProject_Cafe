@@ -17,7 +17,6 @@ public class QueryList {
 	String sb = null;
 
 	// DTO 클래스들 선언
-	CustomerDTO customer = new CustomerDTO();
 	IdVO userId = new IdVO();
 	MaterialDTO material = new MaterialDTO();
 	MemberDTO member = new MemberDTO();
@@ -67,4 +66,9 @@ public class QueryList {
 		}
 
 	}
+	
+	public void setDTOData() {
+		
+	}
+	
 }

@@ -1,16 +1,24 @@
 package _0522.DTO;
 
 public class StockDTO {
-	protected String storkId;
+	protected String storeId;
+	protected String stockId;	// 입고 일련번호
 	private int inputDate;
 	private int sellByDate;
-	private int amount;
+	private int amount;		//입고량
 	
-	public String getStorkId() {
-		return storkId;
+	
+	public String getStoreId() {
+		return storeId;
 	}
-	public void setStorkId(String storkId) {
-		this.storkId = storkId;
+	public void setStoreId(String storeId) {
+		this.storeId = storeId;
+	}
+	public String getStockId() {
+		return stockId;
+	}
+	public void setStockId(String stockId) {
+		this.stockId = stockId;
 	}
 	public int getInputDate() {
 		return inputDate;

@@ -1,6 +1,6 @@
 package _0522.DTO;
 
-public class MemberDTO extends CustomerDTO {
+public class MemberDTO{
 	private String memberID;
 	private String name;
 	private int phone;
