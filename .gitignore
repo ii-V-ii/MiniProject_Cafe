@@ -19,3 +19,5 @@ local.properties
 .tern-project
 .springBeans
 .recommenders/
+*.class
+*.class
