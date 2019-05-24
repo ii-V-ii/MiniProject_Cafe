@@ -1,3 +1,4 @@
+
 package _0522;
 // 동기화 확인용 주석
 import java.io.BufferedReader;
@@ -39,12 +40,42 @@ interface staffMenu {
 }
 
 public class Scripts {
-	Socket socket;
+Socket socket;
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
-	String choose;
+	Scripts scripts;
+	QueryList query;
+	IdVO userId;
+	MaterialDTO material;
+	MemberDTO member;
+	MenuDTO menu;
+	MenuItemDTO menuItem;
+	PartTimeStaffDTO part;
+	RegularStaffDTO regular;
+	RawMaterialDTO raw;
+	StaffDTO staff;
+	StockDTO stock;
+	StoreDTO store;
 
+	String choose;
+  
+public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
+			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
+			StoreDTO store) {
+		this.userId=userId;
+		this.material=material;
+		this.member=member;
+		this.menu=menu;
+		this.menuItem=menuItem;
+		this.part=part;
+		this.regular=regular;
+		this.raw=raw;
+		this.staff=staff;
+		this.stock=stock;
+		this.store=store;
+
+	}
 	public void setPosControl(Pos_controller posControl) {
 		this.posControl = posControl;
 	}
@@ -489,5 +520,6 @@ public class Scripts {
 	public void staffSalaryManage() {
 
 	}
+
 
 }
