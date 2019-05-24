@@ -1,5 +1,5 @@
 package _0522;
-
+// 동기화 확인용 주석
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
