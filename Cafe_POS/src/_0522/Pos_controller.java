@@ -102,6 +102,18 @@ public class Pos_controller {
 		 */
 	}
 
+	public void showStaffList() {
+		query.showStaffList();
+	};
+	public void staffEnroll() {
+		//직원관리>직원 등록
+		
+	}
+	public void staffSchedule() {
+		//직원관리>스케쥴관리
+	}
+
+	
 	public void setDTOdata() {
 		query.setDTOData();
 	}

@@ -1,5 +1,6 @@
 
 package _0522;
+
 // 동기화 확인용 주석
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,7 +54,7 @@ interface staffMenu {
 }
 
 public class Scripts {
-Socket socket;
+	Socket socket;
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
@@ -73,24 +74,25 @@ Socket socket;
 	OrderListDTO orderList;
 
 	String choose;
-  
-public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
+
+	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
 			StoreDTO store, OrderListDTO orderList) {
-		this.userId=userId;
-		this.material=material;
-		this.member=member;
-		this.menu=menu;
-		this.menuItem=menuItem;
-		this.part=part;
-		this.regular=regular;
-		this.raw=raw;
-		this.staff=staff;
-		this.stock=stock;
-		this.store=store;
+		this.userId = userId;
+		this.material = material;
+		this.member = member;
+		this.menu = menu;
+		this.menuItem = menuItem;
+		this.part = part;
+		this.regular = regular;
+		this.raw = raw;
+		this.staff = staff;
+		this.stock = stock;
+		this.store = store;
 		this.orderList = orderList;
 
 	}
+
 	public void setPosControl(Pos_controller posControl) {
 		this.posControl = posControl;
 	}
@@ -203,8 +205,6 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 			break;
 		}// switch
 
-
-	
 	}// mainMenu
 
 	// 유저에게서 매장관리 메뉴를 보여주고 선택받는다
@@ -279,9 +279,34 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
 	public void staffMenu() {
+		// String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
+		send("1. 직원정보 확인");
+		send("2. 직원 등록");
+		send("3. 스케쥴 관리");
+		choose = receive();
 
+		switch (choose) {
+		case staffMenu.STAFFINFO:
+			staffDefaultInfo();
+			break;
+		case staffMenu.STAFFENROLL:
+			posControl.staffEnroll();
+			break;
+		case staffMenu.SCHEDULE:
+			posControl.staffSchedule();
+			break;
+		default:
+			break;
+		}
 	}
-
+	
+	public void staffDefaultInfo() {
+		send("=====직원 명단 =====");
+		//posController.showStaffList();
+		
+	}	
+	
+	
 	// ==2차메뉴
 	// 메서드=====================================================================
 	// 매장관리 > 매장정보
@@ -535,6 +560,5 @@ public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO 
 	public void staffSalaryManage() {
 
 	}
-
 
 }

@@ -77,6 +77,7 @@ public class QueryList {
 				userId.setPassword(password);
 				userId.setStoreId(storeID);
 				store.setStoreId(storeID);
+				setDTOData();
 				return true;
 			} else
 				return false;
@@ -142,5 +143,35 @@ public class QueryList {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public void showStaffList() {
+		try {
+			pps = con.prepareStatement( "SELECT COUNT(rownum) FROM STAFF WHERE STORENO = ?");
+			pps.setString(1, store.getStoreId());
+			rs = pps.executeQuery();
+			int staffCount = rs.getInt(1);
+			String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
+			pps = con.prepareStatement(getStaffInfo);
+			pps.setString(1, store.getStoreId());
+			rs = pps.executeQuery();
+			while(rs.next())
+			{
+				staff.setId(rs.getString(1));
+				staff.setName(rs.getString(2));
+				staff.setJoinDate(rs.getInt(3));
+				staff.setLeaveDate(rs.getInt(4));
+				staff.setPhone(rs.getInt(5));
+				staff.setSex(rs.getString(7));
+				staff.setWorkstyle(rs.getString(8));
+				
+			}
+			System.out.println("staff 정보 갱신완료");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 
 }
