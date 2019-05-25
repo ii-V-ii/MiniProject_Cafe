@@ -437,7 +437,17 @@ public class Scripts {
 				newData = receive();
 				if(newData!="") {
 				int newPhone = Integer.parseInt(newData);
-				staff.setPhone(newPhone);}				
+				staff.setPhone(newPhone);}	
+				
+				send("생일: ");
+				newData = receive();
+				if(newData!="") {
+				staff.setBirth(newData);}
+				
+				send("퇴사일: ");
+				newData = receive();
+				if(newData!="") {
+				staff.setLeaveDate(newData);}
 				
 				posControl.updateStaffInfo();
 				break;
