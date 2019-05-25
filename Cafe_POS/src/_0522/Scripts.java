@@ -1,4 +1,5 @@
 
+
 package _0522;
 
 // 동기화 확인용 주석
@@ -45,12 +46,11 @@ interface menuMenu {
 
 /* 고객관리 */
 interface customerMenu {
-	String CUSTINFO = "1", CUSTENROLL = "2", HISTORY = "3";
+	String CUSTINFO = "1", CUSTENROLL = "2", HISTORY = "3", EXIT = "4", RETURN_CUSTOMERMENU ="5";
 }
 
 /* 직원관리 */
 interface staffMenu {
-
 	String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3", PAY = "4";
 
 }
@@ -63,7 +63,6 @@ public class Scripts {
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
-
 	Scripts scripts;
 
 	QueryList query;
@@ -79,7 +78,6 @@ public class Scripts {
 	StockDTO stock;
 	StoreDTO store;
 	OrderListDTO orderList;
-
 	String choose;
 
 	String text;
@@ -280,13 +278,17 @@ public class Scripts {
 
 	}
 
-/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////내꺼
+
+
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
 
 		send("1.회원정보");
 		send("2.회원등록");
 		send("3.고객구매이력");
+		send("4.되돌아가기");
+		send("선택 >> ");
 		choose = receive();
 
 		while (true) {
@@ -298,49 +300,55 @@ public class Scripts {
 				searchMember();// 1.회원정보>2.고객정보
 				break;
 			case customerMenu.HISTORY:
-				showMemberDetail();// 1.회원정보>3.정보보기
+
+				showMemberDetail();//1.회원정보>3.정보보기
+				break;
+			case customerMenu.EXIT:
+				send("다시선택하세요>>");
+				customerMenu();
+
 				break;
 			}
 		}
 	}
 
 	public void custInfo() {
-		send("1.모두보기");
-		send("2.고객검색");
-		send("3.정보보기");
+		send("1. 고객보기");
+		send("2. 회원 등록");
+		send("3. 고객 구매이력");
+		send("4.되돌아가기");
+		send("5.이전 메뉴로 되돌아가기");//customerMenu();
+		send("선택 >> ");
 		choose = receive();
+
 		switch (choose) {
-		case customerMenu.CUSTINFO:
+		case "1":
+			showMembers();
+			break;
+		case "2":
+			break;
+		case "3":
+			break;
+		case customerMenu.EXIT:
+			send("다시선택하세요>>");
 			custInfo();
+			break;
+		case customerMenu.RETURN_CUSTOMERMENU:
+			send("처음화면으로 되돌아갑니다.");
+			customerMenu();
 			break;
 		}
 	}
 
 	public void custenroll() {
-		send("1.모두보기");
-		send("2.고객검색");
-		send("3.정보보기");
-		choose = receive();
-		switch (choose) {
-		case customerMenu.CUSTENROLL:
-			searchMember();
-			break;
-		}
+
 	}
 
 	public void history() {
-		send("1.모두보기");
-		send("2.고객검색");
-		send("3.정보보기");
-		choose = receive();
 
-		switch (choose) {
-		case customerMenu.HISTORY:
-			showMemberDetail();
-			break;
 
-		}
 	}
+	
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
 
 	public void staffMenu() {
@@ -348,7 +356,9 @@ public class Scripts {
 		send("1. 직원정보 확인");
 		send("2. 직원 등록");
 		send("3. 스케쥴 관리");
-		send("4.급여관리");// 보류
+		send("4.급여관리");//보류
+		send("선택 >> ");
+
 		choose = receive();
 
 		switch (choose) {
@@ -681,48 +691,80 @@ public class Scripts {
 
 	// 매장관리>재고관리>현재 비품 재고
 	public void stockNow() {
-		send("지점번호 : " + stock.getStoreId());
-		send("재고일렬번호 : " + stock.getStockId());
-		send("입고날짜 : " + stock.getInputDate());
-		send("유통기한 : " + stock.getSellByDate());
-		send("재고 량 : " + stock.getAmount());
+		send("===재고 List====");
+		send(" ID | 이름 | 갯수 | 원가 ");
+		posControl.showstockList();
 		send("뒤로가까? y/n");
 		String yon = receive();
 		if (yon == "y")
 			storeMenu();
 		else
 			storeMenu();
-
+//		for(int i =0;i<stocklist.length;i++) {
+//			send(stocklist[i].getStockId());
+//			send(""+stocklist[i].getInputDate());
+//			send(""+stocklist[i].getSellByDate());
+//			send(""+stocklist[i].getAmount());
+//		}
+//		send("지점번호 : " + stock.getStoreId());
+//		send("재고일렬번호 : " + stock.getStockId());
+//		send("입고날짜 : " + stock.getInputDate());
+//		send("유통기한 : " + stock.getSellByDate());
+//		send("재고 량 : " + stock.getAmount());
+//		send("뒤로가까? y/n");
+//		String yon = receive();
+//		if (yon == "y")
+//			storeMenu();
+//		else
+//			storeMenu();
 	}
 
 	// 매장관리>매출정보>입고관리
 	public void stockManage() { // 수량 입력 후에 쿼리에서 합하는거 ? 그거 해줘야지
-		// 입고관리 후에 잘 들어갔는지 확인하고
-		// 싶어!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!==========
 		String id;
 		String name;
 		String category;
-		String stock;
-		String cost;
+		int stock;
+		int cost;
 		send("1. 원재료 입고");
 		send("2. 비품입고");
 		choose = receive();
 
 		if (choose == "1") {
-			send("원재료 입고를 작성하세요.");
-			send("원재료 ID : ");
-			id = receive();
-			send("원재료명 : ");
-			name = receive();
-			send("분류 : ");
-			category = receive();
-			send("수량 : ");
-			stock = receive(); // *** int로 입력되야함
-			send("원가 : ");
-			cost = receive(); // *** int로 입력되야함
+
+			ArrayList<RawMaterialDTO> raw = new ArrayList<>();
+			RawMaterialDTO temp = null;
+
+			while (true) {
+				send("원재료 입고를 작성하세요.");
+				send("원재료 ID : ");
+				id = receive();
+				send("원재료명 : ");
+				name = receive();
+				send("분류 : ");
+				category = receive();
+				send("수량 : ");
+				stock = receiveInt(); // *** int로 입력되야함
+				send("원가 : ");
+				cost = receiveInt(); // *** int로 입력되야함
+
+				temp.setId(id);
+				temp.setName(name);
+				temp.setCategory(category);
+				temp.setStock(stock);
+				temp.setCost(cost);
+
+				raw.add(temp);
+
+				temp = new RawMaterialDTO();
+				send("더 추가하시겠습니까?  y/n");
+				if (choose.equals("n"))
+					break;
+			}
 
 			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
-			posControl.rawstock(id, name, category, stock, cost);
+			posControl.temp(raw);
+			// posControl.rawstock(id, name, category, stock, cost);
 
 			// 메뉴로 다시 돌아가기
 			send("뒤로가까? y/n");
@@ -739,9 +781,9 @@ public class Scripts {
 			send("비품명 : ");
 			name = receive();
 			send("수량 : ");
-			stock = receive(); // *** int로 입력되야함
+			stock = receiveInt(); // *** int로 입력되야함
 			send("원가 : ");
-			cost = receive(); // *** int로 입력되야함
+			cost = receiveInt(); // *** int로 입력되야함
 
 			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
 			posControl.matestock(id, name, stock, cost);
@@ -755,7 +797,6 @@ public class Scripts {
 				stockNow();
 
 		} // else
-
 	}// stockManage
 
 	// 메뉴관리>메뉴정보>기본정보
@@ -788,26 +829,29 @@ public class Scripts {
 
 	}
 
-///////////////////////////////////////////////////////
-
+///////////////////////////////////////////////////////소미 파트 
 	// 고객관리>회원정보 내부 메뉴
-	public void showMembers() {
-		send("1.모두보기");
-		send("2.고객검색");
-		send("3.정보보기");
-
-		while (true) {
-			// QueryList.member();
-
+	public void showMembers() {//1.모두보기
+		MemberDTO[] showMembersList = posControl.showMember();
+		send("=======회원정보 모두보기=======");
+		for(int i = 0; i<showMembersList.length; i++) {
+			 send(""+showMembersList[i].getMemberID());
+			 send(""+showMembersList[i].getName());
+			 send(""+showMembersList[i].getPhone());
+			 send(""+showMembersList[i].getSex());
+			 send(""+showMembersList[i].getBirth());
 		}
-
 	}
 
-	public void searchMember() {
-
+	public void searchMember() {//2.고객검색
+	
+		
+		
 	}
 
-	public void showMemberDetail() {
+	public void showMemberDetail() {//3.정보보기
+		
+		
 
 	}
 
@@ -828,5 +872,6 @@ public class Scripts {
 	public void MostBuyingRecord() {
 
 	}
+
 
 }

@@ -1,3 +1,4 @@
+
 package _0522;
 
 import java.sql.Connection;
@@ -11,10 +12,12 @@ import _0522.DTO.*;
 public class QueryList {
 // 쿼리문 DB 전달을 위한 변수
 	Connection con = null;
-	Statement stmt = null;
+	Statement stmt = null; 
 	PreparedStatement pps = null;
 	ResultSet rs = null;
 	String sb = null;
+	Scripts scripts;
+	StringBuffer sbr = null;
 
 	// DTO 클래스들 선언
 	IdVO userId;
@@ -45,16 +48,17 @@ public class QueryList {
 		this.stock = stock;
 		this.store = store;
 		this.orderList = orderList;
-
 	}
 
-	QueryList(Connection con) {
+	QueryList(Connection con, Scripts scripts) {
 		this.con = con;
+		this.scripts = scripts;
+
 		try {
 			stmt = con.createStatement();
 		} catch (SQLException e) {
 			System.out.println("QueryList 생성자, stmt = con.createStatement() 오류");
-		}
+    }
 	}
 
 	public boolean getLogInInfo(String i, String pass) {
@@ -70,16 +74,14 @@ public class QueryList {
 			pps.setString(1, id);
 			pps.setString(2, password);
 			rs = pps.executeQuery();
+
 			while (rs.next()) {
 				check = rs.getInt("rownum");
 				storeID = rs.getString("storeNo");
-
 				System.out.println(check + "/" + storeID);
 
 			}
-
 			if (check == 1) {
-
 				// userId.setId(id);
 				userId.setPassword(password);
 				userId.setStoreId(storeID);
@@ -92,34 +94,69 @@ public class QueryList {
 		} catch (SQLException e) {
 			return false;
 		}
+
 	}
 
-	public void member() {
+	public MemberDTO[] showMembers()  {
+
 		String memberid;
 		String name;
 		String sex;
-		int birth;
+		String birth;
 		int phone;
 
-		sb = ("select  memberid, name, phone, sex, birth from member");
 		try {
+			stmt = con.createStatement();
+			rs=stmt.executeQuery( "SELECT COUNT(rownum) FROM member ");
+			rs.next();
+			int memberCount=rs.getInt(1);
+			MemberDTO[]memberList = new MemberDTO[memberCount];
+			String getMemberInfo = "SELECT * FROM member";
+			rs = stmt.executeQuery(getMemberInfo);
+			int i = 0;
 			while (rs.next()) {
 				rs.getString("memberid");
 				rs.getString("name");
-				rs.getString("phone");
+				rs.getInt("phone");
 				rs.getString("sex");
-				rs.getInt("birth");
-			}
+				rs.getString("birth");
+				memberList[i++]=new MemberDTO(rs.getString("memberid"),rs.getString("name"),rs.getInt("phone"),rs.getString("sex"),rs.getString("birth"));
+			}return memberList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-	}
+		return null;
 
+	}
+	
+//	public MemberDTO[] searchMember() {//일단주석처리 
+//		String memberid;
+//		String name;
+//		String sex;
+//		String birth;
+//		int phone;
+//		
+//		try {
+//			pps = con.prepareStatement("SELECT COUNT(rownum) FROM member WHERE name = ?");
+//			
+//			
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		
+//	}
+///////////////////////////////////////////////////////////////////////////////
 	public void setDTOData() {
 		String getStoreInfo = "SELECT * FROM STOREINFO WHERE STORENO = ?";
-		String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
-		String getOrderListInfo = "SELECT * FROM ORDERLIST WHERE STORENO = ?";
+
+
+//		String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
+//		String getOrderListInfo = "SELECT * FROM ORDERLIST WHERE STORENO = ?";
+//		
+
 
 		try {
 			pps = con.prepareStatement(getStoreInfo);
@@ -135,33 +172,39 @@ public class QueryList {
 			}
 			System.out.println("store 정보 갱신완료");
 
-			pps = con.prepareStatement(getStaffInfo);
-			pps.setString(1, store.getStoreId());
-			rs = pps.executeQuery();
-			while (rs.next()) {
-				staff.setId(rs.getString(1));
-				staff.setName(rs.getString(2));
-				staff.setJoinDate(rs.getString(3));
-				staff.setLeaveDate(rs.getString(4));
-				staff.setPhone(rs.getInt(5));
-				staff.setSex(rs.getString(7));
-				staff.setWorkstyle(rs.getString(8));
-			}
 
-			System.out.println("staff 정보 갱신완료");
-
-			pps = con.prepareStatement(getOrderListInfo);
-			pps.setString(1, store.getStoreId());
-			rs = pps.executeQuery();
-			while (rs.next()) {
-				orderList.setId(rs.getString(2));
-				orderList.setMemberId(rs.getString(3));
-				orderList.setOrderDate(rs.getString(4));
-				orderList.setOrderPrice(rs.getInt(5));
-
-			}
-
-			System.out.println("orderList 정보 갱신완료");
+			
+			
+//			pps = con.prepareStatement(getStaffInfo);
+//			pps.setString(1, store.getStoreId());
+//			rs = pps.executeQuery();
+//			while(rs.next())
+//			{
+//				staff.setId(rs.getString(1));
+//				staff.setName(rs.getString(2));
+//				staff.setJoinDate(rs.getString(3));
+//				staff.setLeaveDate(rs.getString(4));
+//				staff.setPhone(rs.getInt(5));
+//				staff.setSex(rs.getString(7));
+//				staff.setWorkstyle(rs.getString(8));
+//			}
+//			
+//			System.out.println("staff 정보 갱신완료");
+//			
+//			pps = con.prepareStatement(getOrderListInfo);
+//			pps.setString(1, store.getStoreId());
+//			rs = pps.executeQuery();
+//			while(rs.next())
+//			{
+//				orderList.setId(rs.getString(2));
+//				orderList.setMemberId(rs.getString(3));
+//				orderList.setOrderDate(rs.getString(4));
+//				orderList.setOrderPrice(rs.getInt(5));
+//
+//			}
+//			
+//			System.out.println("orderList 정보 갱신완료");
+			
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -178,6 +221,7 @@ public class QueryList {
 			StaffDTO[] staffList = new StaffDTO[staffCount];
 			String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
 			pps = con.prepareStatement(getStaffInfo);
+			
 			pps.setString(1, store.getStoreId());
 			rs = pps.executeQuery();
 			for (int i = 0; rs.next(); i++) {
@@ -199,6 +243,7 @@ public class QueryList {
 		}
 		return null;
 	}
+
 
 	public StaffDTO[] searchStaff(String staffName){
 		try {
@@ -248,13 +293,58 @@ public class QueryList {
 		// update 할 내용 적어주기 동시 에 업데이트 됐어도
 	}
 
-	// 매장관리>재고관리>입고(원재료)
-	public void rawstock(String id, String name, String category, String stock, String cost) {
+	// 매장관리>재고관리>입고(비품)
+	public void matestock(String id, String name, String stock, String cost) {
 
 	}
 
-	// 매장관리>재고관리>입고(비품)
-	public void matestock(String id, String name, String stock, String cost) {
+	// 매장관리>재고관리>입고(원재료)
+	public void rawstock(String id, String name, String category, int stock, int cost) {
+		String rawid = id;
+		String rawname = name;
+		String cate = category;
+		int stoc = stock;
+		int cos = cost;
+		int check = 0;
+		boolean isCommit = false;
+
+		try {
+			con.setAutoCommit(false);
+
+			while (true) {// 입력받아온 값 크기만큼
+				sbr.append("INSERT INTO rawmaterial VALUES(");
+				sbr.append(rawid);
+				sbr.append("," + rawname);
+				sbr.append("," + cate);
+				sbr.append("," + stoc);
+				sbr.append("," + cos);
+				sbr.append(")");
+
+				stmt.addBatch(sbr.toString());
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	// 매장관리>재고관리>현재비품 현황
+	public void showstockList() {
+		try {
+			stmt = con.createStatement();
+
+			String getStockInfo = "SELECT * FROM stockview";
+			rs = stmt.executeQuery(getStockInfo);
+
+			for (int i = 0; rs.next(); i++) {
+				scripts.send("" + rs.getString(1) + "|" + rs.getString(2) + "|" + rs.getInt(3) + "|" + rs.getInt(4));
+				// stockList[i] = new StockDTO();
+			}
+			// return stockList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 	}
 
