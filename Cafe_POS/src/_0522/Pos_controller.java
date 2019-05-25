@@ -110,7 +110,10 @@ public class Pos_controller {
 
 	public StaffDTO[] showStaffList() {
 		return query.showStaffList();
-	};
+	}
+	public StaffDTO[] searchStaff(String staffName) {
+		return query.searchStaff(staffName);
+	}
 	public void staffEnroll() {
 		//직원관리>직원 등록
 		
@@ -133,6 +136,10 @@ public class Pos_controller {
 	//매장관리>재고관리>입고(비품)
 	public void matestock(String id, String name, String stock, String cost) {
 		
+	}
+	
+	public void updateStaffInfo() {
+		query.updateStaffInfo();
 	}
 
 }

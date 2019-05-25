@@ -64,7 +64,6 @@ public class Scripts {
 	PrintWriter pw;
 	Pos_controller posControl;
 
-
 	Scripts scripts;
 
 	QueryList query;
@@ -85,7 +84,6 @@ public class Scripts {
 
 	String text;
 
-
 	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
 			StoreDTO store, OrderListDTO orderList) {
@@ -103,7 +101,6 @@ public class Scripts {
 		this.store = store;
 
 		this.orderList = orderList;
-
 
 	}
 
@@ -141,20 +138,17 @@ public class Scripts {
 		return null;
 	}
 
-	
 	public int receiveInt() {
 		int line = -1;
 		try {
 			line = br.read();
-				return line;
+			return line;
 		} catch (IOException e) {
 			System.out.println("Client Exit");
 			Pos_main.setClientAccess(false);
 		}
 		return -1;
 	}
-
-
 
 //	public int receiveInt() {
 //		int line = -1;
@@ -167,7 +161,6 @@ public class Scripts {
 //		}
 //		return -1;
 //	}
-
 
 	// 최초 프로그램 실행시 로그인 기능
 	// 메서드 완성할 떄의 예시로 봐주세요
@@ -205,7 +198,6 @@ public class Scripts {
 		send("5. 프로그램 종료");
 		send(">>선택 :");
 
-
 		choose = receive();
 
 		switch (choose) {
@@ -234,11 +226,6 @@ public class Scripts {
 			break;
 		}// switch
 
-
-
-	
-
-
 	}// mainMenu
 
 	// 유저에게서 매장관리 메뉴를 보여주고 선택받는다
@@ -248,7 +235,6 @@ public class Scripts {
 		send("3. 재고관리");
 		send("선택>>");
 		choose = receive();
-
 
 		switch (choose) {
 		case StoreMenu.STOREINFO:
@@ -276,7 +262,6 @@ public class Scripts {
 		send("선택>>");
 		choose = receive();
 
-
 		switch (choose) {
 		case menuMenu.MENUINFO:
 			menuInfo();
@@ -293,8 +278,8 @@ public class Scripts {
 			break;
 		}// switch
 
-
 	}
+
 /////////////////////////////////////////////////////////////////////
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
@@ -307,18 +292,18 @@ public class Scripts {
 		while (true) {
 			switch (choose) {
 			case customerMenu.CUSTINFO:
-				custInfo();//1.회원정보>1.모두보기
+				custInfo();// 1.회원정보>1.모두보기
 				break;
 			case customerMenu.CUSTENROLL:
-				searchMember();//1.회원정보>2.고객정보
-				break;	
+				searchMember();// 1.회원정보>2.고객정보
+				break;
 			case customerMenu.HISTORY:
-				showMemberDetail();//1.회원정보>3.정보보기
-				break;	
+				showMemberDetail();// 1.회원정보>3.정보보기
+				break;
 			}
 		}
 	}
-	
+
 	public void custInfo() {
 		send("1.모두보기");
 		send("2.고객검색");
@@ -330,23 +315,25 @@ public class Scripts {
 			break;
 		}
 	}
+
 	public void custenroll() {
 		send("1.모두보기");
 		send("2.고객검색");
 		send("3.정보보기");
 		choose = receive();
-		switch (choose){
+		switch (choose) {
 		case customerMenu.CUSTENROLL:
 			searchMember();
 			break;
 		}
 	}
+
 	public void history() {
 		send("1.모두보기");
 		send("2.고객검색");
 		send("3.정보보기");
 		choose = receive();
-		
+
 		switch (choose) {
 		case customerMenu.HISTORY:
 			showMemberDetail();
@@ -356,18 +343,18 @@ public class Scripts {
 	}
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
 
-
 	public void staffMenu() {
 		// String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
 		send("1. 직원정보 확인");
 		send("2. 직원 등록");
 		send("3. 스케쥴 관리");
-		send("4.급여관리");//보류
+		send("4.급여관리");// 보류
 		choose = receive();
 
 		switch (choose) {
 		case staffMenu.STAFFINFO:
-			staffDefaultInfo();
+			staffMenuFirst();
+
 			break;
 		case staffMenu.STAFFENROLL:
 			posControl.staffEnroll();
@@ -381,23 +368,114 @@ public class Scripts {
 			break;
 		}
 	}
-	
+
+	public void staffMenuFirst() {
+		send("1. 모든 직원을 본다");
+		send("2. 직원정보 수정");
+		send("3. 직원정보 삭제");
+		choose = receive();
+		switch (choose) {
+		case "1":
+			staffDefaultInfo();
+			break;
+		case "2":
+			staffInfoModify();
+			break;
+		case "3":
+			staffInfoDelete();
+			break;
+		default:
+			send("잘 못 입력하셨습니다");
+			break;
+		}
+	}
+
 	public void staffDefaultInfo() {
 		StaffDTO[] staffList = posControl.showStaffList();
-		send("=====직원 명단 =====");
-		for(int i = 0;i<staffList.length;i++) {
-			send(""+staffList[i].getName());
-			send(""+staffList[i].getPhone());
-			send(""+staffList[i].getSex());
-			send(""+staffList[i].getBirth());
-			send(""+staffList[i].getJoinDate());
-			send(""+staffList[i].getLeaveDate());
-			send(""+staffList[i].getWorkstyle());
+		send("  이름  |   전화번호     |성별| 생년월일  |         입사일               |         퇴사일               |고용형태");
+		for (int i = 0; i < staffList.length; i++) {
+			send("" + staffList[i].getName() + " | " + staffList[i].getPhone() + " | " + staffList[i].getSex() + " | "
+					+ staffList[i].getBirth() + " | " + staffList[i].getJoinDate() + " | " + staffList[i].getLeaveDate()
+					+ " | " + staffList[i].getWorkstyle());
 		}
-	}	
-	
-	
+	}
 
+	public void staffInfoModify() {
+		send("수정 할 직원의 이름을 입력하세요");
+		choose = receive();
+		StaffDTO[] temp = posControl.searchStaff(choose);
+//		for (int i = 0; i<temp.length;i++) {
+//			send("" + staff.getId() + " | " + staff.getName());
+//		}
+
+		for (StaffDTO staff : temp) {
+			send("" + staff.getId() + " | " + staff.getName() + " | " + staff.getPhone());
+		}
+		if (temp.length == 1) {
+			send("위 직원의 정보를 수정하시겠습니까? y/n");
+			choose = receive();
+			switch(choose) {
+			case "y":
+				send("새로운 정보를 입력하세요(변경을 원치 않으시면 enter를 입력하세요");
+				String newData = null;
+				send("이름: ");
+				newData = receive();
+				if(newData!="") {
+				staff.setName(newData); }
+				
+				send("입사일: ");
+				newData = receive();
+				if(newData!="") {
+				staff.setJoinDate(newData);}
+
+				send("퇴사일: ");
+				newData = receive();
+				if(newData!="") {
+				staff.setLeaveDate(newData);}
+				
+				send("전화번호: ");
+				newData = receive();
+				if(newData!="") {
+				int newPhone = Integer.parseInt(newData);
+				staff.setPhone(newPhone);}	
+				
+				send("생일: ");
+				newData = receive();
+				if(newData!="") {
+				staff.setBirth(newData);}
+				
+				send("퇴사일: ");
+				newData = receive();
+				if(newData!="") {
+				staff.setLeaveDate(newData);}
+				
+				posControl.updateStaffInfo();
+				break;
+			case "n":
+				break;
+			default:
+				send("다시 입력하세요");
+				break;
+			}
+		} else if (temp.length > 1) {
+			send("동명이인이 있습니다. 수정하려는 직원의 직원번호를 입력하세요");
+		} else if (temp == null) {
+			send("일지하는 직원이 없습니다");
+		} else {
+			send("error:다시 확인해주세요");
+		}
+
+	}
+
+	public void staffInfoDelete() {
+
+	}
+
+	/*
+	 * // 직원관리>급여관리 내부 메뉴 public void staffSalaryManage() {
+	 * 
+	 * }
+	 */
 	// ==2차메뉴
 	// 메서드=====================================================================
 	// 매장관리 > 매장정보
@@ -536,7 +614,6 @@ public class Scripts {
 
 	}// search
 
-
 	// -----------------------------여기부터 3차메뉴 관리
 	// 매장관리>매장정보>기본정보
 	public void storeInfoDefault() {
@@ -554,13 +631,20 @@ public class Scripts {
 		// 매장 정보 수정 합니다~
 
 		send("매장 정보 수정해주세요.");
-		send("지점번호 : "); 		String num = receive();
-		send("지점명 : "); 		String name = receive();
-		send("지점담당자 : "); 		String owner = receive();
-		send("개업일 : "); 		String open = receive(); // *** int로 입력되야함
-		send("폐업일 : "); 		String close = receive(); // *** int로 입력되야함
-		send("매장전화번호 : ");		String phone = receive(); // *** int로 입력되야함
-		send("매장주소 : "); 		String addr = receive();
+		send("지점번호 : ");
+		String num = receive();
+		send("지점명 : ");
+		String name = receive();
+		send("지점담당자 : ");
+		String owner = receive();
+		send("개업일 : ");
+		String open = receive(); // *** int로 입력되야함
+		send("폐업일 : ");
+		String close = receive(); // *** int로 입력되야함
+		send("매장전화번호 : ");
+		String phone = receive(); // *** int로 입력되야함
+		send("매장주소 : ");
+		String addr = receive();
 		send("입력완료");
 
 		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
@@ -626,15 +710,20 @@ public class Scripts {
 
 		if (choose == "1") {
 			send("원재료 입고를 작성하세요.");
-			send("원재료 ID : ");			id = receive();
-			send("원재료명 : ");			name = receive();
-			send("분류 : ");				category = receive();
-			send("수량 : ");				stock = receive(); // *** int로 입력되야함
-			send("원가 : ");				cost = receive(); // *** int로 입력되야함
+			send("원재료 ID : ");
+			id = receive();
+			send("원재료명 : ");
+			name = receive();
+			send("분류 : ");
+			category = receive();
+			send("수량 : ");
+			stock = receive(); // *** int로 입력되야함
+			send("원가 : ");
+			cost = receive(); // *** int로 입력되야함
 
 			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
 			posControl.rawstock(id, name, category, stock, cost);
-			
+
 			// 메뉴로 다시 돌아가기
 			send("뒤로가까? y/n");
 			String yon = receive();
@@ -645,10 +734,14 @@ public class Scripts {
 
 		} else if (choose == "2") { //
 			send("비품 입고를 작성하세요.");
-			send("비품 ID : ");			id = receive();
-			send("비품명 : ");				name = receive();
-			send("수량 : ");				stock = receive(); // *** int로 입력되야함
-			send("원가 : ");				cost = receive(); // *** int로 입력되야함
+			send("비품 ID : ");
+			id = receive();
+			send("비품명 : ");
+			name = receive();
+			send("수량 : ");
+			stock = receive(); // *** int로 입력되야함
+			send("원가 : ");
+			cost = receive(); // *** int로 입력되야함
 
 			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
 			posControl.matestock(id, name, stock, cost);
@@ -695,7 +788,6 @@ public class Scripts {
 
 	}
 
-
 ///////////////////////////////////////////////////////
 
 	// 고객관리>회원정보 내부 메뉴
@@ -703,24 +795,20 @@ public class Scripts {
 		send("1.모두보기");
 		send("2.고객검색");
 		send("3.정보보기");
-		
-		while(true) {
-			//QueryList.member();
-			
+
+		while (true) {
+			// QueryList.member();
+
 		}
-		
-		
+
 	}
 
 	public void searchMember() {
-	
-		
-		
+
 	}
 
 	public void showMemberDetail() {
-		
-		
+
 	}
 
 	// 고객관리>회원정보>정보보기 내부 메뉴(1.수정)
@@ -738,24 +826,6 @@ public class Scripts {
 	}
 
 	public void MostBuyingRecord() {
-
-	}
-
-	// 직원관리>직원정보 내부 메뉴
-	public void staffInfoDefault() {
-
-	}
-
-	public void staffInfoModify() {
-
-	}
-
-	public void staffInfoDelete() {
-
-	}
-
-	// 직원관리>급여관리 내부 메뉴
-	public void staffSalaryManage() {
 
 	}
 
