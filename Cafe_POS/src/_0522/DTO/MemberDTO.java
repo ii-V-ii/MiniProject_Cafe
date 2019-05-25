@@ -5,7 +5,18 @@ public class MemberDTO{
 	private String name;
 	private int phone;
 	private String sex;
-	private int birth;
+	private String birth;
+	
+	public MemberDTO() {
+		
+	}
+	public MemberDTO(String memberID,String name,int phone,String sex,String birth) {
+		this.memberID=memberID;
+		this.name=name;
+		this.phone=phone;
+		this.sex=sex;
+		this.birth=birth;
+	}
 	
 	public String getMemberID() {
 		return memberID;
@@ -31,12 +42,11 @@ public class MemberDTO{
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
-	public int getBirth() {
+	public String getBirth() {
 		return birth;
 	}
-	public void setBirth(int birth) {
+	public void setBirth(String birth) {
 		this.birth = birth;
 	}
 
-	
 }

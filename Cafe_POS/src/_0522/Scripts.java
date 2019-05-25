@@ -45,12 +45,11 @@ interface menuMenu {
 
 /* 고객관리 */
 interface customerMenu {
-	String CUSTINFO = "1", CUSTENROLL = "2", HISTORY = "3";
+	String CUSTINFO = "1", CUSTENROLL = "2", HISTORY = "3", EXIT = "4", RETURN_CUSTOMERMENU ="5";
 }
 
 /* 직원관리 */
 interface staffMenu {
-
 	String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3", PAY = "4";
 
 }
@@ -63,7 +62,6 @@ public class Scripts {
 	BufferedReader br;
 	PrintWriter pw;
 	Pos_controller posControl;
-
 	Scripts scripts;
 
 	QueryList query;
@@ -79,7 +77,6 @@ public class Scripts {
 	StockDTO stock;
 	StoreDTO store;
 	OrderListDTO orderList;
-
 	String choose;
 
 	String text;
@@ -279,14 +276,17 @@ public class Scripts {
 		}// switch
 
 	}
+/////////////////////////////////////////////////////////////////////내꺼
 
-/////////////////////////////////////////////////////////////////////
+
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
 
 		send("1.회원정보");
 		send("2.회원등록");
 		send("3.고객구매이력");
+		send("4.되돌아가기");
+		send("선택 >> ");
 		choose = receive();
 
 		while (true) {
@@ -298,49 +298,55 @@ public class Scripts {
 				searchMember();// 1.회원정보>2.고객정보
 				break;
 			case customerMenu.HISTORY:
-				showMemberDetail();// 1.회원정보>3.정보보기
+
+				showMemberDetail();//1.회원정보>3.정보보기
+				break;
+			case customerMenu.EXIT:
+				send("다시선택하세요>>");
+				customerMenu();
+
 				break;
 			}
 		}
 	}
 
 	public void custInfo() {
-		send("1.모두보기");
-		send("2.고객검색");
-		send("3.정보보기");
+		send("1. 고객보기");
+		send("2. 회원 등록");
+		send("3. 고객 구매이력");
+		send("4.되돌아가기");
+		send("5.이전 메뉴로 되돌아가기");//customerMenu();
+		send("선택 >> ");
 		choose = receive();
+
 		switch (choose) {
-		case customerMenu.CUSTINFO:
+		case "1":
+			showMembers();
+			break;
+		case "2":
+			break;
+		case "3":
+			break;
+		case customerMenu.EXIT:
+			send("다시선택하세요>>");
 			custInfo();
+			break;
+		case customerMenu.RETURN_CUSTOMERMENU:
+			send("처음화면으로 되돌아갑니다.");
+			customerMenu();
 			break;
 		}
 	}
 
 	public void custenroll() {
-		send("1.모두보기");
-		send("2.고객검색");
-		send("3.정보보기");
-		choose = receive();
-		switch (choose) {
-		case customerMenu.CUSTENROLL:
-			searchMember();
-			break;
-		}
+
 	}
 
 	public void history() {
-		send("1.모두보기");
-		send("2.고객검색");
-		send("3.정보보기");
-		choose = receive();
 
-		switch (choose) {
-		case customerMenu.HISTORY:
-			showMemberDetail();
-			break;
 
-		}
 	}
+	
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
 
 	public void staffMenu() {
@@ -348,7 +354,9 @@ public class Scripts {
 		send("1. 직원정보 확인");
 		send("2. 직원 등록");
 		send("3. 스케쥴 관리");
-		send("4.급여관리");// 보류
+		send("4.급여관리");//보류
+		send("선택 >> ");
+
 		choose = receive();
 
 		switch (choose) {
@@ -788,26 +796,29 @@ public class Scripts {
 
 	}
 
-///////////////////////////////////////////////////////
-
+///////////////////////////////////////////////////////내파트 
 	// 고객관리>회원정보 내부 메뉴
-	public void showMembers() {
-		send("1.모두보기");
-		send("2.고객검색");
-		send("3.정보보기");
-
-		while (true) {
-			// QueryList.member();
-
+	public void showMembers() {//1.모두보기
+		MemberDTO[] showMembersList = posControl.showMember();
+		send("=======회원정보 모두보기=======");
+		for(int i = 0; i<showMembersList.length; i++) {
+			 send(""+showMembersList[i].getMemberID());
+			 send(""+showMembersList[i].getName());
+			 send(""+showMembersList[i].getPhone());
+			 send(""+showMembersList[i].getSex());
+			 send(""+showMembersList[i].getBirth());
 		}
-
 	}
 
-	public void searchMember() {
-
+	public void searchMember() {//2.고객검색
+	
+		
+		
 	}
 
-	public void showMemberDetail() {
+	public void showMemberDetail() {//3.정보보기
+		
+		
 
 	}
 
