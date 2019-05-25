@@ -612,8 +612,7 @@ public class Scripts {
 				stockNow();
 			else
 				stockNow();
-		
-			
+
 		} else if (choose == "2") { //
 			send("비품 입고를 작성하세요.");
 			send("비품 ID : ");
@@ -719,3 +718,4 @@ public class Scripts {
 	public void staffSalaryManage() {
 
 	}
+}
