@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
@@ -79,7 +80,6 @@ public class Scripts {
 
 	String text;
 
-
 	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
 			StoreDTO store, OrderListDTO orderList) {
@@ -97,7 +97,6 @@ public class Scripts {
 		this.store = store;
 
 		this.orderList = orderList;
-
 
 	}
 
@@ -134,18 +133,22 @@ public class Scripts {
 		}
 		return null;
 	}
-
-//	public int receiveInt() {
-//		int line = -1;
-//		try {
-//			line = br.read();
-//			return line;
-//		} catch (IOException e) {
-//			System.out.println("Client Exit");
-//			Pos_main.setClientAccess(false);
-//		}
-//		return -1;
+//	public void sendInt(int msg) {
+//		pw.println(msg);
+//		pw.flush();
 //	}
+
+	public int receiveInt() {
+		int line = -1;
+		try {
+			line = br.read();
+			return line;
+		} catch (IOException e) {
+			System.out.println("Client Exit");
+			Pos_main.setClientAccess(false);
+		}
+		return -1;
+	}
 
 	// 최초 프로그램 실행시 로그인 기능
 	// 메서드 완성할 떄의 예시로 봐주세요
@@ -307,22 +310,21 @@ public class Scripts {
 			break;
 		}
 	}
-	
+
 	public void staffDefaultInfo() {
 		StaffDTO[] staffList = posControl.showStaffList();
 		send("=====직원 명단 =====");
-		for(int i = 0;i<staffList.length;i++) {
-			send(""+staffList[i].getName());
-			send(""+staffList[i].getPhone());
-			send(""+staffList[i].getSex());
-			send(""+staffList[i].getBirth());
-			send(""+staffList[i].getJoinDate());
-			send(""+staffList[i].getLeaveDate());
-			send(""+staffList[i].getWorkstyle());
+		for (int i = 0; i < staffList.length; i++) {
+			send("" + staffList[i].getName());
+			send("" + staffList[i].getPhone());
+			send("" + staffList[i].getSex());
+			send("" + staffList[i].getBirth());
+			send("" + staffList[i].getJoinDate());
+			send("" + staffList[i].getLeaveDate());
+			send("" + staffList[i].getWorkstyle());
 		}
-	}	
-	
-	
+	}
+
 	// ==2차메뉴
 	// 메서드=====================================================================
 	// 매장관리 > 매장정보
@@ -478,13 +480,20 @@ public class Scripts {
 		// 매장 정보 수정 합니다~
 
 		send("매장 정보 수정해주세요.");
-		send("지점번호 : "); 		String num = receive();
-		send("지점명 : "); 		String name = receive();
-		send("지점담당자 : "); 		String owner = receive();
-		send("개업일 : "); 		String open = receive(); // *** int로 입력되야함
-		send("폐업일 : "); 		String close = receive(); // *** int로 입력되야함
-		send("매장전화번호 : ");		String phone = receive(); // *** int로 입력되야함
-		send("매장주소 : "); 		String addr = receive();
+		send("지점번호 : ");
+		String num = receive();
+		send("지점명 : ");
+		String name = receive();
+		send("지점담당자 : ");
+		String owner = receive();
+		send("개업일 : ");
+		String open = receive(); // *** int로 입력되야함
+		send("폐업일 : ");
+		String close = receive(); // *** int로 입력되야함
+		send("매장전화번호 : ");
+		String phone = receive(); // *** int로 입력되야함
+		send("매장주소 : ");
+		String addr = receive();
 		send("입력완료");
 
 		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
@@ -521,44 +530,81 @@ public class Scripts {
 
 	// 매장관리>재고관리>현재 비품 재고
 	public void stockNow() {
-		send("지점번호 : " + stock.getStoreId());
-		send("재고일렬번호 : " + stock.getStockId());
-		send("입고날짜 : " + stock.getInputDate());
-		send("유통기한 : " + stock.getSellByDate());
-		send("재고 량 : " + stock.getAmount());
+		send("===재고 List====");
+		send(" ID | 이름 | 갯수 | 원가 ");
+		posControl.showstockList();
 		send("뒤로가까? y/n");
 		String yon = receive();
 		if (yon == "y")
 			storeMenu();
 		else
 			storeMenu();
-
+//		for(int i =0;i<stocklist.length;i++) {
+//			send(stocklist[i].getStockId());
+//			send(""+stocklist[i].getInputDate());
+//			send(""+stocklist[i].getSellByDate());
+//			send(""+stocklist[i].getAmount());
+//		}
+//		send("지점번호 : " + stock.getStoreId());
+//		send("재고일렬번호 : " + stock.getStockId());
+//		send("입고날짜 : " + stock.getInputDate());
+//		send("유통기한 : " + stock.getSellByDate());
+//		send("재고 량 : " + stock.getAmount());
+//		send("뒤로가까? y/n");
+//		String yon = receive();
+//		if (yon == "y")
+//			storeMenu();
+//		else
+//			storeMenu();
 	}
 
 	// 매장관리>매출정보>입고관리
 	public void stockManage() { // 수량 입력 후에 쿼리에서 합하는거 ? 그거 해줘야지
-		// 입고관리 후에 잘 들어갔는지 확인하고
-		// 싶어!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!==========
 		String id;
 		String name;
 		String category;
-		String stock;
-		String cost;
+		int stock;
+		int cost;
 		send("1. 원재료 입고");
 		send("2. 비품입고");
 		choose = receive();
 
 		if (choose == "1") {
-			send("원재료 입고를 작성하세요.");
-			send("원재료 ID : ");			id = receive();
-			send("원재료명 : ");			name = receive();
-			send("분류 : ");				category = receive();
-			send("수량 : ");				stock = receive(); // *** int로 입력되야함
-			send("원가 : ");				cost = receive(); // *** int로 입력되야함
+
+			ArrayList<RawMaterialDTO> raw = new ArrayList<>();
+			RawMaterialDTO temp = null;
+
+			while (true) {
+				send("원재료 입고를 작성하세요.");
+				send("원재료 ID : ");
+				id = receive();
+				send("원재료명 : ");
+				name = receive();
+				send("분류 : ");
+				category = receive();
+				send("수량 : ");
+				stock = receiveInt(); // *** int로 입력되야함
+				send("원가 : ");
+				cost = receiveInt(); // *** int로 입력되야함
+
+				temp.setId(id);
+				temp.setName(name);
+				temp.setCategory(category);
+				temp.setStock(stock);
+				temp.setCost(cost);
+
+				raw.add(temp);
+
+				temp = new RawMaterialDTO();
+				send("더 추가하시겠습니까?  y/n");
+				if (choose.equals("n"))
+					break;
+			}
 
 			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
-			posControl.rawstock(id, name, category, stock, cost);
-			
+			posControl.temp(raw);
+			// posControl.rawstock(id, name, category, stock, cost);
+
 			// 메뉴로 다시 돌아가기
 			send("뒤로가까? y/n");
 			String yon = receive();
@@ -566,13 +612,18 @@ public class Scripts {
 				stockNow();
 			else
 				stockNow();
-
+		
+			
 		} else if (choose == "2") { //
 			send("비품 입고를 작성하세요.");
-			send("비품 ID : ");			id = receive();
-			send("비품명 : ");				name = receive();
-			send("수량 : ");				stock = receive(); // *** int로 입력되야함
-			send("원가 : ");				cost = receive(); // *** int로 입력되야함
+			send("비품 ID : ");
+			id = receive();
+			send("비품명 : ");
+			name = receive();
+			send("수량 : ");
+			stock = receiveInt(); // *** int로 입력되야함
+			send("원가 : ");
+			cost = receiveInt(); // *** int로 입력되야함
 
 			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
 			posControl.matestock(id, name, stock, cost);

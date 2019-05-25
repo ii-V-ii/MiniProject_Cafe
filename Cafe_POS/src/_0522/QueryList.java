@@ -15,6 +15,8 @@ public class QueryList {
 	PreparedStatement pps = null;
 	ResultSet rs = null;
 	String sb = null;
+	Scripts scripts;
+	StringBuffer sbr = null;
 
 	// DTO 클래스들 선언
 	IdVO userId;
@@ -33,23 +35,24 @@ public class QueryList {
 	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
 			StoreDTO store, OrderListDTO orderList) {
-		this.userId=userId;
-		this.material=material;
-		this.member=member;
-		this.menu=menu;
-		this.menuItem=menuItem;
-		this.part=part;
-		this.regular=regular;
-		this.raw=raw;
-		this.staff=staff;
-		this.stock=stock;
-		this.store=store;
+		this.userId = userId;
+		this.material = material;
+		this.member = member;
+		this.menu = menu;
+		this.menuItem = menuItem;
+		this.part = part;
+		this.regular = regular;
+		this.raw = raw;
+		this.staff = staff;
+		this.stock = stock;
+		this.store = store;
 		this.orderList = orderList;
 
 	}
 
-	QueryList(Connection con) {
+	QueryList(Connection con, Scripts scripts) {
 		this.con = con;
+		this.scripts = scripts;
 	}
 
 	public boolean getLogInInfo(String i, String pass) {
@@ -92,13 +95,12 @@ public class QueryList {
 		String getStoreInfo = "SELECT * FROM STOREINFO WHERE STORENO = ?";
 		String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
 		String getOrderListInfo = "SELECT * FROM ORDERLIST WHERE STORENO = ?";
-		
+
 		try {
 			pps = con.prepareStatement(getStoreInfo);
 			pps.setString(1, store.getStoreId());
 			rs = pps.executeQuery();
-			while(rs.next())
-			{
+			while (rs.next()) {
 				store.setName(rs.getString(2));
 				store.setOwner(rs.getString(3));
 				store.setOpendate(rs.getString(4));
@@ -107,13 +109,11 @@ public class QueryList {
 				store.setAddress(rs.getString(7));
 			}
 			System.out.println("store 정보 갱신완료");
-			
-			
+
 			pps = con.prepareStatement(getStaffInfo);
 			pps.setString(1, store.getStoreId());
 			rs = pps.executeQuery();
-			while(rs.next())
-			{
+			while (rs.next()) {
 				staff.setId(rs.getString(1));
 				staff.setName(rs.getString(2));
 				staff.setJoinDate(rs.getString(3));
@@ -122,32 +122,30 @@ public class QueryList {
 				staff.setSex(rs.getString(7));
 				staff.setWorkstyle(rs.getString(8));
 			}
-			
+
 			System.out.println("staff 정보 갱신완료");
-			
+
 			pps = con.prepareStatement(getOrderListInfo);
 			pps.setString(1, store.getStoreId());
 			rs = pps.executeQuery();
-			while(rs.next())
-			{
+			while (rs.next()) {
 				orderList.setId(rs.getString(2));
 				orderList.setMemberId(rs.getString(3));
 				orderList.setOrderDate(rs.getString(4));
 				orderList.setOrderPrice(rs.getInt(5));
 
 			}
-			
+
 			System.out.println("orderList 정보 갱신완료");
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	public StaffDTO[] showStaffList() {
 		try {
-			pps = con.prepareStatement( "SELECT COUNT(rownum) FROM STAFF WHERE STORENO = ?");
+			pps = con.prepareStatement("SELECT COUNT(rownum) FROM STAFF WHERE STORENO = ?");
 			pps.setString(1, store.getStoreId());
 			rs = pps.executeQuery();
 			rs.next();
@@ -157,8 +155,7 @@ public class QueryList {
 			pps = con.prepareStatement(getStaffInfo);
 			pps.setString(1, store.getStoreId());
 			rs = pps.executeQuery();
-			for(int i =0;rs.next();i++)
-			{	
+			for (int i = 0; rs.next(); i++) {
 				staff.setId(rs.getString(1));
 				staff.setName(rs.getString(2));
 				staff.setJoinDate(rs.getString(3));
@@ -167,8 +164,9 @@ public class QueryList {
 				staff.setBirth(rs.getString(6));
 				staff.setSex(rs.getString(7));
 				staff.setWorkstyle(rs.getString(8));
-				staffList[i]=new StaffDTO(staff.getId(), staff.getName(), staff.getJoinDate(), staff.getLeaveDate(),staff.getPhone(),staff.getBirth(),staff.getSex(),staff.getWorkstyle());
-				
+				staffList[i] = new StaffDTO(staff.getId(), staff.getName(), staff.getJoinDate(), staff.getLeaveDate(),
+						staff.getPhone(), staff.getBirth(), staff.getSex(), staff.getWorkstyle());
+
 			}
 			return staffList;
 		} catch (SQLException e) {
@@ -176,21 +174,68 @@ public class QueryList {
 		}
 		return null;
 	}
-	
 
 	// 혜영===========================================
+	// 매장정보>정보수정
+	public void storeInfoMotify(String num, String name, String owner, String open, String close, String phone,
+			String addr) {
+		// update 할 내용 적어주기 동시 에 업데이트 됐어도
+	}
 
-	//매장정보>정보수정
-	public void storeInfoMotify(String num, String name, String owner, String open, String close, String phone, String addr) {
-		//update 할 내용 적어주기 동시 에 업데이트 됐어도 
-	}
-	//매장관리>재고관리>입고(원재료)
-	public void rawstock(String id, String name, String category, String stock, String cost) {
-		
-	}
-	//매장관리>재고관리>입고(비품)
+	// 매장관리>재고관리>입고(비품)
 	public void matestock(String id, String name, String stock, String cost) {
-		
+
 	}
+
+	// 매장관리>재고관리>입고(원재료)
+	public void rawstock(String id, String name, String category, int stock, int cost) {
+		String rawid = id;
+		String rawname = name;
+		String cate = category;
+		int stoc = stock;
+		int cos = cost;
+		int check = 0;
+		boolean isCommit = false;
+
+		try {
+			con.setAutoCommit(false);
+
+			while (true) {// 입력받아온 값 크기만큼
+				sbr.append("INSERT INTO rawmaterial VALUES(");
+				sbr.append(rawid);
+				sbr.append("," + rawname);
+				sbr.append("," + cate);
+				sbr.append("," + stoc);
+				sbr.append("," + cos);
+				sbr.append(")");
+
+				stmt.addBatch(sbr.toString());
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	// 매장관리>재고관리>현재비품 현황
+	public void showstockList() {
+		try {
+			stmt = con.createStatement();
+
+			String getStockInfo = "SELECT * FROM stockview";
+			rs = stmt.executeQuery(getStockInfo);
+
+			for (int i = 0; rs.next(); i++) {
+				scripts.send("" + rs.getString(1) + "|" + rs.getString(2) + "|" + rs.getInt(3) + "|" + rs.getInt(4));
+				// stockList[i] = new StockDTO();
+			}
+			// return stockList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 
 }
