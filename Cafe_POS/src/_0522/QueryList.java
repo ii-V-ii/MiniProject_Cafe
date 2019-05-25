@@ -1,3 +1,4 @@
+
 package _0522;
 
 import java.sql.Connection;
@@ -93,7 +94,6 @@ public class QueryList {
 		}
 	}
 
-	////////////////////////////////////////////////////////////////////////내꺼
 	public MemberDTO[] showMembers()  {
 
 		String memberid;
@@ -101,7 +101,6 @@ public class QueryList {
 		String sex;
 		String birth;
 		int phone;
-
 
 		try {
 			stmt = con.createStatement();
@@ -123,7 +122,9 @@ public class QueryList {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		return null;
+
 	}
 	
 //	public MemberDTO[] searchMember() {//일단주석처리 
@@ -165,7 +166,7 @@ public class QueryList {
 				store.setAddress(rs.getString(7));
 			}
 			System.out.println("store 정보 갱신완료");
-<<<<<<< HEAD
+
 			
 			
 //			pps = con.prepareStatement(getStaffInfo);

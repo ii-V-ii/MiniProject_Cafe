@@ -276,6 +276,8 @@ public class Scripts {
 		}// switch
 
 	}
+/////////////////////////////////////////////////////////////////////내꺼
+
 
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
@@ -342,9 +344,7 @@ public class Scripts {
 
 	public void history() {
 
-		
-		
-		
+
 	}
 	
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
@@ -354,7 +354,6 @@ public class Scripts {
 		send("1. 직원정보 확인");
 		send("2. 직원 등록");
 		send("3. 스케쥴 관리");
-
 		send("4.급여관리");//보류
 		send("선택 >> ");
 
@@ -796,6 +795,7 @@ public class Scripts {
 	public void searchMenuCategory() {
 
 	}
+
 ///////////////////////////////////////////////////////내파트 
 	// 고객관리>회원정보 내부 메뉴
 	public void showMembers() {//1.모두보기
@@ -839,5 +839,6 @@ public class Scripts {
 	public void MostBuyingRecord() {
 
 	}
+
 
 }
