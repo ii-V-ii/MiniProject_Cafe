@@ -108,7 +108,11 @@ public class Pos_controller {
 
 	public StaffDTO[] showStaffList() {
 		return query.showStaffList();
-	};
+
+	}
+	public StaffDTO[] searchStaff(String staffName) {
+		return query.searchStaff(staffName);
+	}
 
 	public void staffEnroll() {
 		// 직원관리>직원 등록
@@ -147,5 +151,20 @@ public class Pos_controller {
 	public void showstockList() {
 		query.showstockList();
 	}
+	
+	public void updateStaffInfo() {
+		query.updateStaffInfo();
+	}
 
+	
+	
+	
+	
+	public MemberDTO[] showMember() {
+		return query.showMembers();
+	}
+	
+//	public MemberDTO[] searchMember() {/일단주석처리
+//		return query.searchMember();
+//	}
 }
