@@ -1,4 +1,4 @@
-
+﻿
 package _0522;
 
 // 동기화 확인용 주석
@@ -719,5 +719,3 @@ public class Scripts {
 	public void staffSalaryManage() {
 
 	}
-
-}
