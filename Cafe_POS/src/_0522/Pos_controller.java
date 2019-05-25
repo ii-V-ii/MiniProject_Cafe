@@ -118,4 +118,15 @@ public class Pos_controller {
 		query.setDTOData();
 	}
 
+	
+	
+	
+	
+	public MemberDTO[] showMember() {
+		return query.showMembers();
+	}
+	
+//	public MemberDTO[] searchMember() {/일단주석처리
+//		return query.searchMember();
+//	}
 }
