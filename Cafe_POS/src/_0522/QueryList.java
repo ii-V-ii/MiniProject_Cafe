@@ -16,6 +16,8 @@ public class QueryList {
 	PreparedStatement pps = null;
 	ResultSet rs = null;
 	String sb = null;
+	Scripts scripts;
+	StringBuffer sbr = null;
 
 	// DTO 클래스들 선언
 	IdVO userId;
@@ -48,13 +50,15 @@ public class QueryList {
 		this.orderList = orderList;
 	}
 
-	QueryList(Connection con) {
+	QueryList(Connection con, Scripts scripts) {
 		this.con = con;
+		this.scripts = scripts;
+
 		try {
 			stmt = con.createStatement();
 		} catch (SQLException e) {
 			System.out.println("QueryList 생성자, stmt = con.createStatement() 오류");
-		}
+    }
 	}
 
 	public boolean getLogInInfo(String i, String pass) {
@@ -70,16 +74,14 @@ public class QueryList {
 			pps.setString(1, id);
 			pps.setString(2, password);
 			rs = pps.executeQuery();
+
 			while (rs.next()) {
 				check = rs.getInt("rownum");
 				storeID = rs.getString("storeNo");
-
 				System.out.println(check + "/" + storeID);
 
 			}
-
 			if (check == 1) {
-
 				// userId.setId(id);
 				userId.setPassword(password);
 				userId.setStoreId(storeID);
@@ -92,6 +94,7 @@ public class QueryList {
 		} catch (SQLException e) {
 			return false;
 		}
+
 	}
 
 	public MemberDTO[] showMembers()  {
@@ -149,9 +152,11 @@ public class QueryList {
 	public void setDTOData() {
 		String getStoreInfo = "SELECT * FROM STOREINFO WHERE STORENO = ?";
 
+
 //		String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
 //		String getOrderListInfo = "SELECT * FROM ORDERLIST WHERE STORENO = ?";
 //		
+
 
 		try {
 			pps = con.prepareStatement(getStoreInfo);
@@ -166,6 +171,7 @@ public class QueryList {
 				store.setAddress(rs.getString(7));
 			}
 			System.out.println("store 정보 갱신완료");
+
 
 			
 			
@@ -287,13 +293,58 @@ public class QueryList {
 		// update 할 내용 적어주기 동시 에 업데이트 됐어도
 	}
 
-	// 매장관리>재고관리>입고(원재료)
-	public void rawstock(String id, String name, String category, String stock, String cost) {
+	// 매장관리>재고관리>입고(비품)
+	public void matestock(String id, String name, String stock, String cost) {
 
 	}
 
-	// 매장관리>재고관리>입고(비품)
-	public void matestock(String id, String name, String stock, String cost) {
+	// 매장관리>재고관리>입고(원재료)
+	public void rawstock(String id, String name, String category, int stock, int cost) {
+		String rawid = id;
+		String rawname = name;
+		String cate = category;
+		int stoc = stock;
+		int cos = cost;
+		int check = 0;
+		boolean isCommit = false;
+
+		try {
+			con.setAutoCommit(false);
+
+			while (true) {// 입력받아온 값 크기만큼
+				sbr.append("INSERT INTO rawmaterial VALUES(");
+				sbr.append(rawid);
+				sbr.append("," + rawname);
+				sbr.append("," + cate);
+				sbr.append("," + stoc);
+				sbr.append("," + cos);
+				sbr.append(")");
+
+				stmt.addBatch(sbr.toString());
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	// 매장관리>재고관리>현재비품 현황
+	public void showstockList() {
+		try {
+			stmt = con.createStatement();
+
+			String getStockInfo = "SELECT * FROM stockview";
+			rs = stmt.executeQuery(getStockInfo);
+
+			for (int i = 0; rs.next(); i++) {
+				scripts.send("" + rs.getString(1) + "|" + rs.getString(2) + "|" + rs.getInt(3) + "|" + rs.getInt(4));
+				// stockList[i] = new StockDTO();
+			}
+			// return stockList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 	}
 

@@ -1,6 +1,7 @@
 package _0522;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
@@ -35,13 +36,12 @@ public class Pos_controller {
 
 	OrderListDTO orderList;
 
-
 	public void setScripts(Scripts scripts) {
 		this.scripts = scripts;
 	}
 
-	public void setQueryList(Connection con) {
-		this.query = new QueryList(con);
+	public void setQueryList(Connection con, Scripts scripts) {
+		this.query = new QueryList(con, scripts);
 		query.setDTO(userId, material, member, menu, menuItem, part, regular, raw, staff, stock, store, orderList);
 	}
 
@@ -86,8 +86,6 @@ public class Pos_controller {
 		else if (!logInResult)
 			scripts.logInFail();
 
-
-
 		/*
 		 * 죽은 코드입니다. 필요없는 부분이나, 혹시 몰라 주석으로 남겨두어습니다.
 		 * 
@@ -110,32 +108,48 @@ public class Pos_controller {
 
 	public StaffDTO[] showStaffList() {
 		return query.showStaffList();
+
 	}
 	public StaffDTO[] searchStaff(String staffName) {
 		return query.searchStaff(staffName);
 	}
+
 	public void staffEnroll() {
-		//직원관리>직원 등록
-		
+		// 직원관리>직원 등록
+
 	}
+
 	public void staffSchedule() {
-		//직원관리>스케쥴관리
+		// 직원관리>스케쥴관리
 	}
 
 	public void setDTOdata() {
 		query.setDTOData();
 	}
-	//매장정보>정보수정
-	public void storeInfoMotify(String num, String name, String owner, String open, String close, String phone, String addr) {
-		
+
+	// 매장정보>정보수정
+	public void storeInfoMotify(String num, String name, String owner, String open, String close, String phone,
+			String addr) {
+
 	}
-	//매장관리>재고관리>입고(원재료)
-	public void rawstock(String id, String name, String category, String stock, String cost) {
-		
+
+	// 매장관리>재고관리>입고(비품)
+	public void matestock(String id, String name, int stock, int cost) {
+
 	}
-	//매장관리>재고관리>입고(비품)
-	public void matestock(String id, String name, String stock, String cost) {
-		
+
+	// 매장관리>재고관리>입고(원재료)
+	public void temp(ArrayList<RawMaterialDTO> raw) {
+		String id = null;
+		String name = null;
+		String category = null;
+		int stock = 0;
+		int cost = 0;
+		query.rawstock(id, name, category, stock, cost);
+	}
+
+	public void showstockList() {
+		query.showstockList();
 	}
 	
 	public void updateStaffInfo() {

@@ -7,7 +7,15 @@ public class StockDTO {
 	private int sellByDate;
 	private int amount;		//입고량
 	
-	
+	public StockDTO() {
+		
+	}
+	public StockDTO(String stockId, int inputDate, int sellByDate, int amount) {
+		this.stockId = stockId;
+		this.inputDate = inputDate;
+		this.sellByDate = sellByDate;
+		this.amount = amount;
+	}
 	
 	public String getStoreId() {
 		return storeId;
