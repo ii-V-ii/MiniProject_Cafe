@@ -48,4 +48,5 @@ public class MemberDTO{
 	public void setBirth(String birth) {
 		this.birth = birth;
 	}
+
 }

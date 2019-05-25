@@ -32,7 +32,9 @@ public class Pos_controller {
 	StaffDTO staff;
 	StockDTO stock;
 	StoreDTO store;
+
 	OrderListDTO orderList;
+
 
 	public void setScripts(Scripts scripts) {
 		this.scripts = scripts;
@@ -46,6 +48,7 @@ public class Pos_controller {
 	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
 			PartTimeStaffDTO part, RegularStaffDTO regular, RawMaterialDTO raw, StaffDTO staff, StockDTO stock,
 			StoreDTO store, OrderListDTO orderList) {
+
 		this.userId = userId;
 		this.material = material;
 		this.member = member;
@@ -58,6 +61,7 @@ public class Pos_controller {
 		this.stock = stock;
 		this.store = store;
 		this.orderList = orderList;
+
 	}
 
 	// pos_main 클래스가 가동하면 프로그램 최초로 실행되는 메소드
@@ -82,6 +86,8 @@ public class Pos_controller {
 		else if (!logInResult)
 			scripts.logInFail();
 
+
+
 		/*
 		 * 죽은 코드입니다. 필요없는 부분이나, 혹시 몰라 주석으로 남겨두어습니다.
 		 * 
@@ -104,7 +110,10 @@ public class Pos_controller {
 
 	public StaffDTO[] showStaffList() {
 		return query.showStaffList();
-	};
+	}
+	public StaffDTO[] searchStaff(String staffName) {
+		return query.searchStaff(staffName);
+	}
 	public void staffEnroll() {
 		//직원관리>직원 등록
 		
@@ -113,9 +122,24 @@ public class Pos_controller {
 		//직원관리>스케쥴관리
 	}
 
-	
 	public void setDTOdata() {
 		query.setDTOData();
+	}
+	//매장정보>정보수정
+	public void storeInfoMotify(String num, String name, String owner, String open, String close, String phone, String addr) {
+		
+	}
+	//매장관리>재고관리>입고(원재료)
+	public void rawstock(String id, String name, String category, String stock, String cost) {
+		
+	}
+	//매장관리>재고관리>입고(비품)
+	public void matestock(String id, String name, String stock, String cost) {
+		
+	}
+	
+	public void updateStaffInfo() {
+		query.updateStaffInfo();
 	}
 
 	

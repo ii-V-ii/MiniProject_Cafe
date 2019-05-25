@@ -8,6 +8,7 @@ public class StockDTO {
 	private int amount;		//입고량
 	
 	
+	
 	public String getStoreId() {
 		return storeId;
 	}
