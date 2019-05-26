@@ -114,14 +114,21 @@ public class Pos_controller {
 		return query.searchStaff(staffName);
 	}
 
-	public void staffEnroll() {
+	public void staffEnroll(StaffDTO staff) {
 		// 직원관리>직원 등록
-
+		query.staffEnroll(staff);
+		
 	}
 
 	public void staffSchedule() {
 		// 직원관리>스케쥴관리
 	}
+	
+	public MenuItemDTO[] menuInfoDefault() {
+		return query.menuInfoDefault();
+	}
+	
+	
 
 	public void setDTOdata() {
 		query.setDTOData();
@@ -152,8 +159,11 @@ public class Pos_controller {
 		query.showstockList();
 	}
 	
-	public void updateStaffInfo() {
-		query.updateStaffInfo();
+	public void updateStaffInfo(StaffDTO staff) {
+		query.updateStaffInfo(staff);
+	}
+	public void deleteStaffInfo(StaffDTO staff) {
+		query.deleteStaffInfo(staff);
 	}
 
 	
@@ -164,7 +174,14 @@ public class Pos_controller {
 		return query.showMembers();
 	}
 	
-//	public MemberDTO[] searchMember() {/일단주석처리
-//		return query.searchMember();
-//	}
+	public MemberDTO[] searchMember(String memberName) {//일단주석처리
+		return query.searchMember(memberName);
+	}
+	public OrderListDTO[] lastBuyingData(MemberDTO member) {
+		return query.lastBuyingData(member);
+	}
+	
+	public MenuDTO[] mostBuyingData(MemberDTO member) {
+		return query.mostBuyingData(member);
+	}
 }

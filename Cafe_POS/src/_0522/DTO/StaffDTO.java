@@ -6,13 +6,13 @@ public class StaffDTO {
 	private String joinDate;
 	private String leaveDate;
 	private int phone;
-	private String birth;
+	private int birth;
 	private String sex;
 	private String workstyle;
 	private String storeId;
 	
 	public StaffDTO(){}
-	public StaffDTO(String id, String name, String joinDate, String leaveDate, int phone, String birth, String sex, String workstyle){
+	public StaffDTO(String id, String name, String joinDate, String leaveDate, int phone, int birth, String sex, String workstyle){
 		this.id = id;
 		this.name = name;
 		this.joinDate = joinDate;
@@ -23,10 +23,10 @@ public class StaffDTO {
 		this.workstyle = workstyle;
 	}
 	
-	public String getBirth() {
+	public int getBirth() {
 		return birth;
 	}
-	public void setBirth(String birth) {
+	public void setBirth(int birth) {
 		this.birth = birth;
 	}
 	public String getSex() {
