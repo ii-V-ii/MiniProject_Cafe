@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import _0522.DTO.IdVO;
@@ -22,6 +24,7 @@ import _0522.DTO.RegularStaffDTO;
 import _0522.DTO.StaffDTO;
 import _0522.DTO.StockDTO;
 import _0522.DTO.StoreDTO;
+import oracle.sql.DATE;
 
 /*
  * 1차메뉴 (매장,메뉴,고객,직원관리)와 2차 메뉴(매장관리>매장정보, 매출정보, 재고관리) 는 인터페이스로 관리
@@ -412,7 +415,7 @@ public class Scripts {
 
 	public void staffDefaultInfo() {
 		StaffDTO[] staffList = posControl.showStaffList();
-		send("이름 \t전화번호\t\t성별\t생년월일\t입사일\t\t\t퇴사일\t\t\t고용형태");
+		send("이름 \t전화번호\t\t성별\t생년월일\t입사일\t\t퇴사일\t\t고용형태");
 		for (int i = 0; i < staffList.length; i++) {
 			send("" + staffList[i].getName() + "\t" + staffList[i].getPhone() + "\t" + staffList[i].getSex() + "\t"
 					+ staffList[i].getBirth() + "\t" + staffList[i].getJoinDate() + "\t" + staffList[i].getLeaveDate()
@@ -534,7 +537,7 @@ public class Scripts {
 				}
 
 			}
-		} while (!(newData.contentEquals("") || newData.equals("여") ||newData.equals("남")));
+		} while (!(newData.contentEquals("") || newData.equals("여") || newData.equals("남")));
 
 		send("고용형태: ");
 		do {
@@ -725,7 +728,7 @@ public class Scripts {
 	// 매장관리 > 매출정보
 	public void saleInfo() {
 		send("1. 기본정보"); // salesInfoDefault()
-		send("2. 시간별 검색"); // salesSearchTimes()
+		send("2. 기간별 검색"); // salesSearchTimes()
 		send("3. 메뉴별 검색"); // salesSearchMenus()
 		send("선택 :");
 		choose = receive();
@@ -880,16 +883,56 @@ public class Scripts {
 
 	// 매장관리>매출정보>기본정보
 	public void salesInfoDefault() {// 쿼리에서 작성해서 보여야함
-
+//얍얍
+		send("최근 7일간의 매출입니다");
+		String[][] salesData = posControl.salesInfoDefault();
+		send("날짜\t\t총 매출액");
+		for (String[] data : salesData) {
+			send(data[0] + "\t" + data[1]);
+		}
+		send("=================================");
 	}
 
 	// 매장관리>매출정보>시간별 검색
 	public void salesSearchTimes() {// 쿼리에서 작성해서 보여야함
+		send("기간별 검색을 시작합니다");
+		send("검색 시작 날짜를 입력하세요(yy/mm/dd)");
+		String startDate = receive();
+		send("검색 마지막 날짜를 입력하세요(yy/mm/dd)");
+		String finishDate = receive();
+		String[] searchDate = {startDate, finishDate};
+		ArrayList<String[]> salesData = posControl.salesInfoDefault(searchDate);
+		send("날짜\t\t총 매출액");
+		String sum = null;
+		for (String[] data : salesData) {
+			send(data[0] + "\t" + data[1]);
+			sum = data[2];
+		}
+		send("=============================");
+		send("매출 총 합계  : "+sum);
+		send("=============================");
 
 	}
 
 	// 매장관리>매출정보>메뉴별 검색
 	public void salesSearchMenus() {// 쿼리에서 작성해서 보여야함
+		send("메뉴별 검색을 시작합니다");
+		send("검색할 메뉴 이름을 입력하세요");
+		choose = receive();
+		String[][] salesData = posControl.salesMenuDate(choose);
+		send("최근 7일간 판매량==================");
+		send("날짜\t\t판매량\t수입");
+		String sum = null;
+		for(String[] data : salesData) {
+			send(data[0]+"\t"+data[1]+"\t"+data[2]);
+			sum = data[3];
+		}
+		send("=============================");
+		send("최근 7일간 매출	:"+sum);
+		send("최근 30일 간 매출\t:"+posControl.salesMenuDate30(choose));
+		send("전 기간 매출\t\t:"+posControl.salesMenuDate365(choose));
+		send("=============================");
+
 
 	}
 
