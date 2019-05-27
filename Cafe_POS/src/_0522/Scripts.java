@@ -276,7 +276,7 @@ public class Scripts {
 		}// switch
 
 	}
-/////////////////////////////////////////////////////////////////////내꺼
+/////////////////////////////////////////////////////////////////소미파트
 
 
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
@@ -309,7 +309,7 @@ public class Scripts {
 			}
 		}
 	}
-
+////////////////////////////////////////////소미파트
 	public void custInfo() {
 		send("1. 고객보기");
 		send("2. 회원 등록");
@@ -320,12 +320,14 @@ public class Scripts {
 		choose = receive();
 
 		switch (choose) {
-		case "1":
+		case customerMenu.CUSTINFO:
 			showMembers();
 			break;
-		case "2":
+		case customerMenu.CUSTENROLL:
+			custenroll();
 			break;
-		case "3":
+		case customerMenu.HISTORY:
+			history();
 			break;
 		case customerMenu.EXIT:
 			send("다시선택하세요>>");
@@ -342,13 +344,13 @@ public class Scripts {
 
 	}
 
-	public void history() {
+	public void history() {//
 
 
 	}
 	
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
-
+//////////////////////////////////////////////소미파트
 	public void staffMenu() {
 		// String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
 		send("1. 직원정보 확인");
@@ -796,7 +798,7 @@ public class Scripts {
 
 	}
 
-///////////////////////////////////////////////////////내파트 
+///////////////////////////////////////////////////////소미파트 
 	// 고객관리>회원정보 내부 메뉴
 	public void showMembers() {//1.모두보기
 		MemberDTO[] showMembersList = posControl.showMember();

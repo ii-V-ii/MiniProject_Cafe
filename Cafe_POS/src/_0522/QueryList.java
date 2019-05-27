@@ -93,7 +93,7 @@ public class QueryList {
 			return false;
 		}
 	}
-
+//////////////////////////////////////////////////////////////////소미파트 
 	public MemberDTO[] showMembers()  {
 
 		String memberid;
@@ -126,7 +126,7 @@ public class QueryList {
 		return null;
 
 	}
-	
+	//////////////////////////////////////////////////////////////////////////소미파트 
 //	public MemberDTO[] searchMember() {//일단주석처리 
 //		String memberid;
 //		String name;
