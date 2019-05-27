@@ -6,12 +6,12 @@ public class MemberDTO{
 	private String name;
 	private int phone;
 	private String sex;
-	private String birth;
+	private int birth;
 	
 	public MemberDTO() {
 		
 	}
-	public MemberDTO(String memberID,String name,int phone,String sex,String birth) {
+	public MemberDTO(String memberID,String name,int phone,String sex,int birth) {
 		this.memberID=memberID;
 		this.name=name;
 		this.phone=phone;
@@ -43,10 +43,10 @@ public class MemberDTO{
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
-	public String getBirth() {
+	public int getBirth() {
 		return birth;
 	}
-	public void setBirth(String birth) {
+	public void setBirth(int birth) {
 		this.birth = birth;
 	}
 

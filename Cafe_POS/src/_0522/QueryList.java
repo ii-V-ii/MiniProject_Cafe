@@ -4,8 +4,12 @@ package _0522;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
 
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
@@ -26,6 +30,9 @@ public class QueryList {
 	Statement stmt = null;
 	PreparedStatement pps = null;
 	ResultSet rs = null;
+
+	ResultSetMetaData rsmd = null;
+
 	String sb = null;
 	Scripts scripts;
 	StringBuffer sbr = null;
@@ -110,12 +117,6 @@ public class QueryList {
 
 	public MemberDTO[] showMembers() {
 
-		String memberid;
-		String name;
-		String sex;
-		String birth;
-		int phone;
-
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery("SELECT COUNT(rownum) FROM member ");
@@ -132,7 +133,8 @@ public class QueryList {
 				rs.getString("sex");
 				rs.getString("birth");
 				memberList[i++] = new MemberDTO(rs.getString("memberid"), rs.getString("name"), rs.getInt("phone"),
-						rs.getString("sex"), rs.getString("birth"));
+						rs.getString("sex"), rs.getInt("birth"));
+
 			}
 			return memberList;
 		} catch (SQLException e) {
@@ -143,31 +145,81 @@ public class QueryList {
 
 	}
 
-//	public MemberDTO[] searchMember() {//일단주석처리 
-//		String memberid;
-//		String name;
-//		String sex;
-//		String birth;
-//		int phone;
-//		
-//		try {
-//			pps = con.prepareStatement("SELECT COUNT(rownum) FROM member WHERE name = ?");
-//			
-//			
-//			
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		
-//	}
+	public MemberDTO[] searchMember(String memberName) {// 일단주석처리
+		MemberDTO[] memberList = null;
+		try {
+			pps = con.prepareStatement("SELECT COUNT(rownum) FROM member WHERE name = ?");
+			pps.setString(1, memberName);
+			rs = pps.executeQuery();
+			rs.next();
+			int count = rs.getInt(1);
+			memberList = new MemberDTO[count];
+
+			pps = con.prepareStatement("SELECT * FROM member WHERE name = ?");
+			pps.setString(1, memberName);
+			rs = pps.executeQuery();
+			int i = 0;
+			while (rs.next()) {
+				memberList[i] = new MemberDTO();
+				memberList[i].setMemberID(rs.getString(1));
+				memberList[i].setName(rs.getString(2));
+				memberList[i].setPhone(rs.getInt(3));
+				memberList[i].setSex(rs.getString(4));
+				memberList[i].setBirth(rs.getInt(5));
+				i++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return memberList;
+
+	}
+
+	public OrderListDTO[] lastBuyingData(MemberDTO member) {
+		sb = "select * from (select * from orderlist where memberid = ? order by orderdate desc) where rownum<11";
+		OrderListDTO[] orderList = new OrderListDTO[10];
+		try {
+			pps = con.prepareStatement(sb);
+			pps.setString(1, member.getMemberID());
+			rs = pps.executeQuery();
+			for (int i = 0; rs.next(); i++) {
+				orderList[i] = new OrderListDTO();
+				orderList[i].setId(rs.getString(2));
+				orderList[i].setMemberId(rs.getString(3));
+				orderList[i].setOrderDate(rs.getString(4));
+				orderList[i].setOrderPrice(rs.getInt(5));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return orderList;
+	}
+
+	public MenuDTO[] mostBuyingData(MemberDTO member) {
+		sb = "select * from (select mn.menuid, mn.name, sum(od.count) \"총 주문 갯수\" from member m, orderlist ol, orderdetail od, menu mn where m.memberid = ol.memberid and ol.orderid = od.orderid and od.menuid=mn.menuid and m.memberid = ? group by  mn.menuid, mn.name order by  sum(od.count) desc) where rownum <6";
+		MenuDTO[] menuList = new MenuDTO[5];
+		try {
+			pps = con.prepareStatement(sb);
+			pps.setString(1, member.getMemberID());
+			rs = pps.executeQuery();
+			for (int i = 0; rs.next(); i++) {
+				menuList[i] = new MenuDTO();
+				menuList[i].setMenuId(rs.getString(1));
+				menuList[i].setName(rs.getString(2));
+				menuList[i].setAmount(rs.getInt(3));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return menuList;
+	}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 	public void setDTOData() {
 		String getStoreInfo = "SELECT * FROM STOREINFO WHERE STORENO = ?";
-
-//		String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
-//		String getOrderListInfo = "SELECT * FROM ORDERLIST WHERE STORENO = ?";
-//		
 
 		try {
 			pps = con.prepareStatement(getStoreInfo);
@@ -183,36 +235,6 @@ public class QueryList {
 			}
 			System.out.println("store 정보 갱신완료");
 
-//			pps = con.prepareStatement(getStaffInfo);
-//			pps.setString(1, store.getStoreId());
-//			rs = pps.executeQuery();
-//			while(rs.next())
-//			{
-//				staff.setId(rs.getString(1));
-//				staff.setName(rs.getString(2));
-//				staff.setJoinDate(rs.getString(3));
-//				staff.setLeaveDate(rs.getString(4));
-//				staff.setPhone(rs.getInt(5));
-//				staff.setSex(rs.getString(7));
-//				staff.setWorkstyle(rs.getString(8));
-//			}
-//			
-//			System.out.println("staff 정보 갱신완료");
-//			
-//			pps = con.prepareStatement(getOrderListInfo);
-//			pps.setString(1, store.getStoreId());
-//			rs = pps.executeQuery();
-//			while(rs.next())
-//			{
-//				orderList.setId(rs.getString(2));
-//				orderList.setMemberId(rs.getString(3));
-//				orderList.setOrderDate(rs.getString(4));
-//				orderList.setOrderPrice(rs.getInt(5));
-//
-//			}
-//			
-//			System.out.println("orderList 정보 갱신완료");
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -226,7 +248,9 @@ public class QueryList {
 			rs.next();
 			int staffCount = rs.getInt(1);
 			StaffDTO[] staffList = new StaffDTO[staffCount];
-			String getStaffInfo = "SELECT * FROM STAFF WHERE STORENO = ?";
+
+			String getStaffInfo = "SELECT staffno, name, TO_CHAR(joindate, 'yy/mm/dd'), TO_CHAR(leavedate, 'yy/mm/dd'), phone, birth, sex, workstyle FROM STAFF WHERE STORENO = ? order by staffno";
+
 			pps = con.prepareStatement(getStaffInfo);
 
 			pps.setString(1, store.getStoreId());
@@ -237,7 +261,9 @@ public class QueryList {
 				staff.setJoinDate(rs.getString(3));
 				staff.setLeaveDate(rs.getString(4));
 				staff.setPhone(rs.getInt(5));
-				staff.setBirth(rs.getString(6));
+
+				staff.setBirth(rs.getInt(6));
+
 				staff.setSex(rs.getString(7));
 				staff.setWorkstyle(rs.getString(8));
 				staffList[i] = new StaffDTO(staff.getId(), staff.getName(), staff.getJoinDate(), staff.getLeaveDate(),
@@ -262,7 +288,10 @@ public class QueryList {
 			int result = rs.getInt(1);
 			StaffDTO[] searchResult = new StaffDTO[result];
 
-			pps = con.prepareStatement("Select staffno, name, phone from staff where storeno = ? and name = ?");
+
+			pps = con.prepareStatement(
+					"Select staffno, name, TO_CHAR(joindate, 'yy/mm/dd'), TO_CHAR(leavedate, 'yy/mm/dd'), phone, birth, sex, workstyle from staff where storeno = ? and name = ? order by staffno");
+
 			pps.setString(1, store.getStoreId());
 			pps.setString(2, staff.getName());
 			rs = pps.executeQuery();
@@ -271,9 +300,14 @@ public class QueryList {
 				searchResult[i] = new StaffDTO();
 				searchResult[i].setId(rs.getString(1));
 				searchResult[i].setName(rs.getString(2));
-				searchResult[i].setPhone(rs.getInt(3));
-				// System.out.println(searchResult[i].getId()+searchResult[i].getName());
-				System.out.println("검색중" + i);
+
+				searchResult[i].setJoinDate(rs.getString(3));
+				searchResult[i].setLeaveDate(rs.getString(4));
+				searchResult[i].setPhone(rs.getInt(5));
+				searchResult[i].setBirth(rs.getInt(6));
+				searchResult[i].setSex(rs.getString(7));
+				searchResult[i].setWorkstyle(rs.getString(8));
+
 				i++;
 			}
 			return searchResult;
@@ -281,10 +315,6 @@ public class QueryList {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	public void updateStaffInfo() {
-		sb = ("stmt");
 	}
 
 	// 혜영===========================================
@@ -477,14 +507,15 @@ public class QueryList {
 				pps.setInt(4, raw.getStock());
 				pps.setInt(5, raw.getCost());
 				resultInt = pps.executeUpdate();
-			}
+        			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}// rawstock
-
-	// 매장관리>재고관리>입고(비품)
+    	}// rawstock
+  
+  
+  // 매장관리>재고관리>입고(비품)
 	public void matestock(MaterialDTO raw) {
 		int resultInt = 0;
 		MaterialDTO orgMat = new MaterialDTO();
@@ -518,5 +549,188 @@ public class QueryList {
 			e.printStackTrace();
 		}
 	}// matestock
+
+	public void updateStaffInfo(StaffDTO staff) {
+		sb = "UPDATE staff SET name = ?, joindate = ?, leavedate = ?, phone = ?, birth = ?, sex = ?, workstyle = ? WHERE staffno = ?";
+		try {
+			pps = con.prepareStatement(sb);
+			System.out.println(staff.getName() + staff.getJoinDate() + staff.getLeaveDate() + staff.getPhone()
+					+ staff.getBirth() + staff.getSex() + staff.getWorkstyle() + staff.getId());
+			pps.setString(1, staff.getName());
+			pps.setString(2, staff.getJoinDate());
+			pps.setString(3, staff.getLeaveDate());
+			pps.setInt(4, staff.getPhone());
+			pps.setInt(5, staff.getBirth());
+			pps.setString(6, staff.getSex());
+			pps.setString(7, staff.getWorkstyle());
+			pps.setString(8, staff.getId());
+			pps.executeUpdate();
+			System.out.println("staff info update finish");
+		} catch (SQLException e) {
+			System.out.println("format 불일치로 인한 error");
+		}
+
+	}
+
+	public void deleteStaffInfo(StaffDTO staff) {
+		sb = ("DELETE FROM staff WHERE staffno = ?");
+		try {
+			pps = con.prepareStatement(sb);
+			pps.setString(1, staff.getId());
+			pps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void staffEnroll(StaffDTO staff) {
+		sb = "INSERT INTO staff VALUES (staff_seq.nextval, ?, ?,?,?,?,?,?,?)";
+		try {
+			pps = con.prepareStatement(sb);
+			pps.setString(1, staff.getName());
+			pps.setString(2, staff.getJoinDate());
+			pps.setString(3, staff.getLeaveDate());
+			pps.setInt(4, staff.getPhone());
+			pps.setInt(5, staff.getBirth());
+			pps.setString(6, staff.getSex());
+			pps.setString(7, staff.getWorkstyle());
+			pps.setString(8, staff.getStoreId());
+			pps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+//============================================================
+	public MenuItemDTO[] menuInfoDefault() {
+		MenuItemDTO[] itemList = null;
+		try {
+			rs = stmt.executeQuery("SELECT COUNT(menuId) FROM menu");
+			rs.next();
+			int count = rs.getInt(1);
+			itemList = new MenuItemDTO[count];
+			rs = stmt.executeQuery("SELECT * FROM menu");
+			int i = 0;
+			while (rs.next()) {
+				itemList[i] = new MenuItemDTO();
+				itemList[i].setMenuId(rs.getString(1));
+				itemList[i].setName(rs.getString(2));
+				itemList[i].setPrice(rs.getInt(3));
+				itemList[i].setCategory(rs.getString(4));
+				i++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return itemList;
+	}
+
+	public String[][] salesInfoDefault() {
+		sb = "select * from (SELECT to_char(orderdate, 'yy/mm/dd') 날짜, sum(orderPrice) 총매출 FROM orderList WHERE storeno = ? GROUP BY orderdate ORDER BY orderdate desc) where rownum<8";
+		String[][] salesData = new String[7][2];
+
+		try {
+			pps = con.prepareStatement(sb);
+			pps.setString(1, store.getStoreId());
+			rs = pps.executeQuery();
+			for (int i = 0; rs.next(); i++) {
+				salesData[i][0] = rs.getString(1);
+				salesData[i][1] = Integer.toString(rs.getInt(2));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return salesData;
+	}
+
+	public ArrayList<String[]> salesInfoDefault(String[] date) {
+		sb = "select * from (SELECT to_char(orderdate, 'yy/mm/dd') 날짜, sum(orderPrice) 총매출 FROM orderList WHERE storeno = ? GROUP BY orderdate HAVING orderdate between ? and ? ORDER BY orderdate desc)";
+		ArrayList<String[]> salesData = new ArrayList<>();
+
+		try {
+			pps = con.prepareStatement(sb);
+			pps.setString(1, store.getStoreId());
+			pps.setString(2, date[0]);
+			pps.setString(3, date[1]);
+			rs = pps.executeQuery();
+			int sum = 0;
+			for (int i = 0; rs.next(); i++) {
+				sum += rs.getInt(2);
+				String[] temp = { rs.getString(1), Integer.toString(rs.getInt(2)), Integer.toString(sum) };
+				salesData.add(temp);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return salesData;
+	}
+
+	public String[][] salesMenuDate(String menuName) {
+		// sb = "select m.name, sum(o.count), sum(sumprice) from menu m, orderdetail o,
+		// orderlist ol where m.menuid = o.menuid and o.orderid = ol.orderid GROUP BY
+		// m.name HAVING m.name=?";
+
+		sb = "select * from (select to_char(orderdate, 'yy/mm/dd'), sum(count), sum(sumprice) from menu m, orderdetail o, orderlist ol where m.menuid = o.menuid and o.orderid = ol.orderid and m.name = ? and storeno = ? GROUP BY orderdate order by ol.orderdate desc) where rownum<8";
+		String[][] salesMenuWeek = new String[7][4];
+		try {
+			pps = con.prepareStatement(sb);
+			pps.setString(1, menuName);
+			pps.setString(2, store.getStoreId());
+			rs = pps.executeQuery();
+			int sum = 0;
+			for (int i = 0; rs.next(); i++) {
+				salesMenuWeek[i][0] = rs.getString(1);
+				salesMenuWeek[i][1] = Integer.toString(rs.getInt(2));
+				salesMenuWeek[i][2] = Integer.toString(rs.getInt(3));
+				if (Integer.toString(rs.getInt(3)) != null) {
+					sum += rs.getInt(3);
+				}
+			}
+			salesMenuWeek[6][3] = Integer.toString(sum);
+			System.out.println(salesMenuWeek[6][3]);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return salesMenuWeek;
+	}
+
+	public String salesMenuDate30(String menuName) {
+		sb = "select sum(sumprice) from menu m, orderdetail o, orderList ol where m.menuid = o.menuid and o.orderid = ol.orderid and m.name =? and ol.storeno = ? and orderdate between sysdate-30 and sysdate";
+		String sum30 = null;
+		try {
+			pps = con.prepareStatement(sb);
+			pps.setString(1, menuName);
+			pps.setString(2, store.getStoreId());
+			rs = pps.executeQuery();
+			rs.next();
+			sum30 = Integer.toString(rs.getInt(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return sum30;
+		
+	}
+	public String salesMenuDate365(String menuName) {
+		sb = "select sum(sumprice) from menu m, orderdetail o, orderList ol where m.menuid = o.menuid and o.orderid = ol.orderid and m.name =? and ol.storeno = ? and orderdate between sysdate-365 and sysdate";
+		String sum365 = null;
+		try {
+			pps = con.prepareStatement(sb);
+			pps.setString(1, menuName);
+			pps.setString(2, store.getStoreId());
+			rs = pps.executeQuery();
+			rs.next();
+			sum365 = Integer.toString(rs.getInt(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return sum365;
+		
+	}
+
 
 }
