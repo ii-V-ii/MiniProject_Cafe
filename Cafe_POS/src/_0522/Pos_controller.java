@@ -92,24 +92,6 @@ public class Pos_controller {
 		else if (!logInResult)
 			scripts.logInFail();
 
-		/*
-		 * 죽은 코드입니다. 필요없는 부분이나, 혹시 몰라 주석으로 남겨두어습니다.
-		 * 
-		 * 
-		 * // 넘겨받은 인자를 QueryList 클래스 중 한 메서드로 다시 넘겨야하지만 // 점장 List는 프로그램 내에서 관리하기로 했기에
-		 * 일단 checkLogin 메서드 안에서 처리합니다 // 추후 점장List DB도 오라클로 넘긴다면, QueryList 클래스에 적절한
-		 * 메서드를 생성해야 합니다 Iterator<IdVO> itr = ServerMain.list.iterator();
-		 * while(itr.hasNext()) { IdVO temp = itr.next(); if(temp.getId().equals(id)) {
-		 * if(temp.getPassword().equals(password)) { //성공시 유저에게 성공 메세지 보내는 View 메서드를 실행
-		 * System.out.println("Client logIn success"); scripts.logInSuccess(); }else {
-		 * //실패시 유저에게 실패메세지 보내는 View 메서드를 실행
-		 * System.out.println("Client logIn Fail:type_password");
-		 * scripts.logInFailTypePassword();
-		 * 
-		 * } //실패시 유저에게 실패메세지 보내는 View 메서드를 실행 }
-		 * System.out.println("Client logIn Fail:type_id"); scripts.logInFailTypeId(); }
-		 * System.out.println("No More data"); scripts.noData();
-		 */
 	}
 
 	public StaffDTO[] showStaffList() {
@@ -127,8 +109,8 @@ public class Pos_controller {
 		
 	}
 
-	public void staffSchedule() {
-		// 직원관리>스케쥴관리
+	public void showSalaryOption() {
+		query.showSalaryOption();
 	}
 
 	
@@ -142,9 +124,27 @@ public class Pos_controller {
 		query.setDTOData();
 	}
 
+	public String[][] salesInfoDefault(){
+		return query.salesInfoDefault();
+	}
+	public ArrayList<String[]> salesInfoDefault(String[] date) {
+		return query.salesInfoDefault(date);
+		
+	}
 	
+	public String[][] salesMenuDate(String menuName){
+		return query.salesMenuDate(menuName);
+	}
 	
-	
+	public String salesMenuDate30(String menuName) {
+
+	return query.salesMenuDate30(menuName);
+	}
+	public String salesMenuDate365(String menuName) {
+		
+		return query.salesMenuDate365(menuName);
+	}
+
 	// 혜영 =============================================================================
 	
 	// 매장정보>기본정보

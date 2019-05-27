@@ -11,7 +11,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
 import _0522.DTO.MemberDTO;
@@ -54,7 +53,7 @@ interface customerMenu {
 
 /* 직원관리 */
 interface staffMenu {
-	String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3", PAY = "4";
+	String STAFFINFO = "1", STAFFENROLL = "2", PAY = "3";
 
 }
 
@@ -290,7 +289,6 @@ public class Scripts {
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
 
-
 		while (true) {
 			send("1.회원정보");
 			send("2.회원등록");
@@ -375,8 +373,7 @@ public class Scripts {
 		// String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
 		send("1. 직원정보 확인");
 		send("2. 직원 등록");
-		send("3. 스케쥴 관리");
-		send("4.급여관리");// 보류
+		send("3.급여관리");// 보류
 		send("선택 >> ");
 
 		choose = receive();
@@ -384,17 +381,16 @@ public class Scripts {
 		switch (choose) {
 		case staffMenu.STAFFINFO:
 			staffMenuFirst();
-
 			break;
+			
 		case staffMenu.STAFFENROLL:
 			staffEnroll();
-
 			break;
-		case staffMenu.SCHEDULE:
-			posControl.staffSchedule();
+			
+		case staffMenu.PAY:
+			staffSalaryManage();
 			break;
-//		case staffMenu.PAY:
-//		break;
+			
 		default:
 			break;
 		}
@@ -630,7 +626,6 @@ public class Scripts {
 
 	}
 
-
 	public void staffEnroll() {
 		send("새로운 직원을 등록합니다");
 		send("아래의 정보를 맞게 입력하세요");
@@ -702,11 +697,33 @@ public class Scripts {
 		send("등록이 완료되었습니다");
 	}
 
-	/*
-	 * // 직원관리>급여관리 내부 메뉴 public void staffSalaryManage() {
-	 * 
-	 * }
-	 */
+	
+	  // 직원관리>급여관리 내부 메뉴
+	
+	public void staffSalaryManage() {
+		send("1.현재 직원들의 급여설정을 본다");
+		send("2.특정 직원의 급여설정을 변경한다");
+		send("선택>>");
+		choose = receive();
+		switch(choose) {
+		case "1":
+			showSalaryOption();
+			break;
+		case "2":
+			break;
+			
+		default:
+			break;
+		}
+	}
+	public void showSalaryOption() {
+		posControl.showSalaryOption();
+		send("==============================");
+		
+		send("==============================");
+	};
+
+	 
 	// ==2차메뉴
 	// 메서드=====================================================================
 	// 매장관리 > 매장정보
@@ -821,9 +838,8 @@ public class Scripts {
 	// 메뉴관리 > 메뉴등록
 	public void menuEnroll() {
 
-		
 		MenuItemDTO eDto = new MenuItemDTO();
-		
+
 		send("====메뉴입력====");
 		send("메뉴번호 : ");
 		eDto.setMenuId(receive());
@@ -836,10 +852,10 @@ public class Scripts {
 		send("활성화 여부 (Y,N) : ");
 		eDto.setActivation(receive());
 		send("입력완료");
-		
-		posControl.menuEnroll(eDto);	
-		
-		//상위 메뉴로 돌아가기
+
+		posControl.menuEnroll(eDto);
+
+		// 상위 메뉴로 돌아가기
 		menuMenu();
 
 	}// menuEnroll
@@ -906,7 +922,6 @@ public class Scripts {
 		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
 		posControl.storeInfoMotify(sDto);
 
-
 		// 메뉴로 다시 돌아가기
 		storeMenu();
 	}
@@ -942,7 +957,7 @@ public class Scripts {
 		String startDate = receive();
 		send("검색 마지막 날짜를 입력하세요(yy/mm/dd)");
 		String finishDate = receive();
-		String[] searchDate = {startDate, finishDate};
+		String[] searchDate = { startDate, finishDate };
 		ArrayList<String[]> salesData = posControl.salesInfoDefault(searchDate);
 		send("날짜\t\t총 매출액");
 		String sum = null;
@@ -951,9 +966,8 @@ public class Scripts {
 			sum = data[2];
 		}
 		send("=============================");
-		send("매출 총 합계  : "+sum);
+		send("매출 총 합계  : " + sum);
 		send("=============================");
-
 
 	}
 
@@ -967,17 +981,15 @@ public class Scripts {
 		send("최근 7일간 판매량==================");
 		send("날짜\t\t판매량\t수입");
 		String sum = null;
-		for(String[] data : salesData) {
-			send(data[0]+"\t"+data[1]+"\t"+data[2]);
+		for (String[] data : salesData) {
+			send(data[0] + "\t" + data[1] + "\t" + data[2]);
 			sum = data[3];
 		}
 		send("=============================");
-		send("최근 7일간 매출	:"+sum);
-		send("최근 30일 간 매출\t:"+posControl.salesMenuDate30(choose));
-		send("전 기간 매출\t\t:"+posControl.salesMenuDate365(choose));
+		send("최근 7일간 매출	:" + sum);
+		send("최근 30일 간 매출\t:" + posControl.salesMenuDate30(choose));
+		send("전 기간 매출\t\t:" + posControl.salesMenuDate365(choose));
 		send("=============================");
-
-
 
 	}
 
@@ -1001,7 +1013,6 @@ public class Scripts {
 		send("1. 원재료 입고");
 		send("2. 비품입고");
 		choose = receive();
-
 
 		if (choose.equals("1")) {
 			RawMaterialDTO temp = new RawMaterialDTO();
@@ -1058,7 +1069,6 @@ public class Scripts {
 			mainMenu();
 		}
 
-
 	}// stockManage
 
 	// 메뉴관리>메뉴정보>기본정보
@@ -1096,9 +1106,8 @@ public class Scripts {
 //		if (choose.equals("Y") || choose.equals("y")) {
 //			menuModify();
 //		} else if (choose.equals("N") || choose.equals("n")) {
-			menuMenu();
+		menuMenu();
 //		}
-
 
 	}
 
@@ -1206,7 +1215,6 @@ public class Scripts {
 		} else {
 			send("일치하는 고객이 없습니다");
 		}
-
 
 	}
 

@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
 import _0522.DTO.MemberDTO;
@@ -216,7 +215,6 @@ public class QueryList {
 		return menuList;
 	}
 
-
 ///////////////////////////////////////////////////////////////////////////////
 	public void setDTOData() {
 		String getStoreInfo = "SELECT * FROM STOREINFO WHERE STORENO = ?";
@@ -288,7 +286,6 @@ public class QueryList {
 			int result = rs.getInt(1);
 			StaffDTO[] searchResult = new StaffDTO[result];
 
-
 			pps = con.prepareStatement(
 					"Select staffno, name, TO_CHAR(joindate, 'yy/mm/dd'), TO_CHAR(leavedate, 'yy/mm/dd'), phone, birth, sex, workstyle from staff where storeno = ? and name = ? order by staffno");
 
@@ -315,6 +312,11 @@ public class QueryList {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public void showSalaryOption() {
+		sb = "";
+
 	}
 
 	// 혜영===========================================
@@ -419,42 +421,33 @@ public class QueryList {
 			e.printStackTrace();
 		}
 	}// menuEnroll
-/*
- 	int resultInt = 0;
-		StoreDTO orgDto = new StoreDTO();
-		try {
-			pps = con.prepareStatement("select storeno from STOREINFO where storeno = ?");
-			pps.setString(1, orgDto.getStoreId());
-			rs = pps.executeQuery();
-			while (rs.next()) {
-				orgDto.setStoreId(rs.getString(1));
-			}
-
-			if (sDto.getStoreId().equals(orgDto.getStoreId())) {
-				pps = con.prepareStatement(
-						"UPDATE STOREINFO SET name = ? , owner = ?, opendate = TO_CHAR(?,'YYYYMMDD') ,closedate = TO_CHAR(?,'YYYYMMDD'), phone = ? ,address = ? WHERE storeno = ?");
-				pps.setString(1, sDto.getName());
-				pps.setString(2, sDto.getOwner());
-				pps.setString(3, sDto.getOpendate());
-				pps.setString(4, sDto.getClosedate());
-				pps.setInt(5, sDto.getPhone());
-				pps.setString(6, sDto.getAddress());
-				pps.setString(7, sDto.getStoreId());
-				resultInt = pps.executeUpdate();
-			}
- 
- 
- */
+	/*
+	 * int resultInt = 0; StoreDTO orgDto = new StoreDTO(); try { pps =
+	 * con.prepareStatement("select storeno from STOREINFO where storeno = ?");
+	 * pps.setString(1, orgDto.getStoreId()); rs = pps.executeQuery(); while
+	 * (rs.next()) { orgDto.setStoreId(rs.getString(1)); }
+	 * 
+	 * if (sDto.getStoreId().equals(orgDto.getStoreId())) { pps =
+	 * con.prepareStatement(
+	 * "UPDATE STOREINFO SET name = ? , owner = ?, opendate = TO_CHAR(?,'YYYYMMDD') ,closedate = TO_CHAR(?,'YYYYMMDD'), phone = ? ,address = ? WHERE storeno = ?"
+	 * ); pps.setString(1, sDto.getName()); pps.setString(2, sDto.getOwner());
+	 * pps.setString(3, sDto.getOpendate()); pps.setString(4, sDto.getClosedate());
+	 * pps.setInt(5, sDto.getPhone()); pps.setString(6, sDto.getAddress());
+	 * pps.setString(7, sDto.getStoreId()); resultInt = pps.executeUpdate(); }
+	 * 
+	 * 
+	 */
 	// 메뉴관리>메뉴정보>수정
+
 	public void menuModify(MenuItemDTO mDto) {
 		int resultInt = 0;
 		MenuItemDTO orgMe = new MenuItemDTO();
-		//바로 받아와서 바로 수정
+		// 바로 받아와서 바로 수정
 		try {
 			pps = con.prepareStatement("SELECT menuid FROM menu WHERE menuid = ?");
 			pps.setString(1, mDto.getMenuId());
 			rs = pps.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				orgMe.setMenuId(rs.getString(1));
 			}
 			// 기존에 있는거 수정
@@ -507,15 +500,14 @@ public class QueryList {
 				pps.setInt(4, raw.getStock());
 				pps.setInt(5, raw.getCost());
 				resultInt = pps.executeUpdate();
-        			}
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    	}// rawstock
-  
-  
-  // 매장관리>재고관리>입고(비품)
+	}// rawstock
+
+	// 매장관리>재고관리>입고(비품)
 	public void matestock(MaterialDTO raw) {
 		int resultInt = 0;
 		MaterialDTO orgMat = new MaterialDTO();
@@ -573,8 +565,10 @@ public class QueryList {
 	}
 
 	public void deleteStaffInfo(StaffDTO staff) {
-		sb = ("DELETE FROM staff WHERE staffno = ?");
+		
 		try {
+			
+			sb = ("DELETE FROM staff WHERE staffno = ? CASCADE CONSTRAINT");
 			pps = con.prepareStatement(sb);
 			pps.setString(1, staff.getId());
 			pps.executeUpdate();
@@ -586,6 +580,7 @@ public class QueryList {
 	public void staffEnroll(StaffDTO staff) {
 		sb = "INSERT INTO staff VALUES (staff_seq.nextval, ?, ?,?,?,?,?,?,?)";
 		try {
+			con.setAutoCommit(false);
 			pps = con.prepareStatement(sb);
 			pps.setString(1, staff.getName());
 			pps.setString(2, staff.getJoinDate());
@@ -596,11 +591,28 @@ public class QueryList {
 			pps.setString(7, staff.getWorkstyle());
 			pps.setString(8, staff.getStoreId());
 			pps.executeUpdate();
+			String staff_all = "INSERT INTO staff_all VALUES (staff_seq.currval,?,?)";
+			String staff_part = "INSERT INTO staff_part VALUES (staff_seq.currval,?,?,?)";
+			if (staff.getWorkstyle().equals("정직원")) {
+				pps = con.prepareStatement(staff_all);
+				pps.setInt(1, 5);
+				pps.setInt(2, 150);
+				pps.executeUpdate();
+			} else if (staff.getWorkstyle().contentEquals("파트타임")) {
+				pps = con.prepareStatement(staff_part);
+				pps.setInt(1, 5);
+				pps.setInt(2, 4);
+				pps.setInt(3, 8400);
+				pps.executeUpdate();
+			}
+			con.commit();
+			con.setAutoCommit(true);;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 	}
+
 //============================================================
 	public MenuItemDTO[] menuInfoDefault() {
 		MenuItemDTO[] itemList = null;
@@ -713,8 +725,9 @@ public class QueryList {
 			e.printStackTrace();
 		}
 		return sum30;
-		
+
 	}
+
 	public String salesMenuDate365(String menuName) {
 		sb = "select sum(sumprice) from menu m, orderdetail o, orderList ol where m.menuid = o.menuid and o.orderid = ol.orderid and m.name =? and ol.storeno = ? and orderdate between sysdate-365 and sysdate";
 		String sum365 = null;
@@ -729,8 +742,7 @@ public class QueryList {
 			e.printStackTrace();
 		}
 		return sum365;
-		
-	}
 
+	}
 
 }
