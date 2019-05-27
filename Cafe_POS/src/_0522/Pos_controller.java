@@ -1,9 +1,10 @@
 package _0522;
 
 import java.sql.Connection;
+
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
@@ -17,6 +18,9 @@ import _0522.DTO.RegularStaffDTO;
 import _0522.DTO.StaffDTO;
 import _0522.DTO.StockDTO;
 import _0522.DTO.StoreDTO;
+
+import oracle.sql.DATE;
+
 
 /*
  * View에 해당하는 Scripts 클래스와 실제로 각종 기능을 수행하는 QueryList 클래스를 연결해주는 클래스입니다 
@@ -116,25 +120,26 @@ public class Pos_controller {
 		return query.searchStaff(staffName);
 	}
 
-	public void staffEnroll() {
-		// 직원관리>직원 등록
 
+	public void staffEnroll(StaffDTO staff) {
+		// 직원관리>직원 등록
+		query.staffEnroll(staff);
+		
 	}
 
 	public void staffSchedule() {
 		// 직원관리>스케쥴관리
 	}
 
-	public void setDTOdata() {
-		query.setDTOData();
+	
+	public MenuItemDTO[] menuInfoDefault() {
+		return query.menuInfoDefault();
 	}
 	
-	public void updateStaffInfo() {
-		query.updateStaffInfo();
-	}
+	
 
-	public MemberDTO[] showMember() {
-		return query.showMembers();
+	public void setDTOdata() {
+		query.setDTOData();
 	}
 
 	
@@ -169,6 +174,30 @@ public class Pos_controller {
 	}
 	public void menuEnroll(MenuItemDTO eDto) {
 		query.menuEnroll(eDto);
+	}
+
+// ============================================================================
+	public void updateStaffInfo(StaffDTO staff) {
+		query.updateStaffInfo(staff);
+	}
+	public void deleteStaffInfo(StaffDTO staff) {
+		query.deleteStaffInfo(staff);
+	}
+
+// ============================================================================
+	public MemberDTO[] showMember() {
+		return query.showMembers();
+	}
+	
+	public MemberDTO[] searchMember(String memberName) {//일단주석처리
+		return query.searchMember(memberName);
+	}
+	public OrderListDTO[] lastBuyingData(MemberDTO member) {
+		return query.lastBuyingData(member);
+	}
+	
+	public MenuDTO[] mostBuyingData(MemberDTO member) {
+		return query.mostBuyingData(member);
 	}
 
 }
