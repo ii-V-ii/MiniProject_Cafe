@@ -319,7 +319,7 @@ sb="select * from (select mn.menuid, mn.name, sum(od.count) \"총 주문 갯수\
 			pps.executeUpdate();
 			System.out.println("staff info update finish");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("format 불일치로 인한 error");	
 		}
 		
 	}

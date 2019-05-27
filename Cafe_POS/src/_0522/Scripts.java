@@ -534,7 +534,7 @@ public class Scripts {
 				}
 
 			}
-		} while (!(staff.getSex().equals("남") || staff.getSex().equals("여") || newData.contentEquals("")));
+		} while (!(newData.contentEquals("") || newData.equals("여") ||newData.equals("남")));
 
 		send("고용형태: ");
 		do {
@@ -1111,13 +1111,13 @@ public class Scripts {
 						send("더 이상의 구매이력이 존재하지 않습니다");
 					}
 					check = true;
-				} 
+				}
 			}
-			if(check==false) {
+			if (check == false) {
 				send("고객번호를 잘 못 입력하셨습니다");
 				send("처음부터 다시 진행해주세요");
 			}
-			
+
 		} else {
 			send("일치하는 고객이 없습니다");
 		}
@@ -1166,13 +1166,13 @@ public class Scripts {
 						send("더 이상의 구매이력이 존재하지 않습니다");
 					}
 					check = true;
-				} 
+				}
 			}
-			if(check==false) {
+			if (check == false) {
 				send("고객번호를 잘 못 입력하셨습니다");
 				send("처음부터 다시 진행해주세요");
 			}
-			
+
 		} else {
 			send("일치하는 고객이 없습니다");
 		}
