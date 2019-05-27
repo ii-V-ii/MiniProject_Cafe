@@ -8,7 +8,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
 
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
@@ -22,6 +24,7 @@ import _0522.DTO.RegularStaffDTO;
 import _0522.DTO.StaffDTO;
 import _0522.DTO.StockDTO;
 import _0522.DTO.StoreDTO;
+import oracle.sql.DATE;
 
 /*
  * 1차메뉴 (매장,메뉴,고객,직원관리)와 2차 메뉴(매장관리>매장정보, 매출정보, 재고관리) 는 인터페이스로 관리
@@ -179,9 +182,11 @@ public class Scripts {
 		// 편의를 위해 view 메서드 -> view 메서드 의 이동은 scripts 클래스내에서
 		// 직접적으로 이루어지도록 하겠습니다
 		posControl.setDTOdata();
+
 		while (true) {
 			mainMenu();
 		}
+
 	}
 
 	public void logInFail() {
@@ -285,6 +290,7 @@ public class Scripts {
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
 
+
 		while (true) {
 			send("1.회원정보");
 			send("2.회원등록");
@@ -293,6 +299,7 @@ public class Scripts {
 			send("선택 >> ");
 
 			choose = receive();
+
 			switch (choose) {
 			case customerMenu.CUSTINFO:
 				custInfo();// 1.회원정보>1.모두보기
@@ -310,6 +317,7 @@ public class Scripts {
 	}
 
 	public void custInfo() {
+
 		send("1. 모든 고객 보기");
 		send("2. 고객 검색");
 		send("3. 상세 고객 정보");
@@ -342,6 +350,7 @@ public class Scripts {
 	}
 
 	public void history() {
+
 		send("1. 최신 구매이력");
 		send("2. 최다 구매이력");
 		choose = receive();
@@ -357,6 +366,7 @@ public class Scripts {
 			break;
 
 		}
+
 	}
 
 	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
@@ -378,6 +388,7 @@ public class Scripts {
 			break;
 		case staffMenu.STAFFENROLL:
 			staffEnroll();
+
 			break;
 		case staffMenu.SCHEDULE:
 			posControl.staffSchedule();
@@ -412,7 +423,8 @@ public class Scripts {
 
 	public void staffDefaultInfo() {
 		StaffDTO[] staffList = posControl.showStaffList();
-		send("이름 \t전화번호\t\t성별\t생년월일\t입사일\t\t\t퇴사일\t\t\t고용형태");
+
+		send("이름 \t전화번호\t\t성별\t생년월일\t입사일\t\t퇴사일\t\t고용형태");
 		for (int i = 0; i < staffList.length; i++) {
 			send("" + staffList[i].getName() + "\t" + staffList[i].getPhone() + "\t" + staffList[i].getSex() + "\t"
 					+ staffList[i].getBirth() + "\t" + staffList[i].getJoinDate() + "\t" + staffList[i].getLeaveDate()
@@ -423,6 +435,7 @@ public class Scripts {
 	public void staffInfoModify() {
 		send("수정 할 직원의 이름을 입력하세요");
 		choose = receive();
+
 		StaffDTO[] staffList = posControl.searchStaff(choose);
 		for (StaffDTO staff : staffList) {
 			send("" + staff.getId() + "\t" + staff.getName() + "\t" + staff.getPhone() + "\t" + staff.getJoinDate());
@@ -433,6 +446,7 @@ public class Scripts {
 			choose = receive();
 			switch (choose) {
 			case "y":
+
 				staffInfoModifyDetail();
 				break;
 			case "n":
@@ -534,7 +548,7 @@ public class Scripts {
 				}
 
 			}
-		} while (!(staff.getSex().equals("남") || staff.getSex().equals("여") || newData.contentEquals("")));
+		} while (!(newData.contentEquals("") || newData.equals("여") || newData.equals("남")));
 
 		send("고용형태: ");
 		do {
@@ -578,6 +592,7 @@ public class Scripts {
 				send("다시 입력하세요");
 				break;
 			}
+
 		} else if (staffList.length > 1) {
 			send("동명이인이 있습니다. 삭제하려는 직원의 직원번호를 입력하세요");
 			choose = receive();
@@ -610,9 +625,11 @@ public class Scripts {
 
 		} else {
 			send("일치하는 직원이 없습니다");
+
 		}
 
 	}
+
 
 	public void staffEnroll() {
 		send("새로운 직원을 등록합니다");
@@ -725,7 +742,8 @@ public class Scripts {
 	// 매장관리 > 매출정보
 	public void saleInfo() {
 		send("1. 기본정보"); // salesInfoDefault()
-		send("2. 시간별 검색"); // salesSearchTimes()
+		send("2. 기간별 검색"); // salesSearchTimes()
+
 		send("3. 메뉴별 검색"); // salesSearchMenus()
 		send("선택 :");
 		choose = receive();
@@ -803,6 +821,27 @@ public class Scripts {
 	// 메뉴관리 > 메뉴등록
 	public void menuEnroll() {
 
+		
+		MenuItemDTO eDto = new MenuItemDTO();
+		
+		send("====메뉴입력====");
+		send("메뉴번호 : ");
+		eDto.setMenuId(receive());
+		send("메뉴명 : ");
+		eDto.setName(receive());
+		send("가격 : ");
+		eDto.setPrice(Integer.parseInt(receive()));
+		send("분류 : ");
+		eDto.setCategory(receive());
+		send("활성화 여부 (Y,N) : ");
+		eDto.setActivation(receive());
+		send("입력완료");
+		
+		posControl.menuEnroll(eDto);	
+		
+		//상위 메뉴로 돌아가기
+		menuMenu();
+
 	}// menuEnroll
 
 	// 메뉴관리 > 메뉴검색
@@ -831,38 +870,42 @@ public class Scripts {
 	// -----------------------------여기부터 3차메뉴 관리
 	// 매장관리>매장정보>기본정보
 	public void storeInfoDefault() {
-		send("지점번호 : " + store.getStoreId());
-		send("지점명 : " + store.getName());
-		send("지점담당자 : " + store.getOwner());
-		send("개업일 : " + store.getOpendate());
-		send("폐업일 : " + store.getClosedate());
-		send("매장전화번호 : " + store.getPhone());
-		send("매장주소 : " + store.getAddress());
+
+		StoreDTO showStoreList = posControl.storeInfoDefault();
+		send("======= 매장 정보 =======");
+		send("" + showStoreList.getName());
+		send("" + showStoreList.getOwner());
+		send("" + showStoreList.getOpendate());
+		send("" + showStoreList.getClosedate());
+		send("" + showStoreList.getPhone());
+		send("" + showStoreList.getAddress());
+
 	}
 
 	// 매장관리>매장정보>수정
 	public void storeInfoMotify() {
 		// 매장 정보 수정 합니다~
-
+		StoreDTO sDto = new StoreDTO();
 		send("매장 정보 수정해주세요.");
 		send("지점번호 : ");
-		String num = receive();
+		sDto.setStoreId(receive());
 		send("지점명 : ");
-		String name = receive();
+		sDto.setName(receive());
 		send("지점담당자 : ");
-		String owner = receive();
+		sDto.setOwner(receive());
 		send("개업일 : ");
-		String open = receive(); // *** int로 입력되야함
+		sDto.setOpendate(receive()); // *** int로 입력되야함
 		send("폐업일 : ");
-		String close = receive(); // *** int로 입력되야함
+		sDto.setClosedate(receive()); // *** int로 입력되야함
 		send("매장전화번호 : ");
-		String phone = receive(); // *** int로 입력되야함
+		sDto.setPhone(Integer.parseInt(receive())); // *** int로 입력되야함
 		send("매장주소 : ");
-		String addr = receive();
+		sDto.setAddress(receive());
 		send("입력완료");
 
 		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
-		posControl.storeInfoMotify(num, name, owner, open, close, phone, addr);
+		posControl.storeInfoMotify(sDto);
+
 
 		// 메뉴로 다시 돌아가기
 		storeMenu();
@@ -881,15 +924,60 @@ public class Scripts {
 	// 매장관리>매출정보>기본정보
 	public void salesInfoDefault() {// 쿼리에서 작성해서 보여야함
 
+		send("최근 7일간의 매출입니다");
+		String[][] salesData = posControl.salesInfoDefault();
+		send("날짜\t\t총 매출액");
+		for (String[] data : salesData) {
+			send(data[0] + "\t" + data[1]);
+		}
+		send("=================================");
+
 	}
 
 	// 매장관리>매출정보>시간별 검색
 	public void salesSearchTimes() {// 쿼리에서 작성해서 보여야함
 
+		send("기간별 검색을 시작합니다");
+		send("검색 시작 날짜를 입력하세요(yy/mm/dd)");
+		String startDate = receive();
+		send("검색 마지막 날짜를 입력하세요(yy/mm/dd)");
+		String finishDate = receive();
+		String[] searchDate = {startDate, finishDate};
+		ArrayList<String[]> salesData = posControl.salesInfoDefault(searchDate);
+		send("날짜\t\t총 매출액");
+		String sum = null;
+		for (String[] data : salesData) {
+			send(data[0] + "\t" + data[1]);
+			sum = data[2];
+		}
+		send("=============================");
+		send("매출 총 합계  : "+sum);
+		send("=============================");
+
+
 	}
 
 	// 매장관리>매출정보>메뉴별 검색
 	public void salesSearchMenus() {// 쿼리에서 작성해서 보여야함
+
+		send("메뉴별 검색을 시작합니다");
+		send("검색할 메뉴 이름을 입력하세요");
+		choose = receive();
+		String[][] salesData = posControl.salesMenuDate(choose);
+		send("최근 7일간 판매량==================");
+		send("날짜\t\t판매량\t수입");
+		String sum = null;
+		for(String[] data : salesData) {
+			send(data[0]+"\t"+data[1]+"\t"+data[2]);
+			sum = data[3];
+		}
+		send("=============================");
+		send("최근 7일간 매출	:"+sum);
+		send("최근 30일 간 매출\t:"+posControl.salesMenuDate30(choose));
+		send("전 기간 매출\t\t:"+posControl.salesMenuDate365(choose));
+		send("=============================");
+
+
 
 	}
 
@@ -904,116 +992,113 @@ public class Scripts {
 			storeMenu();
 		else
 			storeMenu();
-//		for(int i =0;i<stocklist.length;i++) {
-//			send(stocklist[i].getStockId());
-//			send(""+stocklist[i].getInputDate());
-//			send(""+stocklist[i].getSellByDate());
-//			send(""+stocklist[i].getAmount());
-//		}
-//		send("지점번호 : " + stock.getStoreId());
-//		send("재고일렬번호 : " + stock.getStockId());
-//		send("입고날짜 : " + stock.getInputDate());
-//		send("유통기한 : " + stock.getSellByDate());
-//		send("재고 량 : " + stock.getAmount());
-//		send("뒤로가까? y/n");
-//		String yon = receive();
-//		if (yon == "y")
-//			storeMenu();
-//		else
-//			storeMenu();
+
 	}
 
 	// 매장관리>매출정보>입고관리
-	public void stockManage() { // 수량 입력 후에 쿼리에서 합하는거 ? 그거 해줘야지
-		String id;
-		String name;
-		String category;
-		int stock;
-		int cost;
+	public void stockManage() {
+
 		send("1. 원재료 입고");
 		send("2. 비품입고");
 		choose = receive();
 
-		if (choose == "1") {
 
-			ArrayList<RawMaterialDTO> raw = new ArrayList<>();
-			RawMaterialDTO temp = null;
+		if (choose.equals("1")) {
+			RawMaterialDTO temp = new RawMaterialDTO();
+			send("원재료 입고를 작성하세요.");
+			send("원재료 ID : ");
+			temp.setId(receive());
+			send("원재료 ID : " + temp.getId());
 
-			while (true) {
-				send("원재료 입고를 작성하세요.");
-				send("원재료 ID : ");
-				id = receive();
-				send("원재료명 : ");
-				name = receive();
-				send("분류 : ");
-				category = receive();
-				send("수량 : ");
-				stock = receiveInt(); // *** int로 입력되야함
-				send("원가 : ");
-				cost = receiveInt(); // *** int로 입력되야함
+			send("원재료명 : ");
+			temp.setName(receive());
+			send("원재료명 : " + temp.getName());
 
-				temp.setId(id);
-				temp.setName(name);
-				temp.setCategory(category);
-				temp.setStock(stock);
-				temp.setCost(cost);
+			send("분류 : ");
+			temp.setCategory(receive());
+			send("분류 : " + temp.getCategory());
 
-				raw.add(temp);
+			send("수량 : ");
+			temp.setStock(Integer.parseInt(receive())); // *** int로 입력되야함
+			send("수량 : " + temp.getStock());
 
-				temp = new RawMaterialDTO();
-				send("더 추가하시겠습니까?  y/n");
-				if (choose.equals("n"))
-					break;
-			}
+			send("원가 : ");
+			temp.setCost(Integer.parseInt(receive())); // *** int로 입력되야함
+			send("원가 : " + temp.getCost());
 
-			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
-			posControl.temp(raw);
-			// posControl.rawstock(id, name, category, stock, cost);
+			posControl.temp(temp);
 
-			// 메뉴로 다시 돌아가기
-			send("뒤로가까? y/n");
-			String yon = receive();
-			if (yon == "y")
-				stockNow();
-			else
-				stockNow();
-
-		} else if (choose == "2") { //
+		} else if (choose.equals("2")) {
+			MaterialDTO temp = new MaterialDTO();
 			send("비품 입고를 작성하세요.");
 			send("비품 ID : ");
-			id = receive();
+			temp.setId(receive());
+			send("비품 ID : " + temp.getId());
+
 			send("비품명 : ");
-			name = receive();
+			temp.setName(receive());
+			send("비품명 : " + temp.getName());
+
 			send("수량 : ");
-			stock = receiveInt(); // *** int로 입력되야함
+			temp.setStock(Integer.parseInt(receive())); // *** int로 입력되야함
+			send("수량 : " + temp.getStock());
+
 			send("원가 : ");
-			cost = receiveInt(); // *** int로 입력되야함
+			temp.setCost(Integer.parseInt(receive())); // *** int로 입력되야함
+			send("원가 : " + temp.getCost());
 
-			// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
-			posControl.matestock(id, name, stock, cost);
+			posControl.matestock(temp);
+		}
 
-			// 메뉴로 다시 돌아가기
-			send("뒤로가까? y/n");
-			String yon = receive();
-			if (yon == "y")
-				stockNow();
-			else
-				stockNow();
+		send("더 추가하시겠습니까?  y/n");
+		choose = receive();
+		if (choose.equals("Y") || choose.equals("y")) {
+			this.stockManage();
+		} else if (choose.equals("N") || choose.equals("n")) {
+			mainMenu();
+		}
 
-		} // else
+
 	}// stockManage
 
 	// 메뉴관리>메뉴정보>기본정보
 	public void menuInfoDefault() {
+
 		send("메뉴번호\t메뉴이름\t가격\t카테고리");
 		MenuItemDTO[] menuList = posControl.menuInfoDefault();
 		for (MenuItemDTO menu : menuList) {
 			send(menu.getMenuId() + "\t" + menu.getName() + "\t" + menu.getPrice() + "\t" + menu.getCategory());
 		}
+
 	}
 
 	// 메뉴관리>메뉴정보>수정
 	public void menuModify() {
+
+		MenuItemDTO mDto = new MenuItemDTO();
+		send("====메뉴수정====");
+		send("메뉴번호 : ");
+		mDto.setMenuId(receive());
+		send("메뉴명 : ");
+		mDto.setName(receive());
+		send("가격 : ");
+		mDto.setPrice(Integer.parseInt(receive()));
+		send("분류 : ");
+		mDto.setCategory(receive());
+		send("활성화 여부 (Y,N) : ");
+		mDto.setActivation(receive());
+		send("입력완료");
+
+		posControl.menuModify(mDto);
+
+//		send("계속 하시겠습니까?");
+//		choose = receive();
+//		if (choose.equals("Y") || choose.equals("y")) {
+//			menuModify();
+//		} else if (choose.equals("N") || choose.equals("n")) {
+			menuMenu();
+//		}
+
 
 	}
 
@@ -1111,20 +1196,22 @@ public class Scripts {
 						send("더 이상의 구매이력이 존재하지 않습니다");
 					}
 					check = true;
-				} 
+				}
 			}
-			if(check==false) {
+			if (check == false) {
 				send("고객번호를 잘 못 입력하셨습니다");
 				send("처음부터 다시 진행해주세요");
 			}
-			
+
 		} else {
 			send("일치하는 고객이 없습니다");
 		}
 
+
 	}
 
 	public void MostBuyingRecord() {
+
 		send("고객의 최다 구매물품을 검색합니다");
 		send("검색을 원하는 고객의 이름을 입력하세요");
 		choose = receive();
@@ -1166,13 +1253,13 @@ public class Scripts {
 						send("더 이상의 구매이력이 존재하지 않습니다");
 					}
 					check = true;
-				} 
+				}
 			}
-			if(check==false) {
+			if (check == false) {
 				send("고객번호를 잘 못 입력하셨습니다");
 				send("처음부터 다시 진행해주세요");
 			}
-			
+
 		} else {
 			send("일치하는 고객이 없습니다");
 		}

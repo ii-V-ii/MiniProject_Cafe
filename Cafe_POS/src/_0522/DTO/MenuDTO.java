@@ -1,6 +1,7 @@
 package _0522.DTO;
 
 public class MenuDTO {
+
 	String menuId;
 	String name;
 	int amount;
