@@ -1,6 +1,7 @@
 package _0522;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.util.ArrayList;
 
 import _0522.DTO.IdVO;
@@ -15,6 +16,7 @@ import _0522.DTO.RegularStaffDTO;
 import _0522.DTO.StaffDTO;
 import _0522.DTO.StockDTO;
 import _0522.DTO.StoreDTO;
+import oracle.sql.DATE;
 
 /*
  * View에 해당하는 Scripts 클래스와 실제로 각종 기능을 수행하는 QueryList 클래스를 연결해주는 클래스입니다 
@@ -139,6 +141,27 @@ public class Pos_controller {
 			String addr) {
 
 	}
+	
+	
+	public String[][] salesInfoDefault() {
+		return query.salesInfoDefault();
+	}
+	
+	public ArrayList<String[]> salesInfoDefault(String[] date) {
+		return query.salesInfoDefault(date);
+	}
+	
+	public String[][] salesMenuDate(String menuName){
+		return query.salesMenuDate(menuName);
+	}
+	public String salesMenuDate30(String menuName){
+		return query.salesMenuDate30(menuName);
+	}
+	public String salesMenuDate365(String menuName){
+		return query.salesMenuDate365(menuName);
+	}
+
+	
 
 	// 매장관리>재고관리>입고(비품)
 	public void matestock(String id, String name, int stock, int cost) {
