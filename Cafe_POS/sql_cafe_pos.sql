@@ -61,7 +61,9 @@ menuID VARCHAR2(30),
 name VARCHAR2(30) CONSTRAINT menu_nu_name NOT NULL,
 price NUMBER CONSTRAINT menu_nu_price NOT NULL,
 --recipe VARCHAR2(30) CONSTRAINT menu_nu_recipe NOT NULL,
-category VARCHAR2(30),  
+category VARCHAR2(30), 
+-- 활성화 타입 넣어줌
+activation VARCHAR2(30),
 CONSTRAINT menu_pk_menuID PRIMARY KEY(menuID),
 CONSTRAINT menu_ch_price CHECK(price>0)
 );
@@ -198,18 +200,18 @@ Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0003','박손님',1
 Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0004','이손님',1011712225,'남',911205);
 
 
-
-
+--===check=======================================================================================================================
 REM INSERTING into MENU
 SET DEFINE OFF;
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me1','아메리카노',4500,'커피음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me2','카페라떼',4800,'커피음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me3','카페모카',5000,'커피음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me4','돌체라떼',5300,'커피음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me5','핫초코',5500,'음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me6','딸기바나나',6000,'음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me7','베이글',3500,'베이커리');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me8','스콘',3500,'베이커리');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me1','아메리카노',4500,'커피음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me2','카페라떼',4800,'커피음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me3','카페모카',5000,'커피음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me4','돌체라떼',5300,'커피음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me5','핫초코',5500,'음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me6','딸기바나나',6000,'음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me7','베이글',3500,'베이커리','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me8','스콘',3500,'베이커리','Y');
+
 
 REM INSERTING into ORDERLIST
 SET DEFINE OFF;
