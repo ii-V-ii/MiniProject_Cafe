@@ -73,7 +73,7 @@ public class Pos_main extends Thread {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		posControl.setQueryList(con);
+		posControl.setQueryList(con, scripts);
 		try {
 			con = cp.getConnection();
 		} catch (SQLException e) {

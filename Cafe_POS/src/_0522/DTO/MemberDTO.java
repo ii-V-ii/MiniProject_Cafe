@@ -1,3 +1,4 @@
+
 package _0522.DTO;
 
 public class MemberDTO{
@@ -6,6 +7,17 @@ public class MemberDTO{
 	private int phone;
 	private String sex;
 	private int birth;
+	
+	public MemberDTO() {
+		
+	}
+	public MemberDTO(String memberID,String name,int phone,String sex,int birth) {
+		this.memberID=memberID;
+		this.name=name;
+		this.phone=phone;
+		this.sex=sex;
+		this.birth=birth;
+	}
 	
 	public String getMemberID() {
 		return memberID;
@@ -37,6 +49,5 @@ public class MemberDTO{
 	public void setBirth(int birth) {
 		this.birth = birth;
 	}
-	
-	
+
 }

@@ -8,6 +8,7 @@ public class RowMaterialDTO {
 	private int cost;
 	
 	
+	
 	public String getId() {
 		return id;
 	}
