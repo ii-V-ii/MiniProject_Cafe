@@ -114,7 +114,7 @@ public class QueryList {
 
 	}
 	//////////////////////////////////////////////////////////////////////////////
-	////	 판매
+	//// 판매
 	//////////////////////////////////////////////////////////////////////////////
 
 	public void calcualteOrder() {
@@ -141,13 +141,13 @@ public class QueryList {
 			member.setMemberID(rs.getString(1));
 			member.setPhone(rs.getInt(2));
 
-			//가게번호, 주문번호, 고객, 날짜, 주문총액
+			// 가게번호, 주문번호, 고객, 날짜, 주문총액
 			pps = con.prepareStatement(
 					"INSERT INTO orderlist VALUES(?, 'or'||order_seq.nextval,?, to_date(sysdate), 1)");
 			pps.setString(1, store.getStoreId());
 			pps.setString(2, member.getMemberID());
 			pps.executeUpdate();
-			//메뉴, 양, 합계액
+			// 메뉴, 양, 합계액
 			pps = con.prepareStatement("INSERT INTO orderDetail VALUES('or'||order_seq.currval, ?, ?, ?)");
 			int sumprice = 0;
 			for (MenuDTO menu : MenuDTO.getOrderedMenu()) {
@@ -208,45 +208,45 @@ public class QueryList {
 		return null;
 
 	}
-	//고객관리수정,소미파트
-	public  MemberDTO[] modifyshowMember(MemberDTO modifymember)  {
-		sb="UPDATE member SET name = ?, phone = ?, sex = ?, birth = ? WHERE memberid = ?";
+
+	// 고객관리수정,소미파트
+	public MemberDTO[] modifyshowMember(MemberDTO modifymember) {
+		sb = "UPDATE member SET name = ?, phone = ?, sex = ?, birth = ? WHERE memberid = ?";
 		MemberDTO[] modifyshowMember = null;
 		try {
 			pps = con.prepareStatement(sb);
-			System.out.println(modifymember.getName()+modifymember.getPhone()+modifymember.getSex()+modifymember.getBirth()+modifymember.getMemberID());
+			System.out.println(modifymember.getName() + modifymember.getPhone() + modifymember.getSex()
+					+ modifymember.getBirth() + modifymember.getMemberID());
 			pps.setString(1, modifymember.getName());
 			pps.setInt(2, modifymember.getPhone());
-			pps.setString(3,modifymember.getSex());
+			pps.setString(3, modifymember.getSex());
 			pps.setInt(4, modifymember.getBirth());
-			pps.setString(5,modifymember.getMemberID());
+			pps.setString(5, modifymember.getMemberID());
 			pps.executeUpdate();
 			System.out.println("member_info modify finish~");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			
-			//System.out.println("format 불일치로인한 error.");
-		}return modifyshowMember;
+
+			// System.out.println("format 불일치로인한 error.");
+		}
+		return modifyshowMember;
 	}
-	
-	//고객관리삭제, 소미파트
-	public MemberDTO[] deleteshowMember(MemberDTO deletemember){
-		sb="DELETE member SET name = ?, phone = ?, sex = ?, birth = ? WHERE memberid =?";
-		MemberDTO[]deleteshowMember = null;
+
+	// 고객관리삭제, 소미파트
+	public MemberDTO[] deleteshowMember(MemberDTO deletemember) {
+		sb = "DELETE FROM member WHERE memberid =?";
+		MemberDTO[] deleteshowMember = null;
 		try {
 			pps = con.prepareStatement(sb);
-			System.out.println(deletemember.getName()+deletemember.getPhone()+deletemember.getSex()+deletemember.getBirth()+deletemember.getMemberID());
-			pps.setString(1,deletemember.getName());
-			pps.setInt(2,deletemember.getPhone());
-			pps.setString(3,deletemember.getSex());
-			pps.setInt(4,deletemember.getBirth());
-			pps.setString(5,deletemember.getMemberID());
+			pps.setString(1, deletemember.getMemberID());
+			pps.executeUpdate();
 			System.out.println("member_info delete finish~");
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}return deleteshowMember;
+		}
+		return deleteshowMember;
 	}
-	
+
 	public MemberDTO[] searchMember(String memberName) {// 일단주석처리
 		MemberDTO[] memberList = null;
 		try {
@@ -276,6 +276,21 @@ public class QueryList {
 
 		return memberList;
 
+	}
+
+	public void enrollMember(MemberDTO member) {
+		try {
+			sb = "INSERT INTO member VALUES (member_seq.nextval, ?, ?,?,?,0)";
+
+			pps = con.prepareStatement(sb);
+			pps.setString(1, member.getName());
+			pps.setInt(2, member.getPhone());
+			pps.setString(3, member.getSex());
+			pps.setInt(4, member.getBirth());
+			pps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public OrderListDTO[] lastBuyingData(MemberDTO member) {
@@ -444,31 +459,39 @@ public class QueryList {
 
 	// 매장관리>매장정보>정보수정
 	public void storeInfoMotify(StoreDTO sDto) {
-		int resultInt = 0;
+
 		StoreDTO orgDto = new StoreDTO();
 		try {
-			pps = con.prepareStatement("select storeno from STOREINFO where storeno = ?");
-			pps.setString(1, orgDto.getStoreId());
+			pps = con.prepareStatement("select name from STOREINFO where name = ?");
+			pps.setString(1, sDto.getName());
 			rs = pps.executeQuery();
 			while (rs.next()) {
-				orgDto.setStoreId(rs.getString(1));
+				orgDto.setName(rs.getString(1));
+			System.out.println(0);
 			}
-
-			if (sDto.getStoreId().equals(orgDto.getStoreId())) {
+			System.out.println(1);
+			
+			
+			if (sDto.getName().equals(orgDto.getName())) {
+				System.out.println(2);
 				pps = con.prepareStatement(
-						"UPDATE STOREINFO SET name = ? , owner = ?, opendate = TO_CHAR(?,'YYYYMMDD') ,closedate = TO_CHAR(?,'YYYYMMDD'), phone = ? ,address = ? WHERE storeno = ?");
+						"UPDATE STOREINFO SET name=?, owner = ?, opendate = ?, closedate = ?, phone = ? , address = ? WHERE name = ?");
+				System.out.println(3);
 				pps.setString(1, sDto.getName());
 				pps.setString(2, sDto.getOwner());
 				pps.setString(3, sDto.getOpendate());
 				pps.setString(4, sDto.getClosedate());
 				pps.setInt(5, sDto.getPhone());
 				pps.setString(6, sDto.getAddress());
-				pps.setString(7, sDto.getStoreId());
-				resultInt = pps.executeUpdate();
+				pps.setString(7, sDto.getName());
+				System.out.println(4);
+				pps.executeUpdate();
+				System.out.println(5);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		System.out.println(6);
 	}// storeInfoMotify
 
 	// 매장관리>재고관리>현재비품 현황
@@ -500,10 +523,7 @@ public class QueryList {
 			rs.next();
 
 			// 입력한 내용이 기존에 있는 데이터라면... update
-			if (eDto.getMenuId().equals(orgMe.getMenuId())) {
-				System.out.println("기존에 있는 메뉴입니다.");
-				System.out.println("메뉴정보에서 수정해주세요.");
-			} else {
+			if (!eDto.getMenuId().equals(orgMe.getMenuId())) {
 				pps = con.prepareStatement(
 						"INSERT INTO menu (menuid,name,price,category,activation) VALUES (?,?,?,?,?)");
 				pps.setString(1, eDto.getMenuId());
@@ -801,7 +821,7 @@ public class QueryList {
 	}
 
 	public ArrayList<String[]> showSalaryOption() {
-		sb = "select staffno, name, workstyle, workday, 8 직무시간, round(sal*10000/4.35/40) 시급, sal*10000 월급  from staff natural join staff_all where storeno = ? and workstyle = '정직원' union select staffno, name, workstyle, workday, hour, pay_per_hour, workday*hour*pay_per_hour*4.35 월급 from staff natural join staff_part where storeno = ? and workstyle = '파트타임'";
+		sb = "select staffno, name, workstyle, workday, 8 직무시간, round(sal/4.35/40) 시급, sal 월급  from staff natural join staff_all where storeno = ? and workstyle = '정직원' union select staffno, name, workstyle, workday, hour, pay_per_hour, workday*hour*pay_per_hour*4.35 월급 from staff natural join staff_part where storeno = ? and workstyle = '파트타임'";
 		ArrayList<String[]> optionList = new ArrayList<>();
 		try {
 			pps = con.prepareStatement(sb);
@@ -1023,4 +1043,3 @@ public class QueryList {
 	}
 
 }
-

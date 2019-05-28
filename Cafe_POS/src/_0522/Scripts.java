@@ -559,6 +559,7 @@ public class Scripts {
 
 	// 고객관리>회원정보
 	public void custInfo() {
+		
 		send("2. 고객 검색");
 		send("3. 상세 고객 정보");
 		send("4. 되돌아가기");
@@ -587,7 +588,47 @@ public class Scripts {
 
 	// 고객관리>회원등록
 	public void custenroll() {
-
+		send("새로운 고객을 등록합니다");
+		send("아래의 정보를 맞게 입력하세요");
+		send(" * 이 붙은 항목은 필수 입력사항입니다");
+		while (true) {
+			send("* 이름 : ");
+			choose = receive();
+			if (choose.contentEquals(""))
+				send("이름은 필수 입력사항입니다. 다시 입력하세요");
+			else {
+				member.setName(choose);
+				break;
+			}
+		}
+		
+		send("전화번호 : ");
+		choose = receive();
+		if (choose.contentEquals("")) {
+			member.setPhone(1000000000);
+		} else {
+			int phoneNumber = Integer.parseInt(choose);
+			member.setPhone(phoneNumber);
+		}
+		send("성별 : ");
+		send("'남' 또는 '여' 로 입력하세요");
+		choose = receive();
+		if (choose.contentEquals("")) {
+			member.setSex("");
+		} else {
+			member.setSex(choose);
+		}
+		send("생년월일 : ");
+		choose = receive();
+		if (choose.contentEquals("")) {
+			member.setBirth(900101);
+		} else {
+			int birth = Integer.parseInt(choose);
+			member.setBirth(birth);
+		}
+		
+		posControl.enrollMember(member);
+		send("등록이 완료되었습니다");
 	}
 
 	// 고객관리>고객구매이력
@@ -1090,12 +1131,12 @@ public class Scripts {
 						send("값을 입력하지 않았습니다");
 					}
 				}
-				send("시급을 입력하세요 (8351 이상의 정수 입력)");
+				send("시급을 입력하세요 (8350 이상의 정수 입력)");
 				while (true) {
 					choose = receive();
 					if (choose != "") {
 						pay = Integer.parseInt(choose);
-						if (pay <= 8350) {
+						if (pay < 8350) {
 							send("8350보다 큰 값을 입력하세요");
 						} else {
 							break;
@@ -1134,7 +1175,7 @@ public class Scripts {
 						send("값을 입력하지 않았습니다");
 					}
 				}
-				send("월급을 입력하세요(단위: 10000원)");
+				send("월급을 입력하세요(단위:원)");
 				while (true) {
 					choose = receive();
 					if (choose != "") {
@@ -1240,12 +1281,12 @@ public class Scripts {
 		switch (choose) {
 		case "y":
 			int pay = 0;
-			send("새로운 월급 액수를 입력하세요(8351 이상의 정수)");
+			send("새로운 월급 액수를 입력하세요(8350 이상의 정수)");
 			while (true) {
 				choose = receive();
 				if (choose != "") {
 					pay = Integer.parseInt(choose);
-					if (pay > 8350) {
+					if (pay > 8349) {
 						break;
 					} else {
 						send("8350보다 큰 정수를 입력하세요");
@@ -1277,7 +1318,7 @@ public class Scripts {
 		switch (choose) {
 		case "y":
 			int pay = 0;
-			send("새로운 월급 액수를 입력하세요(10000원 단위)");
+			send("새로운 월급 액수를 입력하세요(단위 : 원)");
 			while (true) {
 				choose = receive();
 				if (choose != "") {
@@ -1456,26 +1497,22 @@ public class Scripts {
 		// 매장 정보 수정 합니다~
 		StoreDTO sDto = new StoreDTO();
 		send("매장 정보 수정해주세요.");
-		send("지점번호 : ");
-		sDto.setStoreId(receive());
-		send("지점명 : ");
-		sDto.setName(receive());
+		send("지점명 : ");		// ***not null
+		sDto.setName(receive());	// *** not null
 		send("지점담당자 : ");
 		sDto.setOwner(receive());
 		send("개업일 : ");
-		sDto.setOpendate(receive()); // *** int로 입력되야함
+		sDto.setOpendate(receive()); // *** not null
 		send("폐업일 : ");
-		sDto.setClosedate(receive()); // *** int로 입력되야함
+		sDto.setClosedate(receive()); 
 		send("매장전화번호 : ");
 		sDto.setPhone(Integer.parseInt(receive())); // *** int로 입력되야함
 		send("매장주소 : ");
 		sDto.setAddress(receive());
 
-		send("입력완료");
-
 		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
 		posControl.storeInfoMotify(sDto);
-
+		send("입력완료");
 		// 메뉴로 다시 돌아가기
 		storeMenu();
 	}
@@ -1768,7 +1805,7 @@ public class Scripts {
 		}
 		if(memberDetailModifyList.length==1) {
 			member=memberDetailModifyList[0];
-			send("정보를 수정하겠습니까?"+"\t"+"yes 또는 no를 입력해주세요");
+			send("정보를 수정하겠습니까?"+"\t"+"y 또는 n를 입력해주세요");
 			send("선택>> ");
 			choose=receive();
 			switch(choose) {
@@ -1854,16 +1891,15 @@ public class Scripts {
 	
 	public void showMemberDetailDelete() {
 
-		send("삭제 할 고객님의 이름을 입력하세요");
+		send("삭제 할 고객의 이름을 입력하세요");
 		choose = receive();
-		member = null;
-		MemberDTO[] deletememberList = posControl.deleteshowMember(choose);
-		for (MemberDTO member : deletememberList) {
-			send("" + member.getName() + "\t" + member.getPhone() + "\t" + member.getSex() + "\t" + member.getBirth() + "\t" +member.getMemberID());
+		MemberDTO[] memberList = posControl.searchMember(choose);
+		for (MemberDTO member : memberList) {
+			send("" + member.getMemberID() + "\t" + member.getName() + "\t" + member.getPhone());
 		}
-		if (deletememberList.length == 1) {
-			member = deletememberList[0];
-			send("위 고객 정보를 삭제하시겠습니까? y/n");
+		if (memberList.length == 1) {
+			member = memberList[0];
+			send("위 고객의 정보를 삭제하시겠습니까? y/n");
 			choose = receive();
 			switch (choose) {
 			case "y":
@@ -1877,25 +1913,26 @@ public class Scripts {
 				send("다시 입력하세요");
 				break;
 			}
-		} else if (deletememberList.length > 1) {
-			send("동명이인이 있습니다. 삭제하려는 고객의 고객번호를 입력하세요");
+
+		} else if (memberList.length > 1) {
+			send("동명이인이 있습니다. 삭제하려는 직원의 직원번호를 입력하세요");
 			choose = receive();
 			boolean check = false;
-			for (MemberDTO temp : deletememberList) {
+			for (MemberDTO temp : memberList) {
 				if (choose.contentEquals(temp.getMemberID())) {
 					member = temp;
 					check = true;
 				}
 			}
 			if (!check)
-				send("고객번호를 다시 확인해주세요");
+				send("직원 번호를 다시 확인해주세요");
 			else if (check) {
-				send("위 고객의 정보를 삭제하시겠습니까? y/n");
+				send("위 직원의 정보를 삭제하시겠습니까? y/n");
 				choose = receive();
 				switch (choose) {
 				case "y":
 					posControl.deleteshowMember(member);
-					send("해당 고객 정보가 삭제되었습니다");
+					send("해당 직원의 정보가 삭제되었습니다");
 					break;
 				case "n":
 					send("변경을 취소했습니다");
@@ -1908,7 +1945,8 @@ public class Scripts {
 				send("error:입력을 다시 확인해주세요");
 
 		} else {
-			send("일치하는 고객이 없습니다");
+			send("일치하는 직원이 없습니다");
+
 		}
 	}
 

@@ -180,17 +180,13 @@ CONSTRAINT buyingData_ch_amount CHECK(amount >=0)
 );
 
 commit;
-<<<<<<< HEAD
+
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --시퀀스 생성
 CREATE SEQUENCE staff_SEQ START WITH 1000 INCREMENT BY 1  MAXVALUE 10000  MINVALUE 1  NOCYCLE;
 CREATE SEQUENCE member_SEQ START WITH 100000 INCREMENT BY 1 MAXVALUE 999999 MINVALUE 1 NOCYCLE;
 CREATE SEQUENCE order_seq start with 101  increment by 1 maxvalue 999 minvalue 100 cycle;
 CREATE SEQUENCE menu_seq START WITH   01  increment by 1 maxvalue 99 minvalue 1  NOCYCLE;
-
-=======
->>>>>>> master
-
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -209,53 +205,32 @@ Insert into MASTERLIST (STORENO, MASTERID, MASTERPASSWORD) values ('03', 'test2'
 
 REM INSERTING into MEMBER
 SET DEFINE OFF;
-<<<<<<< HEAD
+
 Insert into MEMBER (MEMBERID, NAME, PHONE, SEX, BIRTH, POINT) values (0, '비회원', 0, null, null, 0);
-=======
-<<<<<<< HEAD
-Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0001','김손님',1011112,'여',850505);
-Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0002','최손님',1011152223,'남',870605);
-Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0003','박손님',1011612224,'여',890705);
-Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0004','이손님',1011712225,'남',911205);
-=======
->>>>>>> master
 Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH,POINT) values (member_seq.nextval,'김손님',1011112,'여',850505,0);
 Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH,POINT) values (member_seq.nextval,'최손님',1011152223,'남',870605,0);
 Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH,POINT) values (member_seq.nextval,'박손님',1011612224,'여',890705,0);
 Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH,POINT) values (member_seq.nextval,'이손님',1011712225,'남',911205,0);
 
 
->>>>>>> master
-
-
 --===check=======================================================================================================================
 REM INSERTING into MENU
 SET DEFINE OFF;
-<<<<<<< HEAD
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me'||menu_seq.nextval,'아메리카노',4500,'커피음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me'||menu_seq.nextval,'카페라떼',4800,'커피음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me'||menu_seq.nextval,'카페모카',5000,'커피음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me'||menu_seq.nextval,'돌체라떼',5300,'커피음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me'||menu_seq.nextval,'핫초코',5500,'음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me'||menu_seq.nextval,'딸기바나나',6000,'음료');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me'||menu_seq.nextval,'베이글',3500,'베이커리');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me'||menu_seq.nextval,'스콘',3500,'베이커리');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY) values ('me'||menu_seq.nextval,'마들렌',2000,'베이커리');
-=======
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me1','아메리카노',4500,'커피음료','Y');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me2','카페라떼',4800,'커피음료','Y');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me3','카페모카',5000,'커피음료','Y');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me4','돌체라떼',5300,'커피음료','Y');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me5','핫초코',5500,'음료','Y');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me6','딸기바나나',6000,'음료','Y');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me7','베이글',3500,'베이커리','Y');
-Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me8','스콘',3500,'베이커리','Y');
->>>>>>> master
+
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me'||menu_seq.nextval,'아메리카노',4500,'커피음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me'||menu_seq.nextval,'카페라떼',4800,'커피음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me'||menu_seq.nextval,'카페모카',5000,'커피음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me'||menu_seq.nextval,'돌체라떼',5300,'커피음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me'||menu_seq.nextval,'핫초코',5500,'음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me'||menu_seq.nextval,'딸기바나나',6000,'음료','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me'||menu_seq.nextval,'베이글',3500,'베이커리','Y');
+Insert into MENU (MENUID,NAME,PRICE,CATEGORY,ACTIVATION) values ('me'||menu_seq.nextval,'스콘',3500,'베이커리','Y');
+
 
 
 REM INSERTING into ORDERLIST
 SET DEFINE OFF;
-<<<<<<< HEAD
+
 Insert into ORDERLIST (STORENO, ORDERID,ORDERDATE,ORDERPRICE,MEMBERID) values ('01', 'or'||order_seq.nextval,to_date('19/05/20','RR/MM/DD'),22500,'100000');
 Insert into ORDERLIST (STORENO, ORDERID,ORDERDATE,ORDERPRICE,MEMBERID) values ('01', 'or'||order_seq.nextval,to_date('19/05/21','RR/MM/DD'),16600,'100000');
 INSERT INTO ORDERLIST (STORENO, ORDERID, ORDERDATE, ORDERPRICE, MEMBERID) values ('02', 'or'||order_seq.nextval, to_date('19/05/21', 'RR/MM/DD'), 9000, '100000');
@@ -297,27 +272,15 @@ INSERT INTO orderdetail (COUNT, SUMPRICE, ORDERID, MENUID) values (1, 6000, 'or1
 INSERT INTO orderdetail (COUNT, SUMPRICE, ORDERID, MENUID) values (4, 14000, 'or111', 'me8');
 
 
-
-
-
-=======
-Insert into ORDERLIST (STORENO, ORDERID,ORDERDATE,ORDERPRICE,MEMBERID) values ('01', 'or01',to_date('19/02/02','RR/MM/DD'),25000,'c0001');
-Insert into ORDERLIST (STORENO, ORDERID,ORDERDATE,ORDERPRICE,MEMBERID) values ('01', 'or02',to_date('19/02/03','RR/MM/DD'),45000,'c0001');
-
-REM INSERTING into ORDERDETAIL
-SET DEFINE OFF;
-Insert into ORDERDETAIL (COUNT,SUMPRICE,ORDERID,MENUID) values (1,4500,'or01','me1');
->>>>>>> master
-
 REM INSERTING into STAFF
 SET DEFINE OFF;
-Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values ('1000','류혜영',to_date('19/02/26','RR/MM/DD'),to_date('99/12/31','RR/MM/DD'),1012538253,900729,'여','정직원','01');
-Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values ('1001','한국화',to_date('19/03/26','RR/MM/DD'),to_date('99/12/31','RR/MM/DD'),1011112222,911205,'여','정직원','01');
-Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values ('1002','한소미',to_date('19/04/26','RR/MM/DD'),to_date('99/12/31','RR/MM/DD'),1022225555,920102,'여','정직원','01');
-Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values ('1003','김종현',to_date('18/01/01','RR/MM/DD'),to_date('19/03/25','RR/MM/DD'),1095558555,931212,'남','파트타임','02');
-Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values ('1004','황민현',to_date('17/12/25','RR/MM/DD'),to_date('18/02/08','RR/MM/DD'),1011115555,930728,'남','파트타임','02');
-Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values ('1005','박찬열',to_date('18/05/31','RR/MM/DD'),to_date('18/12/31','RR/MM/DD'),1055558888,921125,'남','정직원','03');
-Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values ('1006','변백현',to_date('19/01/01','RR/MM/DD'),to_date('99/12/31','RR/MM/DD'),1044488850,920506,'남','파트타임','03');
+Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values (staff_seq.nextval,'류혜영',to_date('19/02/26','RR/MM/DD'),to_date('99/12/31','RR/MM/DD'),1012538253,900729,'여','정직원','01');
+Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values (staff_seq.nextval,'한국화',to_date('19/03/26','RR/MM/DD'),to_date('99/12/31','RR/MM/DD'),1011112222,911205,'여','정직원','01');
+Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values (staff_seq.nextval,'한소미',to_date('19/04/26','RR/MM/DD'),to_date('99/12/31','RR/MM/DD'),1022225555,920102,'여','정직원','01');
+Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values (staff_seq.nextval,'김종현',to_date('18/01/01','RR/MM/DD'),to_date('19/03/25','RR/MM/DD'),1095558555,931212,'남','파트타임','02');
+Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values (staff_seq.nextval,'황민현',to_date('17/12/25','RR/MM/DD'),to_date('18/02/08','RR/MM/DD'),1011115555,930728,'남','파트타임','02');
+Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values (staff_seq.nextval,'박찬열',to_date('18/05/31','RR/MM/DD'),to_date('18/12/31','RR/MM/DD'),1055558888,921125,'남','정직원','03');
+Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STORENO) values (staff_seq.nextval,'변백현',to_date('19/01/01','RR/MM/DD'),to_date('99/12/31','RR/MM/DD'),1044488850,920506,'남','파트타임','03');
 
 REM INSERTING into STAFF_ALL
 SET DEFINE OFF;

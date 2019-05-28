@@ -258,6 +258,10 @@ public class Pos_controller {
 	public MemberDTO[] searchMember(String memberName) {//일단주석처리
 		return query.searchMember(memberName);
 	}
+	
+	public void enrollMember(MemberDTO member) {
+		query.enrollMember(member);
+	}
 
 	public OrderListDTO[] lastBuyingData(MemberDTO member) {
 		return query.lastBuyingData(member);
