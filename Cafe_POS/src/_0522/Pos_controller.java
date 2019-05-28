@@ -21,7 +21,7 @@ import _0522.DTO.StoreDTO;
 import oracle.sql.DATE;
 
 /*
- * View에 해당하는 Scripts 클래스와 실제로 각종 기능을 수행하는 QueryList 클래스를 연결해주는 클래스입니다 
+ * View에 해당하는 Scripts 클래스와 실제로 각종 기능을 수행하는 QueryList 클래스를 연결해주는 클래스입니다
  */
 public class Pos_controller {
 	Scripts scripts;
@@ -92,7 +92,7 @@ public class Pos_controller {
 
 	}
 	//////////////////////////////////////////////////////////////////////////////
-		////판매
+	////판매
 	//////////////////////////////////////////////////////////////////////////////
 
 	public void calcualteOrder() {
@@ -102,6 +102,7 @@ public class Pos_controller {
 	public void createPayment(MemberDTO member) {
 		query.createPayment(member);
 	}
+
 	//////////////////////////////////////////////////////////////////////////////
 	public StaffDTO[] showStaffList() {
 		return query.showStaffList();
@@ -111,7 +112,6 @@ public class Pos_controller {
 	public StaffDTO[] searchStaff(String staffName) {
 		return query.searchStaff(staffName);
 	}
-
 
 	public void staffEnroll(StaffDTO staff) {
 		// 직원관리>직원 등록
@@ -126,19 +126,20 @@ public class Pos_controller {
 	public void changeWorkday(StaffDTO staff, int workDay) {
 		query.changeWorkday(staff, workDay);
 	}
-	
+
 	public void changeWorkTime(StaffDTO staff, int workTime) {
 		query.changeWorkTime(staff, workTime);
-		
+
 	}
-	
+
 	public void changePayMonth(StaffDTO staff, int pay) {
 		query.changePayMonth(staff, pay);
 	}
-	
+
 	public void changePayHour(StaffDTO staff, int pay) {
 		query.changePayHour(staff, pay);
 	}
+
 	public MenuItemDTO[] menuInfoDefault() {
 		return query.menuInfoDefault();
 	}
@@ -146,7 +147,6 @@ public class Pos_controller {
 	public void setDTOdata() {
 		query.setDTOData();
 	}
-
 
 	public String[][] salesInfoDefault() {
 		return query.salesInfoDefault();
@@ -173,6 +173,7 @@ public class Pos_controller {
 
 	// 혜영
 	// =============================================================================
+
 	// 매장정보>기본정보
 	public StoreDTO storeInfoDefault() {
 		return query.storeInfoDefault();
@@ -187,7 +188,6 @@ public class Pos_controller {
 	public void showstockList() {
 		query.showstockList();
 	}
-
 
 	// 매장관리>재고관리>입고(원재료)
 	public void temp(RawMaterialDTO raw) {
@@ -204,8 +204,29 @@ public class Pos_controller {
 		query.menuModify(mDto);
 	}
 
+	// 메뉴관리>메뉴등록
 	public void menuEnroll(MenuItemDTO eDto) {
 		query.menuEnroll(eDto);
+	}
+
+	// 메뉴관리>메뉴정보>삭제
+	public void menuDelete(MenuDTO menu) {
+		query.menuDelete(menu);
+	}
+
+	// 메뉴관리>메뉴정보>활성화
+	public void menuActivation(String n) {
+		query.menuActivation(n);
+	}
+
+	// 메뉴관리>메뉴검색>이름
+	public void searchMenuName(String str) {
+		query.searchMenuName(str);
+	}
+
+	// 메뉴관리>메뉴검색>종류
+	public void searchMenuCategory(String str) {
+		query.searchMenuCategory(str);
 	}
 
 // ============================================================================
@@ -213,20 +234,18 @@ public class Pos_controller {
 		query.updateStaffInfo(staff);
 	}
 
-
 	public void deleteStaffInfo(StaffDTO staff) {
 		query.deleteStaffInfo(staff);
 	}
+
 	public ArrayList<String[]> showSalaryOption() {
 		return query.showSalaryOption();
 	}
-
 
 // ============================================================================
 	public MemberDTO[] showMember() {
 		return query.showMembers();
 	}
-
 
 	public MemberDTO[] searchMember(String memberName) {// 일단주석처리
 		return query.searchMember(memberName);
@@ -235,7 +254,6 @@ public class Pos_controller {
 	public OrderListDTO[] lastBuyingData(MemberDTO member) {
 		return query.lastBuyingData(member);
 	}
-
 
 	public MenuDTO[] mostBuyingData(MemberDTO member) {
 		return query.mostBuyingData(member);
