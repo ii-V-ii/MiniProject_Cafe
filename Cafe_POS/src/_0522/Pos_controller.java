@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.util.ArrayList;
 
-
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
 import _0522.DTO.MemberDTO;
@@ -20,7 +19,6 @@ import _0522.DTO.StockDTO;
 import _0522.DTO.StoreDTO;
 
 import oracle.sql.DATE;
-
 
 /*
  * View에 해당하는 Scripts 클래스와 실제로 각종 기능을 수행하는 QueryList 클래스를 연결해주는 클래스입니다 
@@ -112,74 +110,121 @@ public class Pos_controller {
 		 */
 	}
 
+	// 메뉴리스트
+
 	public StaffDTO[] showStaffList() {
 		return query.showStaffList();
 
 	}
+
 	public StaffDTO[] searchStaff(String staffName) {
 		return query.searchStaff(staffName);
 	}
 
-
 	public void staffEnroll(StaffDTO staff) {
 		// 직원관리>직원 등록
 		query.staffEnroll(staff);
-		
+
 	}
 
 	public void staffSchedule() {
 		// 직원관리>스케쥴관리
 	}
 
-	
 	public MenuItemDTO[] menuInfoDefault() {
 		return query.menuInfoDefault();
 	}
-	
-	
 
 	public void setDTOdata() {
 		query.setDTOData();
 	}
 
-	
-	
-	
-	// 혜영 =============================================================================
-	
+	public String[][] salesInfoDefault() {
+		return query.salesInfoDefault();
+	}
+
+	public ArrayList<String[]> salesInfoDefault(String[] date) {
+		return query.salesInfoDefault(date);
+
+	}
+
+	public String[][] salesMenuDate(String menuName) {
+		return query.salesMenuDate(menuName);
+	}
+
+	public String salesMenuDate30(String menuName) {
+
+		return query.salesMenuDate30(menuName);
+	}
+
+	public String salesMenuDate365(String menuName) {
+
+		return query.salesMenuDate365(menuName);
+	}
+
+	// 혜영
+	// =============================================================================
+
 	// 매장정보>기본정보
 	public StoreDTO storeInfoDefault() {
 		return query.storeInfoDefault();
 	}
-	
+
 	// 매장정보>정보수정
 	public void storeInfoMotify(StoreDTO sDto) {
 		query.storeInfoMotify(sDto);
 	}
+
 	// 매장관리>재고관리>현재비품현황
 	public void showstockList() {
 		query.showstockList();
 	}
+
 	// 매장관리>재고관리>입고(원재료)
 	public void temp(RawMaterialDTO raw) {
-		query.rawstock(raw); 
+		query.rawstock(raw);
 	}
+
 	// 매장관리>재고관리>입고(비품)
 	public void matestock(MaterialDTO raw) {
-		query.matestock(raw); 
+		query.matestock(raw);
 	}
+
 	// 메뉴관리>메뉴정보>수정
 	public void menuModify(MenuItemDTO mDto) {
 		query.menuModify(mDto);
 	}
+
+	// 메뉴관리>메뉴등록
 	public void menuEnroll(MenuItemDTO eDto) {
 		query.menuEnroll(eDto);
+	}
+
+	// 메뉴관리>메뉴정보>삭제
+	public void menuDelete(MenuDTO menu) {
+		query.menuDelete(menu);
+	}
+
+	// 메뉴관리>메뉴정보>활성화
+	public void menuActivation(String n) {
+		query.menuActivation(n);
+	}
+
+	// 메뉴관리>메뉴검색>이름
+	public void searchMenuName(String str) {
+		query.searchMenuName(str);
+	}
+	
+	// 메뉴관리>메뉴검색>종류
+	public void searchMenuCategory(String str) {
+		query.searchMenuCategory(str);
 	}
 
 // ============================================================================
 	public void updateStaffInfo(StaffDTO staff) {
 		query.updateStaffInfo(staff);
 	}
+
 	public void deleteStaffInfo(StaffDTO staff) {
 		query.deleteStaffInfo(staff);
 	}
@@ -188,14 +233,15 @@ public class Pos_controller {
 	public MemberDTO[] showMember() {
 		return query.showMembers();
 	}
-	
-	public MemberDTO[] searchMember(String memberName) {//일단주석처리
+
+	public MemberDTO[] searchMember(String memberName) {// 일단주석처리
 		return query.searchMember(memberName);
 	}
+
 	public OrderListDTO[] lastBuyingData(MemberDTO member) {
 		return query.lastBuyingData(member);
 	}
-	
+
 	public MenuDTO[] mostBuyingData(MemberDTO member) {
 		return query.mostBuyingData(member);
 	}

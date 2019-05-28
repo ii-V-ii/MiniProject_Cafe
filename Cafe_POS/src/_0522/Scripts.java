@@ -546,7 +546,6 @@ public class Scripts {
 					staff.setSex(newData);
 					System.out.println("해당 직원의 성별을" + staff.getSex() + "로 변경완료");
 				}
-
 			}
 		} while (!(newData.contentEquals("") || newData.equals("여") || newData.equals("남")));
 
@@ -625,9 +624,7 @@ public class Scripts {
 
 		} else {
 			send("일치하는 직원이 없습니다");
-
 		}
-
 	}
 
 
@@ -707,8 +704,7 @@ public class Scripts {
 	 * 
 	 * }
 	 */
-	// ==2차메뉴
-	// 메서드=====================================================================
+	// ==2차메뉴 메서드=====================================================================
 	// 매장관리 > 매장정보
 	public void storeInfo() {
 		send("1. 기본정보"); // storeInfoDefault()
@@ -809,7 +805,7 @@ public class Scripts {
 			menuDelete();
 			break;
 		case "4":
-			menuOnOff();
+			menuActivation();
 			break;
 		default:
 			send("다시 선택하세요.");
@@ -820,8 +816,6 @@ public class Scripts {
 
 	// 메뉴관리 > 메뉴등록
 	public void menuEnroll() {
-
-		
 		MenuItemDTO eDto = new MenuItemDTO();
 		
 		send("====메뉴입력====");
@@ -870,8 +864,8 @@ public class Scripts {
 	// -----------------------------여기부터 3차메뉴 관리
 	// 매장관리>매장정보>기본정보
 	public void storeInfoDefault() {
-
 		StoreDTO showStoreList = posControl.storeInfoDefault();
+		
 		send("======= 매장 정보 =======");
 		send("" + showStoreList.getName());
 		send("" + showStoreList.getOwner());
@@ -879,7 +873,6 @@ public class Scripts {
 		send("" + showStoreList.getClosedate());
 		send("" + showStoreList.getPhone());
 		send("" + showStoreList.getAddress());
-
 	}
 
 	// 매장관리>매장정보>수정
@@ -901,6 +894,7 @@ public class Scripts {
 		sDto.setPhone(Integer.parseInt(receive())); // *** int로 입력되야함
 		send("매장주소 : ");
 		sDto.setAddress(receive());
+		
 		send("입력완료");
 
 		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
@@ -923,7 +917,6 @@ public class Scripts {
 
 	// 매장관리>매출정보>기본정보
 	public void salesInfoDefault() {// 쿼리에서 작성해서 보여야함
-
 		send("최근 7일간의 매출입니다");
 		String[][] salesData = posControl.salesInfoDefault();
 		send("날짜\t\t총 매출액");
@@ -986,45 +979,38 @@ public class Scripts {
 		send("===재고 List====");
 		send(" ID | 이름 | 갯수 | 원가 ");
 		posControl.showstockList();
+		
 		send("뒤로가까? y/n");
 		String yon = receive();
 		if (yon == "y")
 			storeMenu();
 		else
 			storeMenu();
-
 	}
 
 	// 매장관리>매출정보>입고관리
 	public void stockManage() {
-
 		send("1. 원재료 입고");
 		send("2. 비품입고");
 		choose = receive();
-
-
+		
 		if (choose.equals("1")) {
 			RawMaterialDTO temp = new RawMaterialDTO();
 			send("원재료 입고를 작성하세요.");
 			send("원재료 ID : ");
 			temp.setId(receive());
-			send("원재료 ID : " + temp.getId());
 
 			send("원재료명 : ");
 			temp.setName(receive());
-			send("원재료명 : " + temp.getName());
 
 			send("분류 : ");
 			temp.setCategory(receive());
-			send("분류 : " + temp.getCategory());
 
 			send("수량 : ");
-			temp.setStock(Integer.parseInt(receive())); // *** int로 입력되야함
-			send("수량 : " + temp.getStock());
+			temp.setStock(Integer.parseInt(receive()));
 
 			send("원가 : ");
-			temp.setCost(Integer.parseInt(receive())); // *** int로 입력되야함
-			send("원가 : " + temp.getCost());
+			temp.setCost(Integer.parseInt(receive())); 
 
 			posControl.temp(temp);
 
@@ -1033,19 +1019,15 @@ public class Scripts {
 			send("비품 입고를 작성하세요.");
 			send("비품 ID : ");
 			temp.setId(receive());
-			send("비품 ID : " + temp.getId());
 
 			send("비품명 : ");
 			temp.setName(receive());
-			send("비품명 : " + temp.getName());
 
 			send("수량 : ");
 			temp.setStock(Integer.parseInt(receive())); // *** int로 입력되야함
-			send("수량 : " + temp.getStock());
 
 			send("원가 : ");
 			temp.setCost(Integer.parseInt(receive())); // *** int로 입력되야함
-			send("원가 : " + temp.getCost());
 
 			posControl.matestock(temp);
 		}
@@ -1057,8 +1039,6 @@ public class Scripts {
 		} else if (choose.equals("N") || choose.equals("n")) {
 			mainMenu();
 		}
-
-
 	}// stockManage
 
 	// 메뉴관리>메뉴정보>기본정보
@@ -1069,13 +1049,13 @@ public class Scripts {
 		for (MenuItemDTO menu : menuList) {
 			send(menu.getMenuId() + "\t" + menu.getName() + "\t" + menu.getPrice() + "\t" + menu.getCategory());
 		}
-
-	}
+	}//menuInfoDefault
 
 	// 메뉴관리>메뉴정보>수정
 	public void menuModify() {
 
 		MenuItemDTO mDto = new MenuItemDTO();
+		menuInfoDefault();
 		send("====메뉴수정====");
 		send("메뉴번호 : ");
 		mDto.setMenuId(receive());
@@ -1098,30 +1078,80 @@ public class Scripts {
 //		} else if (choose.equals("N") || choose.equals("n")) {
 			menuMenu();
 //		}
-
-
-	}
-
+	} // menuModify
+	
 	// 메뉴관리>메뉴정보>삭제
-	public void menuDelete() {
+	public void  menuDelete() {
+		MenuDTO menu = new MenuDTO();
+		menuInfoDefault();
+		send("삭제할 메뉴ID을 입력하세요.");
+		menu.setMenuId(receive());
+		
+		posControl.menuDelete(menu);
+		
+		menuMenu();
+	}
+	
 
+	public void menuActivation() {
+
+		send("====판매가능한 메뉴확인====");
+		send("1. 판매가능한 메뉴\t| 2.시즌메뉴");
+		choose = receive();
+		
+		if(choose.equals("1")) {
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.menuActivation("y");
+		
+		}
+		else if(choose.equals("2")) {
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.menuActivation("n");
+		
+		}else {
+			menuInfo();
+		}
 	}
 
-	// 메뉴관리>메뉴정보>활성화,비활성화
-	public void menuOnOff() {
-
-	}
-
-	// 메뉴검색>메뉴검색>이름
+	// 메뉴관리>메뉴검색>이름
 	public void searchMenuName() {
-
+		
+		menuInfoDefault();
+		send("메뉴를 입력하세요(원재료확인)");
+		choose = receive();
+		
+		posControl.searchMenuName(choose);
+		
+		
+		//SELECT name FROM recipe WHERE menuid = (SELECT menuid FROM menu	WHERE name = '?');
+		
+		
 	}
 
-	// 메뉴검색>메뉴검색>종류
+	// 메뉴관리>메뉴검색>종류
 	public void searchMenuCategory() {
-
+		send("====종류검색====");
+		send("1.커피음료 \t| 2.음료\t| 3.베이커리\t| 4.차");
+		choose = receive();
+		
+		if(choose.equals("1")){
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.searchMenuCategory("커피음료");
+		}else if(choose.equals("2")){
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.searchMenuCategory("음료");
+		}else if(choose.equals("3")){
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.searchMenuCategory("베이커리");
+		}else if(choose.equals("4")){
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.searchMenuCategory("차");
+		}else {
+			send("잘못입력했습니다~");
+			searchMenuCategory();
+		}
+		
 	}
-
 ///////////////////////////////////////////////////////소미 파트 
 	// 고객관리>회원정보 내부 메뉴
 	public void showMembers() {// 1.모두보기
