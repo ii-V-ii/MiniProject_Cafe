@@ -53,8 +53,11 @@ name VARCHAR2(30) CONSTRAINT member_nu_name NOT NULL,
 phone NUMBER,
 sex VARCHAR2(30),
 birth NUMBER,
+point number CONSTRAINT member_nu_point NOT NULL,
 CONSTRAINT member_pk_MemberID PRIMARY KEY(MemberID),
-CONSTRAINT member_ch_sex CHECK(sex IN('여','남'))
+CONSTRAINT member_ch_sex CHECK(sex IN('여','남')),
+CONSTRAINT member_uk_phone UNIQUE  (phone),
+CONSTRAINT member_ch_phone CHECK(point >=0)
 );
 
 CREATE TABLE menu(
@@ -118,7 +121,7 @@ CONSTRAINT staff_part_pk_staffno PRIMARY KEY(staffno),
 CONSTRAINT staff_part_fk_staff FOREIGN KEY(staffno) REFERENCES staff(staffno),
 CONSTRAINT staff_part_ch_workday CHECK(workday<=7),
 CONSTRAINT staff_part_ch_hour CHECK(hour<=8),
-CONSTRAINT staff_part_ch_pay_per_hour CHECK(pay_per_hour>8350)
+CONSTRAINT staff_part_ch_pay_per_hour CHECK(pay_per_hour>=8350)
 );
 
 CREATE TABLE staff_all(
@@ -196,10 +199,19 @@ Insert into MASTERLIST (STORENO, MASTERID, MASTERPASSWORD) values ('03', 'test2'
 
 REM INSERTING into MEMBER
 SET DEFINE OFF;
+<<<<<<< HEAD
 Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0001','김손님',1011112,'여',850505);
 Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0002','최손님',1011152223,'남',870605);
 Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0003','박손님',1011612224,'여',890705);
 Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH) values ('c0004','이손님',1011712225,'남',911205);
+=======
+Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH,POINT) values (member_seq.nextval,'김손님',1011112,'여',850505,0);
+Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH,POINT) values (member_seq.nextval,'최손님',1011152223,'남',870605,0);
+Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH,POINT) values (member_seq.nextval,'박손님',1011612224,'여',890705,0);
+Insert into MEMBER (MEMBERID,NAME,PHONE,SEX,BIRTH,POINT) values (member_seq.nextval,'이손님',1011712225,'남',911205,0);
+
+
+>>>>>>> master
 
 
 --===check=======================================================================================================================
@@ -236,10 +248,10 @@ Insert into STAFF (STAFFNO,NAME,JOINDATE,LEAVEDATE,PHONE,BIRTH,SEX,WORKSTYLE,STO
 
 REM INSERTING into STAFF_ALL
 SET DEFINE OFF;
-Insert into STAFF_ALL (WORKDAY,SAL,STAFFNO) values (5,150,'1000');
-Insert into STAFF_ALL (WORKDAY,SAL,STAFFNO) values (4,130,'1001');
-Insert into STAFF_ALL (WORKDAY,SAL,STAFFNO) values (5,150,'1002');
-Insert into STAFF_ALL (WORKDAY,SAL,STAFFNO) values (3,110,'1005');
+Insert into STAFF_ALL (WORKDAY,SAL,STAFFNO) values (5,1500000,'1000');
+Insert into STAFF_ALL (WORKDAY,SAL,STAFFNO) values (4,1300000,'1001');
+Insert into STAFF_ALL (WORKDAY,SAL,STAFFNO) values (5,1500000,'1002');
+Insert into STAFF_ALL (WORKDAY,SAL,STAFFNO) values (3,1100000,'1005');
 
 REM INSERTING into STAFF_PART
 SET DEFINE OFF;

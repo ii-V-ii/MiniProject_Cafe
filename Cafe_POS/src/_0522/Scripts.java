@@ -11,7 +11,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-
 import _0522.DTO.IdVO;
 import _0522.DTO.MaterialDTO;
 import _0522.DTO.MemberDTO;
@@ -54,7 +53,7 @@ interface customerMenu {
 
 /* 직원관리 */
 interface staffMenu {
-	String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3", PAY = "4";
+	String STAFFINFO = "1", STAFFENROLL = "2", PAY = "3";
 
 }
 
@@ -150,18 +149,6 @@ public class Scripts {
 		}
 		return -1;
 	}
-
-//	public int receiveInt() {
-//		int line = -1;
-//		try {
-//			line = br.read();
-//			return line;
-//		} catch (IOException e) {
-//			System.out.println("Client Exit");
-//			Pos_main.setClientAccess(false);
-//		}
-//		return -1;
-//	}
 
 	// 최초 프로그램 실행시 로그인 기능
 	// 메서드 완성할 떄의 예시로 봐주세요
@@ -290,7 +277,6 @@ public class Scripts {
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
 
-
 		while (true) {
 			send("1.회원정보");
 			send("2.회원등록");
@@ -375,8 +361,8 @@ public class Scripts {
 		// String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
 		send("1. 직원정보 확인");
 		send("2. 직원 등록");
-		send("3. 스케쥴 관리");
-		send("4.급여관리");// 보류
+
+		send("3. 급여 관리");
 		send("선택 >> ");
 
 		choose = receive();
@@ -384,17 +370,16 @@ public class Scripts {
 		switch (choose) {
 		case staffMenu.STAFFINFO:
 			staffMenuFirst();
-
 			break;
+
 		case staffMenu.STAFFENROLL:
 			staffEnroll();
+			break;
 
+		case staffMenu.PAY:
+			staffSalaryManage();
 			break;
-		case staffMenu.SCHEDULE:
-			posControl.staffSchedule();
-			break;
-//		case staffMenu.PAY:
-//		break;
+
 		default:
 			break;
 		}
@@ -546,6 +531,7 @@ public class Scripts {
 					staff.setSex(newData);
 					System.out.println("해당 직원의 성별을" + staff.getSex() + "로 변경완료");
 				}
+
 			}
 		} while (!(newData.contentEquals("") || newData.equals("여") || newData.equals("남")));
 
@@ -624,9 +610,10 @@ public class Scripts {
 
 		} else {
 			send("일치하는 직원이 없습니다");
-		}
-	}
 
+		}
+
+	}
 
 	public void staffEnroll() {
 		send("새로운 직원을 등록합니다");
@@ -685,13 +672,17 @@ public class Scripts {
 		} else {
 			staff.setSex(choose);
 		}
-		send("성별 : ");
-		send("'정직원' 또는 '파트타임'으로 입력하세요");
-		choose = receive();
-		if (choose.contentEquals("")) {
-			staff.setWorkstyle("");
-		} else {
-			staff.setWorkstyle(choose);
+
+		while (true) {
+			send("* 고용형태 : ");
+			send("'정직원' 또는 '파트타임'으로 입력하세요");
+			choose = receive();
+			if (choose.contentEquals("")) {
+				send("고용형태는 필수 입력사항입니다. 다시 입력하세요");
+			} else {
+				staff.setWorkstyle(choose);
+				break;
+			}
 		}
 		staff.setStoreId(store.getStoreId());
 
@@ -699,12 +690,388 @@ public class Scripts {
 		send("등록이 완료되었습니다");
 	}
 
-	/*
-	 * // 직원관리>급여관리 내부 메뉴 public void staffSalaryManage() {
-	 * 
-	 * }
-	 */
-	// ==2차메뉴 메서드=====================================================================
+	// 직원관리>급여관리 내부 메뉴
+	public void staffSalaryManage() {
+		send("1. 현재 직원들의 급여설정을 본다");
+		send("2. 직원의 급여설정을 변경한다");
+		choose = receive();
+		switch (choose) {
+
+		case "1":
+			showSalaryOption();
+			break;
+		case "2":
+
+			updateSalaryOption();
+			break;
+		default:
+			send("잘 못 입력하셨습니다");
+			break;
+		}
+
+	}
+
+	public void showSalaryOption() {
+		ArrayList<String[]> optionList = posControl.showSalaryOption();
+		send("직원번호\t직원명\t고용형태\t근무일수\t근무시간\t환산시급\t환산월급");
+		for (String[] option : optionList) {
+			send(option[0] + "\t" + option[1] + "\t" + option[2] + "\t" + option[3] + "\t" + option[4] + "\t"
+					+ option[5] + "\t" + option[6]);
+		}
+	}
+
+	public void updateSalaryOption() {
+		send("급여 설정을 변경할 직원의 이름을 입력하세요");
+		choose = receive();
+		StaffDTO[] staffList = posControl.searchStaff(choose);
+		for (StaffDTO staff : staffList) {
+			send("" + staff.getId() + "\t" + staff.getName() + "\t" + staff.getPhone() + "\t" + staff.getJoinDate());
+		}
+		if (staffList.length == 1) {
+			staff = staffList[0];
+			send("위 직원의 급여 설정을 변경하시겠습니까? y/n");
+			choose = receive();
+			switch (choose) {
+			case "y":
+
+				updateSalaryOptionDetail(staff);
+				break;
+			case "n":
+				send("취소하셨습니다");
+				break;
+			default:
+				send("다시 입력하세요");
+				break;
+			}
+		} else if (staffList.length > 1) {
+			send("동명이인이 있습니다. 원하시는 직원의 직원번호를 입력하세요");
+			choose = receive();
+			boolean check = false;
+			for (StaffDTO temp : staffList) {
+				if (choose.contentEquals(temp.getId())) {
+					staff = temp;
+					check = true;
+				}
+			}
+			if (!check)
+				send("직원 번호를 다시 확인해주세요");
+			else if (check) {
+				send("위 직원의 급여정보를 변경하시겠습니까? y/n");
+				choose = receive();
+				switch (choose) {
+				case "y":
+					updateSalaryOptionDetail(staff);
+					break;
+				case "n":
+					send("변경을 취소했습니다");
+					break;
+				default:
+					send("잘 못 입력하셨습니다");
+					break;
+				}
+			} else
+				send("error:입력을 다시 확인해주세요");
+
+		} else {
+			send("일치하는 직원이 없습니다");
+		}
+	}
+
+	public void updateSalaryOptionDetail(StaffDTO staff) {
+		send("해당 직원의 근무정보 중 변경을 원하시는 부분을 선택하세요");
+		String pay = null;
+		if (staff.getWorkstyle().contentEquals("정직원")) {
+			send("1. 고용형태\t2. 근무일수\t3. 월급");
+		} else if (staff.getWorkstyle().contentEquals("파트타임")) {
+			send("1. 고용형태\t2. 근무일수\t3. 일 근무시간\t4. 시급");
+		}
+		choose = receive();
+		switch (choose) {
+		case "1":
+			changeTime(staff);
+			break;
+		case "2":
+			changeWorkday(staff);
+			break;
+		case "3":
+			if (staff.getWorkstyle().contentEquals("정직원")) {
+				changePayMonth(staff);
+			} else if (staff.getWorkstyle().contentEquals("파트타임")) {
+				changeWorktime(staff);
+			}
+			break;
+		case "4":
+			if (staff.getWorkstyle().contentEquals("파트타임")) {
+				changePayHour(staff);
+			} else {
+				send("잘 못 입력하셨습니다");
+			}
+			break;
+		default:
+			send("잘 못 입력하셨습니다");
+			break;
+		}
+	}
+
+	public void changeTime(StaffDTO staff) {
+		int workday = 0;
+		int workTime = 0;
+		int pay = 0;
+		if (staff.getWorkstyle().contentEquals("정직원")) {
+			send("고용형태를 파트타임으로 바꾸시겠습니까? y/n");
+			choose = receive();
+			switch (choose) {
+			case "y":
+				send("새로운 주당 근무 일수를 입력하세요 (7 이하 정수 입력)");
+				while (true) {
+					choose = receive();
+					if (choose != "") {
+						workday = Integer.parseInt(choose);
+						if (workday < 8 && workday > 0) {
+							break;
+						} else {
+							send("1~7 사이의 정수를 입력하세요");
+						}
+
+					} else {
+						send("값을 입력하지 않았습니다");
+					}
+				}
+				send("새로운 하루 근무시간을 입력하세요 (8이하 정수 입력)");
+				while (true) {
+					choose = receive();
+					if (choose != "") {
+						workTime = Integer.parseInt(choose);
+						if (workTime < 1 || workTime > 8) {
+							send("1~8 사이의 정수를 입력하세요");
+						} else {
+							break;
+						}
+
+					} else {
+						send("값을 입력하지 않았습니다");
+					}
+				}
+				send("시급을 입력하세요 (8351 이상의 정수 입력)");
+				while (true) {
+					choose = receive();
+					if (choose != "") {
+						pay = Integer.parseInt(choose);
+						if (pay <= 8350) {
+							send("8350보다 큰 값을 입력하세요");
+						} else {
+							break;
+						}
+
+					} else {
+						send("값을 입력하지 않았습니다");
+					}
+				}
+				posControl.changeTime(staff, workday, workTime, pay);
+				break;
+			case "n":
+				send("취소되었습니다");
+				break;
+			default:
+				send("잘 못 입력하셨습니다");
+				break;
+			}
+		} else if (staff.getWorkstyle().contentEquals("파트타임")) {
+			send("고용형태를 정직원으로 바꾸시겠습니까? y/n");
+			choose = receive();
+			switch (choose) {
+			case "y":
+				send("주당 근무일 수를 입력하세요");
+				while (true) {
+					choose = receive();
+					if (choose != "") {
+						workday = Integer.parseInt(choose);
+						if (workday < 8 && workday > 0) {
+							break;
+						} else {
+							send("1~7 사이의 정수를 입력하세요");
+						}
+
+					} else {
+						send("값을 입력하지 않았습니다");
+					}
+				}
+				send("월급을 입력하세요(단위: 10000원)");
+				while (true) {
+					choose = receive();
+					if (choose != "") {
+						pay = Integer.parseInt(choose);
+						if (pay <= 0) {
+							send("0보다 큰 값을 입력하세요");
+						} else {
+							break;
+						}
+
+					} else {
+						send("값을 입력하지 않았습니다");
+					}
+				}
+				posControl.changeTime(staff, workday, 8, pay);
+				break;
+			case "n":
+				send("취소되었습니다");
+				break;
+			default:
+				send("잘 못 입력하셨습니다");
+				break;
+			}
+		}
+		send("업데이트가 완료되었습니다");
+	}
+
+	public void changeWorkday(StaffDTO staff) {
+		send("주당 근무일수를 변경하시겠습니까? y/n");
+		choose = receive();
+		switch (choose) {
+		case "y":
+			int workDay = 0;
+			send("새로운 주당 근무일수를 입력하세요");
+			while (true) {
+				choose = receive();
+				if (choose != "") {
+					workDay = Integer.parseInt(choose);
+					if (workDay < 8 && workDay > 0) {
+						break;
+					} else {
+						send("1~7 사이의 정수를 입력하세요");
+					}
+
+				} else {
+					send("값을 입력하지 않았습니다");
+				}
+			}
+			posControl.changeWorkday(staff, workDay);
+			send("업데이트가 완료되었습니다");
+			break;
+		case "n":
+			send("취소되었습니다");
+			break;
+		default:
+			send("잘 못 입력하셨습니다");
+			break;
+		}
+
+	}
+
+	public void changeWorktime(StaffDTO staff) {
+		send("일당 근무시간을 변경하시겠습니까? y/n");
+		choose = receive();
+		switch (choose) {
+		case "y":
+			int workTime = 0;
+			send("새로운 일당 근무시간을 입력하세요");
+			while (true) {
+				choose = receive();
+				if (choose != "") {
+					workTime = Integer.parseInt(choose);
+					if (workTime < 9 && workTime > 0) {
+						break;
+					} else {
+						send("1~8 사이의 정수를 입력하세요");
+					}
+
+				} else {
+					send("값을 입력하지 않았습니다");
+				}
+			}
+
+			posControl.changeWorkTime(staff, workTime);
+			send("업데이트가 완료되었습니다");
+			break;
+
+		case "n":
+			send("취소되었습니다");
+			break;
+
+		default:
+			send("잘 못 입력하셨습니다");
+			break;
+
+		}
+
+	};
+
+	public void changePayHour(StaffDTO staff) {
+		send("시급 액수를 변경하겠습니까? y/n");
+		choose = receive();
+		switch (choose) {
+		case "y":
+			int pay = 0;
+			send("새로운 월급 액수를 입력하세요(8351 이상의 정수)");
+			while (true) {
+				choose = receive();
+				if (choose != "") {
+					pay = Integer.parseInt(choose);
+					if (pay > 8350) {
+						break;
+					} else {
+						send("8350보다 큰 정수를 입력하세요");
+					}
+
+				} else {
+					send("값을 입력하지 않았습니다");
+				}
+			}
+
+			posControl.changePayHour(staff, pay);
+			send("업데이트가 완료되었습니다");
+			break;
+
+		case "n":
+			send("취소되었습니다");
+			break;
+
+		default:
+			send("잘 못 입력하셨습니다");
+			break;
+
+		}
+	}
+
+	public void changePayMonth(StaffDTO staff) {
+		send("월급 액수를 변경하겠습니까? y/n");
+		choose = receive();
+		switch (choose) {
+		case "y":
+			int pay = 0;
+			send("새로운 월급 액수를 입력하세요(10000원 단위)");
+			while (true) {
+				choose = receive();
+				if (choose != "") {
+					pay = Integer.parseInt(choose);
+					if (pay > 0) {
+						break;
+					} else {
+						send("0보다 큰 정수를 입력하세요");
+					}
+
+				} else {
+					send("값을 입력하지 않았습니다");
+				}
+			}
+
+			posControl.changePayMonth(staff, pay);
+			send("업데이트가 완료되었습니다");
+			break;
+
+		case "n":
+			send("취소되었습니다");
+			break;
+
+		default:
+			send("잘 못 입력하셨습니다");
+			break;
+
+		}
+	}
+
+	// ==2차메뉴
+	// 메서드=====================================================================
 	// 매장관리 > 매장정보
 	public void storeInfo() {
 		send("1. 기본정보"); // storeInfoDefault()
@@ -739,7 +1106,6 @@ public class Scripts {
 	public void saleInfo() {
 		send("1. 기본정보"); // salesInfoDefault()
 		send("2. 기간별 검색"); // salesSearchTimes()
-
 		send("3. 메뉴별 검색"); // salesSearchMenus()
 		send("선택 :");
 		choose = receive();
@@ -816,8 +1182,9 @@ public class Scripts {
 
 	// 메뉴관리 > 메뉴등록
 	public void menuEnroll() {
+
 		MenuItemDTO eDto = new MenuItemDTO();
-		
+
 		send("====메뉴입력====");
 		send("메뉴번호 : ");
 		eDto.setMenuId(receive());
@@ -830,10 +1197,10 @@ public class Scripts {
 		send("활성화 여부 (Y,N) : ");
 		eDto.setActivation(receive());
 		send("입력완료");
-		
-		posControl.menuEnroll(eDto);	
-		
-		//상위 메뉴로 돌아가기
+
+		posControl.menuEnroll(eDto);
+
+		// 상위 메뉴로 돌아가기
 		menuMenu();
 
 	}// menuEnroll
@@ -865,7 +1232,7 @@ public class Scripts {
 	// 매장관리>매장정보>기본정보
 	public void storeInfoDefault() {
 		StoreDTO showStoreList = posControl.storeInfoDefault();
-		
+
 		send("======= 매장 정보 =======");
 		send("" + showStoreList.getName());
 		send("" + showStoreList.getOwner());
@@ -894,12 +1261,11 @@ public class Scripts {
 		sDto.setPhone(Integer.parseInt(receive())); // *** int로 입력되야함
 		send("매장주소 : ");
 		sDto.setAddress(receive());
-		
+
 		send("입력완료");
 
 		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
 		posControl.storeInfoMotify(sDto);
-
 
 		// 메뉴로 다시 돌아가기
 		storeMenu();
@@ -917,6 +1283,7 @@ public class Scripts {
 
 	// 매장관리>매출정보>기본정보
 	public void salesInfoDefault() {// 쿼리에서 작성해서 보여야함
+
 		send("최근 7일간의 매출입니다");
 		String[][] salesData = posControl.salesInfoDefault();
 		send("날짜\t\t총 매출액");
@@ -935,7 +1302,7 @@ public class Scripts {
 		String startDate = receive();
 		send("검색 마지막 날짜를 입력하세요(yy/mm/dd)");
 		String finishDate = receive();
-		String[] searchDate = {startDate, finishDate};
+		String[] searchDate = { startDate, finishDate };
 		ArrayList<String[]> salesData = posControl.salesInfoDefault(searchDate);
 		send("날짜\t\t총 매출액");
 		String sum = null;
@@ -944,9 +1311,8 @@ public class Scripts {
 			sum = data[2];
 		}
 		send("=============================");
-		send("매출 총 합계  : "+sum);
+		send("매출 총 합계  : " + sum);
 		send("=============================");
-
 
 	}
 
@@ -960,17 +1326,15 @@ public class Scripts {
 		send("최근 7일간 판매량==================");
 		send("날짜\t\t판매량\t수입");
 		String sum = null;
-		for(String[] data : salesData) {
-			send(data[0]+"\t"+data[1]+"\t"+data[2]);
+		for (String[] data : salesData) {
+			send(data[0] + "\t" + data[1] + "\t" + data[2]);
 			sum = data[3];
 		}
 		send("=============================");
-		send("최근 7일간 매출	:"+sum);
-		send("최근 30일 간 매출\t:"+posControl.salesMenuDate30(choose));
-		send("전 기간 매출\t\t:"+posControl.salesMenuDate365(choose));
+		send("최근 7일간 매출	:" + sum);
+		send("최근 30일 간 매출\t:" + posControl.salesMenuDate30(choose));
+		send("전 기간 매출\t\t:" + posControl.salesMenuDate365(choose));
 		send("=============================");
-
-
 
 	}
 
@@ -979,13 +1343,13 @@ public class Scripts {
 		send("===재고 List====");
 		send(" ID | 이름 | 갯수 | 원가 ");
 		posControl.showstockList();
-		
 		send("뒤로가까? y/n");
 		String yon = receive();
 		if (yon == "y")
 			storeMenu();
 		else
 			storeMenu();
+
 	}
 
 	// 매장관리>매출정보>입고관리
@@ -993,7 +1357,7 @@ public class Scripts {
 		send("1. 원재료 입고");
 		send("2. 비품입고");
 		choose = receive();
-		
+
 		if (choose.equals("1")) {
 			RawMaterialDTO temp = new RawMaterialDTO();
 			send("원재료 입고를 작성하세요.");
@@ -1010,7 +1374,7 @@ public class Scripts {
 			temp.setStock(Integer.parseInt(receive()));
 
 			send("원가 : ");
-			temp.setCost(Integer.parseInt(receive())); 
+			temp.setCost(Integer.parseInt(receive()));
 
 			posControl.temp(temp);
 
@@ -1049,7 +1413,7 @@ public class Scripts {
 		for (MenuItemDTO menu : menuList) {
 			send(menu.getMenuId() + "\t" + menu.getName() + "\t" + menu.getPrice() + "\t" + menu.getCategory());
 		}
-	}//menuInfoDefault
+	}// menuInfoDefault
 
 	// 메뉴관리>메뉴정보>수정
 	public void menuModify() {
@@ -1071,61 +1435,55 @@ public class Scripts {
 
 		posControl.menuModify(mDto);
 
-//		send("계속 하시겠습니까?");
-//		choose = receive();
-//		if (choose.equals("Y") || choose.equals("y")) {
-//			menuModify();
-//		} else if (choose.equals("N") || choose.equals("n")) {
-			menuMenu();
-//		}
+//			send("계속 하시겠습니까?");
+//			choose = receive();
+//			if (choose.equals("Y") || choose.equals("y")) {
+//				menuModify();
+//			} else if (choose.equals("N") || choose.equals("n")) {
+		menuMenu();
+//			}
 	} // menuModify
-	
+
 	// 메뉴관리>메뉴정보>삭제
-	public void  menuDelete() {
+	public void menuDelete() {
 		MenuDTO menu = new MenuDTO();
 		menuInfoDefault();
 		send("삭제할 메뉴ID을 입력하세요.");
 		menu.setMenuId(receive());
-		
+
 		posControl.menuDelete(menu);
-		
+
 		menuMenu();
 	}
-	
 
+	// 메뉴관리>메뉴정보>활성화,비활성화
 	public void menuActivation() {
 
 		send("====판매가능한 메뉴확인====");
 		send("1. 판매가능한 메뉴\t| 2.시즌메뉴");
 		choose = receive();
-		
-		if(choose.equals("1")) {
+
+		if (choose.equals("1")) {
 			send("메뉴번호\t메뉴이름\t가격\t카테고리");
 			posControl.menuActivation("y");
-		
-		}
-		else if(choose.equals("2")) {
+
+		} else if (choose.equals("2")) {
 			send("메뉴번호\t메뉴이름\t가격\t카테고리");
 			posControl.menuActivation("n");
-		
-		}else {
+
+		} else {
 			menuInfo();
 		}
 	}
 
 	// 메뉴관리>메뉴검색>이름
 	public void searchMenuName() {
-		
+
 		menuInfoDefault();
 		send("메뉴를 입력하세요(원재료확인)");
 		choose = receive();
-		
+
 		posControl.searchMenuName(choose);
-		
-		
-		//SELECT name FROM recipe WHERE menuid = (SELECT menuid FROM menu	WHERE name = '?');
-		
-		
 	}
 
 	// 메뉴관리>메뉴검색>종류
@@ -1133,25 +1491,26 @@ public class Scripts {
 		send("====종류검색====");
 		send("1.커피음료 \t| 2.음료\t| 3.베이커리\t| 4.차");
 		choose = receive();
-		
-		if(choose.equals("1")){
+
+		if (choose.equals("1")) {
 			send("메뉴번호\t메뉴이름\t가격\t카테고리");
 			posControl.searchMenuCategory("커피음료");
-		}else if(choose.equals("2")){
+		} else if (choose.equals("2")) {
 			send("메뉴번호\t메뉴이름\t가격\t카테고리");
 			posControl.searchMenuCategory("음료");
-		}else if(choose.equals("3")){
+		} else if (choose.equals("3")) {
 			send("메뉴번호\t메뉴이름\t가격\t카테고리");
 			posControl.searchMenuCategory("베이커리");
-		}else if(choose.equals("4")){
+		} else if (choose.equals("4")) {
 			send("메뉴번호\t메뉴이름\t가격\t카테고리");
 			posControl.searchMenuCategory("차");
-		}else {
+		} else {
 			send("잘못입력했습니다~");
 			searchMenuCategory();
 		}
-		
+
 	}
+
 ///////////////////////////////////////////////////////소미 파트 
 	// 고객관리>회원정보 내부 메뉴
 	public void showMembers() {// 1.모두보기
@@ -1236,7 +1595,6 @@ public class Scripts {
 		} else {
 			send("일치하는 고객이 없습니다");
 		}
-
 
 	}
 

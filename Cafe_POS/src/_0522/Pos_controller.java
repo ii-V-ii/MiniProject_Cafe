@@ -90,27 +90,7 @@ public class Pos_controller {
 		else if (!logInResult)
 			scripts.logInFail();
 
-		/*
-		 * 죽은 코드입니다. 필요없는 부분이나, 혹시 몰라 주석으로 남겨두어습니다.
-		 * 
-		 * 
-		 * // 넘겨받은 인자를 QueryList 클래스 중 한 메서드로 다시 넘겨야하지만 // 점장 List는 프로그램 내에서 관리하기로 했기에
-		 * 일단 checkLogin 메서드 안에서 처리합니다 // 추후 점장List DB도 오라클로 넘긴다면, QueryList 클래스에 적절한
-		 * 메서드를 생성해야 합니다 Iterator<IdVO> itr = ServerMain.list.iterator();
-		 * while(itr.hasNext()) { IdVO temp = itr.next(); if(temp.getId().equals(id)) {
-		 * if(temp.getPassword().equals(password)) { //성공시 유저에게 성공 메세지 보내는 View 메서드를 실행
-		 * System.out.println("Client logIn success"); scripts.logInSuccess(); }else {
-		 * //실패시 유저에게 실패메세지 보내는 View 메서드를 실행
-		 * System.out.println("Client logIn Fail:type_password");
-		 * scripts.logInFailTypePassword();
-		 * 
-		 * } //실패시 유저에게 실패메세지 보내는 View 메서드를 실행 }
-		 * System.out.println("Client logIn Fail:type_id"); scripts.logInFailTypeId(); }
-		 * System.out.println("No More data"); scripts.noData();
-		 */
 	}
-
-	// 메뉴리스트
 
 	public StaffDTO[] showStaffList() {
 		return query.showStaffList();
@@ -121,16 +101,33 @@ public class Pos_controller {
 		return query.searchStaff(staffName);
 	}
 
+
 	public void staffEnroll(StaffDTO staff) {
 		// 직원관리>직원 등록
 		query.staffEnroll(staff);
 
 	}
 
-	public void staffSchedule() {
-		// 직원관리>스케쥴관리
+	public void changeTime(StaffDTO staff, int workDay, int workTime, int pay) {
+		query.changeTime(staff, workDay, workTime, pay);
 	}
 
+	public void changeWorkday(StaffDTO staff, int workDay) {
+		query.changeWorkday(staff, workDay);
+	}
+	
+	public void changeWorkTime(StaffDTO staff, int workTime) {
+		query.changeWorkTime(staff, workTime);
+		
+	}
+	
+	public void changePayMonth(StaffDTO staff, int pay) {
+		query.changePayMonth(staff, pay);
+	}
+	
+	public void changePayHour(StaffDTO staff, int pay) {
+		query.changePayHour(staff, pay);
+	}
 	public MenuItemDTO[] menuInfoDefault() {
 		return query.menuInfoDefault();
 	}
@@ -138,6 +135,7 @@ public class Pos_controller {
 	public void setDTOdata() {
 		query.setDTOData();
 	}
+
 
 	public String[][] salesInfoDefault() {
 		return query.salesInfoDefault();
@@ -163,76 +161,82 @@ public class Pos_controller {
 	}
 
 	// 혜영
-	// =============================================================================
+		// =============================================================================
 
-	// 매장정보>기본정보
-	public StoreDTO storeInfoDefault() {
-		return query.storeInfoDefault();
-	}
+		// 매장정보>기본정보
+		public StoreDTO storeInfoDefault() {
+			return query.storeInfoDefault();
+		}
 
-	// 매장정보>정보수정
-	public void storeInfoMotify(StoreDTO sDto) {
-		query.storeInfoMotify(sDto);
-	}
+		// 매장정보>정보수정
+		public void storeInfoMotify(StoreDTO sDto) {
+			query.storeInfoMotify(sDto);
+		}
 
-	// 매장관리>재고관리>현재비품현황
-	public void showstockList() {
-		query.showstockList();
-	}
+		// 매장관리>재고관리>현재비품현황
+		public void showstockList() {
+			query.showstockList();
+		}
 
-	// 매장관리>재고관리>입고(원재료)
-	public void temp(RawMaterialDTO raw) {
-		query.rawstock(raw);
-	}
+		// 매장관리>재고관리>입고(원재료)
+		public void temp(RawMaterialDTO raw) {
+			query.rawstock(raw);
+		}
 
-	// 매장관리>재고관리>입고(비품)
-	public void matestock(MaterialDTO raw) {
-		query.matestock(raw);
-	}
+		// 매장관리>재고관리>입고(비품)
+		public void matestock(MaterialDTO raw) {
+			query.matestock(raw);
+		}
 
-	// 메뉴관리>메뉴정보>수정
-	public void menuModify(MenuItemDTO mDto) {
-		query.menuModify(mDto);
-	}
+		// 메뉴관리>메뉴정보>수정
+		public void menuModify(MenuItemDTO mDto) {
+			query.menuModify(mDto);
+		}
 
-	// 메뉴관리>메뉴등록
-	public void menuEnroll(MenuItemDTO eDto) {
-		query.menuEnroll(eDto);
-	}
+		// 메뉴관리>메뉴등록
+		public void menuEnroll(MenuItemDTO eDto) {
+			query.menuEnroll(eDto);
+		}
 
-	// 메뉴관리>메뉴정보>삭제
-	public void menuDelete(MenuDTO menu) {
-		query.menuDelete(menu);
-	}
+		// 메뉴관리>메뉴정보>삭제
+		public void menuDelete(MenuDTO menu) {
+			query.menuDelete(menu);
+		}
 
-	// 메뉴관리>메뉴정보>활성화
-	public void menuActivation(String n) {
-		query.menuActivation(n);
-	}
+		// 메뉴관리>메뉴정보>활성화
+		public void menuActivation(String n) {
+			query.menuActivation(n);
+		}
 
-	// 메뉴관리>메뉴검색>이름
-	public void searchMenuName(String str) {
-		query.searchMenuName(str);
-	}
-	
-	// 메뉴관리>메뉴검색>종류
-	public void searchMenuCategory(String str) {
-		query.searchMenuCategory(str);
-	}
+		// 메뉴관리>메뉴검색>이름
+		public void searchMenuName(String str) {
+			query.searchMenuName(str);
+		}
+		
+		// 메뉴관리>메뉴검색>종류
+		public void searchMenuCategory(String str) {
+			query.searchMenuCategory(str);
+		}
 
 // ============================================================================
 	public void updateStaffInfo(StaffDTO staff) {
 		query.updateStaffInfo(staff);
 	}
 
+
 	public void deleteStaffInfo(StaffDTO staff) {
 		query.deleteStaffInfo(staff);
 	}
+	public ArrayList<String[]> showSalaryOption() {
+		return query.showSalaryOption();
+	}
+
 
 // ============================================================================
 	public MemberDTO[] showMember() {
 		return query.showMembers();
 	}
+
 
 	public MemberDTO[] searchMember(String memberName) {// 일단주석처리
 		return query.searchMember(memberName);
@@ -241,6 +245,7 @@ public class Pos_controller {
 	public OrderListDTO[] lastBuyingData(MemberDTO member) {
 		return query.lastBuyingData(member);
 	}
+
 
 	public MenuDTO[] mostBuyingData(MemberDTO member) {
 		return query.mostBuyingData(member);
