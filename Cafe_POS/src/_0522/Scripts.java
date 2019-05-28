@@ -1,4 +1,3 @@
-
 package _0522;
 
 // 동기화 확인용 주석
@@ -28,7 +27,6 @@ import oracle.sql.DATE;
 /*
  * 1차메뉴 (매장,메뉴,고객,직원관리)와 2차 메뉴(매장관리>매장정보, 매출정보, 재고관리) 는 인터페이스로 관리
  * 3차메뉴 (매장정보>기본정보, 수정, 수입확인, 지출확인)는 scripts 클래스 내의 메소드로 관리합니다
- * 
  */
 
 // 유저에게 보여줄 메뉴 인터페이스(1차, 2차 메뉴)
@@ -138,20 +136,19 @@ public class Scripts {
 		return null;
 	}
 
-	public int receiveInt() {
-		int line = -1;
-		try {
-			line = br.read();
-			return line;
-		} catch (IOException e) {
-			System.out.println("Client Exit");
-			Pos_main.setClientAccess(false);
-		}
-		return -1;
-	}
+//	public int receiveInt() {
+//		int line = -1;
+//		try {
+//			line = br.read();
+//			return line;
+//		} catch (IOException e) {
+//			System.out.println("Client Exit");
+//			Pos_main.setClientAccess(false);
+//		}
+//		return -1;
+//	}
 
-	// 최초 프로그램 실행시 로그인 기능
-	// 메서드 완성할 떄의 예시로 봐주세요
+	// 최초 프로그램 실행시 로그인 기능 메서드 완성할 떄의 예시로 봐주세요
 	public void logIn() {
 		// 유저에게 메세지를 전달하고 유저의 입력을 받는다
 		send("카페관리 프로그램을 시작합니다");
@@ -173,23 +170,17 @@ public class Scripts {
 		while (true) {
 			mainMenu();
 		}
-
 	}
 
 	public void logInFail() {
 		send("로그인에 실패했습니다");
 		send("id 또는 password를 확인해주세요");
 	}
-
+// 1차==========================================================================
 	// 유저에게서 메인메뉴를 보여주고 선택받는다
 	public void mainMenu() {
-		send("1. 매장관리");
-		send("2. 메뉴관리");
-		send("3. 고객관리");
-		send("4. 직원관리");
-		send("5. 프로그램 종료");
-		send(">>선택 :");
-
+		send("1.매장관리  |  2.메뉴관리  |  3.고객관리  |  4.직원관리  |  5.프로그램 종료");
+		send("선택 >>");
 		choose = receive();
 
 		switch (choose) {
@@ -213,18 +204,15 @@ public class Scripts {
 			}
 			break;
 		default:
-			send("다시선택하세요~");
+			send("다시선택하세요.");
 			mainMenu();
 			break;
 		}// switch
-
 	}// mainMenu
 
 	// 유저에게서 매장관리 메뉴를 보여주고 선택받는다
 	public void storeMenu() {
-		send("1. 매장정보");
-		send("2. 매출정보");
-		send("3. 재고관리");
+		send("1.매장정보  |  2.매출정보  |  3.재고관리  |  4.되돌아가기");
 		send("선택>>");
 		choose = receive();
 
@@ -238,19 +226,19 @@ public class Scripts {
 		case StoreMenu.STOCK:
 			stock();
 			break;
-		default:
-			send("다시선택하세요~");
+		case "4":
 			mainMenu();
 			break;
+		default:
+			send("다시선택하세요.");
+			storeMenu();
+			break;
 		}// switch
-
 	}
 
 	// 유저에게서 메뉴관리 메뉴를 보여주고 선택받는다
 	public void menuMenu() {
-		send("1. 메뉴정보");
-		send("2. 메뉴등록");
-		send("3. 메뉴검색");
+		send("1.메뉴정보  |  2.메뉴등록  |  3.메뉴검색  |  4. 돌아가기");
 		send("선택>>");
 		choose = receive();
 
@@ -264,26 +252,21 @@ public class Scripts {
 		case menuMenu.SEARCH:
 			search();
 			break;
-		default:
-			send("다시선택하세요~");
+		case "4":
 			mainMenu();
 			break;
+		default:
+			send("다시선택하세요.");
+			menuMenu();
+			break;
 		}// switch
-
 	}
-
-/////////////////////////////////////////////////////////////////////내꺼
 
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
-
 		while (true) {
-			send("1.회원정보");
-			send("2.회원등록");
-			send("3.고객구매이력");
-			send("4.이전 메뉴로 되돌아가기");
-			send("선택 >> ");
-
+			send("1.회원정보  |  2.회원등록  |  3.고객구매이력  |  4. 돌아가기");
+			send("선택 >>");
 			choose = receive();
 
 			switch (choose) {
@@ -298,17 +281,108 @@ public class Scripts {
 				break;
 			case customerMenu.EXIT:
 				return;
+			default:
+				send("다시선택하세요.");
+				customerMenu();
+				break;
 			}
 		}
 	}
+	//직원관리
+		public void staffMenu() {
+			send("1.직원정보 확인  |  2.직원등록  |  3.급여관리  |  4.돌아가기");
+			send("선택 >>");
+			choose = receive();
 
+			switch (choose) {
+			case staffMenu.STAFFINFO:
+				staffMenuFirst();
+				break;
+			case staffMenu.STAFFENROLL:
+				staffEnroll();
+				break;
+			case staffMenu.PAY:
+				staffSalaryManage();
+				break;
+			case "4":
+				mainMenu();
+				break;
+			default:
+				send("잘못 입력하셨습니다");
+				staffMenu();
+				break;
+			}
+		}	
+	
+	
+//2차=======================================================
+		// 매장관리 > 매장정보
+		public void storeInfo() {
+			send("1. 기본정보"); // storeInfoDefault()
+			send("2. 수정");// storeInfoMotify()
+			send("3. 수입확인");// checkIncome()
+			send("4. 지출확인");// checkOutcome()
+			send("선택 : ");
+			choose = receive();
+
+			switch (choose) {
+			case "1":
+				storeInfoDefault();
+				break;
+			case "2":
+				storeInfoMotify();
+				break;
+			case "3":
+				checkIncome();
+				break;
+			case "4":
+				checkOutcome();
+				break;
+			default:
+				send("다시선택하세요.");
+				mainMenu();
+				break;
+			}// switch
+		}// storeInfo
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	//고객관리>회원정보
 	public void custInfo() {
-
-		send("1. 모든 고객 보기");
 		send("2. 고객 검색");
 		send("3. 상세 고객 정보");
-		send("4.되돌아가기");
-		send("5.이전 메뉴로 되돌아가기");// customerMenu();
+		send("4. 되돌아가기");
+		send("5. 이전 메뉴로 되돌아가기");// customerMenu();
 		send("선택 >> ");
 		choose = receive();
 
@@ -330,16 +404,16 @@ public class Scripts {
 			break;
 		}
 	}
-
+	// 고객관리>회원등록
 	public void custenroll() {
 
 	}
-
+	//고객관리>고객구매이력
 	public void history() {
-
-		send("1. 최신 구매이력");
-		send("2. 최다 구매이력");
+		send("1.최신 구매이력  |  2.최다 구매이력  |  3.돌아가기");
+		send("선택>>");
 		choose = receive();
+		
 		switch (choose) {
 		case "1":
 			lastBuyingRecord();
@@ -347,49 +421,23 @@ public class Scripts {
 		case "2":
 			MostBuyingRecord();
 			break;
+		case "3":
+			customerMenu();
+			break;
 		default:
 			send("잘못 입력하셨습니다");
-			break;
-
-		}
-
-	}
-
-	// 유저에게서 직원관리 메뉴를 보여주고 선택받는다
-
-	public void staffMenu() {
-		// String STAFFINFO = "1", STAFFENROLL = "2", SCHEDULE = "3";
-		send("1. 직원정보 확인");
-		send("2. 직원 등록");
-
-		send("3. 급여 관리");
-		send("선택 >> ");
-
-		choose = receive();
-
-		switch (choose) {
-		case staffMenu.STAFFINFO:
-			staffMenuFirst();
-			break;
-
-		case staffMenu.STAFFENROLL:
-			staffEnroll();
-			break;
-
-		case staffMenu.PAY:
-			staffSalaryManage();
-			break;
-
-		default:
+			history();
 			break;
 		}
 	}
+
+	//직원관리>직원정보
 
 	public void staffMenuFirst() {
-		send("1. 모든 직원을 본다");
-		send("2. 직원정보 수정");
-		send("3. 직원정보 삭제");
+		send("1.직원기본정보  |  2.직원정보수정  |  3.직원정보삭제  |  4.돌아가기 ");
+		send("선택>>");
 		choose = receive();
+		
 		switch (choose) {
 		case "1":
 			staffDefaultInfo();
@@ -400,12 +448,16 @@ public class Scripts {
 		case "3":
 			staffInfoDelete();
 			break;
+		case "4":
+			staffMenu();
+			break;
 		default:
-			send("잘 못 입력하셨습니다");
+			send("잘못 입력하셨습니다");
+			staffMenuFirst();
 			break;
 		}
 	}
-
+	//직원관리>직원정보>기본정보
 	public void staffDefaultInfo() {
 		StaffDTO[] staffList = posControl.showStaffList();
 
@@ -416,6 +468,7 @@ public class Scripts {
 					+ "\t" + staffList[i].getWorkstyle());
 		}
 	}
+	
 
 	public void staffInfoModify() {
 		send("수정 할 직원의 이름을 입력하세요");
@@ -692,25 +745,27 @@ public class Scripts {
 
 	// 직원관리>급여관리 내부 메뉴
 	public void staffSalaryManage() {
-		send("1. 현재 직원들의 급여설정을 본다");
-		send("2. 직원의 급여설정을 변경한다");
+		send("1.직원급여현황  |  2.직원급여수정  |  3.돌아가기");
+		send("선택>>");
 		choose = receive();
+		
 		switch (choose) {
-
 		case "1":
 			showSalaryOption();
 			break;
 		case "2":
-
 			updateSalaryOption();
 			break;
+		case "3":
+			staffMenu();
+			break;
 		default:
-			send("잘 못 입력하셨습니다");
+			send("잘못 입력하셨습니다");
+			staffSalaryManage();
 			break;
 		}
-
 	}
-
+	//직원관리>직원급여현황
 	public void showSalaryOption() {
 		ArrayList<String[]> optionList = posControl.showSalaryOption();
 		send("직원번호\t직원명\t고용형태\t근무일수\t근무시간\t환산시급\t환산월급");
@@ -1070,37 +1125,8 @@ public class Scripts {
 		}
 	}
 
-	// ==2차메뉴
-	// 메서드=====================================================================
-	// 매장관리 > 매장정보
-	public void storeInfo() {
-		send("1. 기본정보"); // storeInfoDefault()
-		send("2. 수정");// storeInfoMotify()
-		send("3. 수입확인");// checkIncome()
-		send("4. 지출확인");// checkOutcome()
-		send("선택 : ");
-		choose = receive();
+	// ==2차메뉴 메서드=====================================================================
 
-		switch (choose) {
-		case "1":
-			storeInfoDefault();
-			break;
-		case "2":
-			storeInfoMotify();
-			break;
-		case "3":
-			checkIncome();
-			break;
-		case "4":
-			checkOutcome();
-			break;
-		default:
-			send("다시선택하세요.");
-			mainMenu();
-			break;
-		}// switch
-
-	}// storeInfo
 
 	// 매장관리 > 매출정보
 	public void saleInfo() {
