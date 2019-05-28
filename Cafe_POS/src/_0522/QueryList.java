@@ -114,6 +114,72 @@ public class QueryList {
 
 	}
 
+	//////////////////////////////////////////////////////////////////////////////
+	//// 판매
+	//////////////////////////////////////////////////////////////////////////////
+
+	public void calcualteOrder() {
+		sb = "select price*? from menu where menuid = ?";
+		try {
+			pps = con.prepareStatement(sb);
+			for (MenuDTO menu : MenuDTO.getOrderedMenu()) {
+				pps.setInt(1, menu.getAmount());
+				pps.setString(2, menu.getMenuId());
+				rs = pps.executeQuery();
+				rs.next();
+				menu.setSumprice(rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void createPayment(MemberDTO member) {
+		try {
+			con.setAutoCommit(false);
+			rs = stmt.executeQuery("SELECT memberid, point FROM member WHERE phone="+member.getPhone());
+			rs.next();
+			member.setMemberID(rs.getString(1));
+			member.setPhone(rs.getInt(2));
+			
+			//가게번호, 주문번호, 고객, 날짜, 주문총액
+			pps = con.prepareStatement("INSERT INTO orderlist VALUES(?, 'or'||order_seq.nextval,?, to_date(sysdate), 1)");
+			pps.setString(1,store.getStoreId());
+			pps.setString(2, member.getMemberID());
+			pps.executeUpdate();
+			//메뉴, 양, 합계액
+			pps = con.prepareStatement("INSERT INTO orderDetail VALUES('or'||order_seq.currval, ?, ?, ?)");
+			int sumprice=0;
+			for(MenuDTO menu:MenuDTO.getOrderedMenu()) {
+			pps.setString(1, menu.getMenuId());
+			pps.setInt(2,menu.getAmount());
+			pps.setInt(3, menu.getSumprice());
+			sumprice += menu.getSumprice();
+			pps.addBatch();
+			}
+			System.out.println(pps.executeBatch());
+			con.commit();
+			rs = stmt.executeQuery("SELECT orderid FROM orderlist order by orderid desc");
+			rs.next();
+			String number = rs.getString(1);
+			System.out.println(number);
+			pps = con.prepareStatement("UPDATE orderlist SET orderprice=? WHERE orderid = ?");
+			pps.setInt(1, sumprice);
+			pps.setString(2, number);
+			pps.executeUpdate();
+			stmt.executeUpdate("UPDATE member SET point = "+(member.getPoint()+sumprice*5/100)+" WHERE memberid="+member.getMemberID());
+			
+			
+			con.commit();
+			con.setAutoCommit(true);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	//////////////////////////////////////////////////////////////////////////////
+
 	public MemberDTO[] showMembers() {
 
 		try {
@@ -131,8 +197,9 @@ public class QueryList {
 				rs.getInt("phone");
 				rs.getString("sex");
 				rs.getString("birth");
+				rs.getInt("point");
 				memberList[i++] = new MemberDTO(rs.getString("memberid"), rs.getString("name"), rs.getInt("phone"),
-						rs.getString("sex"), rs.getInt("birth"));
+						rs.getString("sex"), rs.getInt("birth"), rs.getInt("point"));
 
 			}
 			return memberList;
@@ -313,7 +380,6 @@ public class QueryList {
 		}
 		return null;
 	}
-
 
 	// 혜영===========================================
 
@@ -584,7 +650,6 @@ public class QueryList {
 
 	public void staffEnroll(StaffDTO staff) {
 
-
 		try {
 			con.setAutoCommit(false);
 			sb = "INSERT INTO staff VALUES (staff_seq.nextval, ?, ?,?,?,?,?,?,?)";
@@ -599,7 +664,6 @@ public class QueryList {
 			pps.setString(7, staff.getWorkstyle());
 			pps.setString(8, staff.getStoreId());
 			pps.executeUpdate();
-
 
 			if (staff.getWorkstyle().contentEquals("정직원")) {
 				sb = "INSERT INTO staff_all VALUES (staff_seq.currval, ?, ?";
@@ -687,35 +751,34 @@ public class QueryList {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 
 	}
-	
+
 	public void changeWorkTime(StaffDTO staff, int workTime) {
 		try {
-			stmt.execute("UPDATE staff_part SET hour = "+workTime+" WHERE staffno = "+staff.getId());
+			stmt.execute("UPDATE staff_part SET hour = " + workTime + " WHERE staffno = " + staff.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void changePayMonth(StaffDTO staff, int pay) {
 		try {
-			stmt.execute("UPDATE staff_all SET SAL = "+pay+" WHERE staffno = "+staff.getId());
-		}catch(SQLException e) {
+			stmt.execute("UPDATE staff_all SET SAL = " + pay + " WHERE staffno = " + staff.getId());
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void changePayHour(StaffDTO staff, int pay) {
 		try {
-			stmt.execute("UPDATE staff_part SET pay_per_hour = "+pay+" WHERE staffno = "+staff.getId());
-		}catch(SQLException e) {
+			stmt.execute("UPDATE staff_part SET pay_per_hour = " + pay + " WHERE staffno = " + staff.getId());
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 //============================================================
 	public MenuItemDTO[] menuInfoDefault() {
 		MenuItemDTO[] itemList = null;

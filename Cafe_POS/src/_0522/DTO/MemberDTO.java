@@ -7,16 +7,18 @@ public class MemberDTO{
 	private int phone;
 	private String sex;
 	private int birth;
+	private int point;
 	
 	public MemberDTO() {
 		
 	}
-	public MemberDTO(String memberID,String name,int phone,String sex,int birth) {
+	public MemberDTO(String memberID,String name,int phone,String sex,int birth, int point) {
 		this.memberID=memberID;
 		this.name=name;
 		this.phone=phone;
 		this.sex=sex;
 		this.birth=birth;
+		this.point = point;
 	}
 	
 	public String getMemberID() {
@@ -48,6 +50,12 @@ public class MemberDTO{
 	}
 	public void setBirth(int birth) {
 		this.birth = birth;
+	}
+	public int getPoint() {
+		return point;
+	}
+	public void setPoint(int point) {
+		this.point = point;
 	}
 
 }

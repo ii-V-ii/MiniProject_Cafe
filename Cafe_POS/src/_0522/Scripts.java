@@ -33,7 +33,7 @@ import oracle.sql.DATE;
 
 // 유저에게 보여줄 메뉴 인터페이스(1차, 2차 메뉴)
 interface MainMenu {
-	String STORE = "1", MENU = "2", CUSTOMER = "3", STAFF = "4";
+	String SALES = "0", STORE = "1", MENU = "2", CUSTOMER = "3", STAFF = "4";
 }
 
 /* 매장관리 */
@@ -81,7 +81,7 @@ public class Scripts {
 	StoreDTO store;
 	OrderListDTO orderList;
 	String choose;
-
+	boolean paycheck = false;
 	String text;
 
 	public void setDTO(IdVO userId, MaterialDTO material, MemberDTO member, MenuDTO menu, MenuItemDTO menuItem,
@@ -150,18 +150,6 @@ public class Scripts {
 		return -1;
 	}
 
-//	public int receiveInt() {
-//		int line = -1;
-//		try {
-//			line = br.read();
-//			return line;
-//		} catch (IOException e) {
-//			System.out.println("Client Exit");
-//			Pos_main.setClientAccess(false);
-//		}
-//		return -1;
-//	}
-
 	// 최초 프로그램 실행시 로그인 기능
 	// 메서드 완성할 떄의 예시로 봐주세요
 	public void logIn() {
@@ -195,6 +183,7 @@ public class Scripts {
 
 	// 유저에게서 메인메뉴를 보여주고 선택받는다
 	public void mainMenu() {
+		send("0. 판매");
 		send("1. 매장관리");
 		send("2. 메뉴관리");
 		send("3. 고객관리");
@@ -205,6 +194,10 @@ public class Scripts {
 		choose = receive();
 
 		switch (choose) {
+		case MainMenu.SALES:
+			sale();
+			break;
+
 		case MainMenu.STORE:
 			storeMenu();
 			break;
@@ -284,6 +277,217 @@ public class Scripts {
 
 	}
 
+/////////////////////////////////////////////////////////////////////
+	/////// 판매메뉴 추가
+/////////////////////////////////////////////////////////////////////
+	public void sale() {
+
+		MenuDTO.resetOrder();
+		send("카테고리");
+		while(true) {
+		menu = new MenuDTO();
+		String showMenu= null;
+		if(MenuDTO.getOrderedMenu().size()>0)
+			showMenu = "4. PAYING	0.CANCEL";
+		else {
+			showMenu = "0. CANCLE";
+		}
+		send("1.COFFEE	2.BEVERGE	3.BAKERY	"+showMenu);
+		send("선택>>");
+		choose = receive();
+		switch (choose) {
+		case "1":
+			choiceCoffee();
+			break;
+		case "2":
+			choiceBeverge();
+			break;
+		case "3":
+			choiceBakery();
+			break;
+		case "4":
+			if(MenuDTO.getOrderedMenu().size()>0) {
+				showOrderedMenu();
+			};
+			break;
+		case "0":
+			send("주문을 취소합니다");
+			MenuDTO.resetOrder();
+;			return;
+		default:
+			send("잘 못 선택하셨습니다");
+			break;
+		}
+		if(paycheck) {
+			break;}
+		}
+	}
+	
+	public void choiceCoffee() {
+		send("메뉴를 고르세요");
+		send("1.아메리카노	2.카페라떼		3.카페모카		4.돌체라떼		0.돌아가기");
+		choose = receive();
+		if(choose.contentEquals("0"))
+			return;
+		switch(choose) {
+		case "1":
+			menu.setMenuId("me1");
+			menu.setName("아메리카노");
+			break;
+		case"2":
+			menu.setMenuId("me2");
+			menu.setName("카페라떼");
+			break;
+		case "3":
+			menu.setMenuId("me3");
+			menu.setName("카페모카");
+			break;
+		case "4":
+			menu.setMenuId("me4");
+			menu.setName("돌체라떼");
+			break;
+		case "0":
+			send("이전 메뉴로 돌아갑니다");
+			return;
+		default:
+			send("잘 못 입력하였습니다");
+			return;
+		}
+		
+		choiceCount(menu);
+	}
+	public void choiceBeverge() {
+		send("메뉴를 고르세요");
+		send("1.핫초코	2.딸기바나나	0.돌아가기");
+		choose = receive();
+		if(choose.contentEquals("0"))
+			return;
+		switch(choose) {
+		case "1":
+			menu.setMenuId("me5");
+			menu.setName("핫초코");
+			
+			break;
+		case"2":
+			menu.setMenuId("me6");
+			menu.setName("딸기바나나");
+			break;
+		case "0":
+			send("이전 메뉴로 돌아갑니다");
+			return;
+		default:
+			send("잘 못 입력하였습니다");
+			return;
+		}
+		choiceCount(menu);
+
+	}
+	public void choiceBakery() {
+		send("메뉴를 고르세요");
+		send("1.베이글	2.스콘	0.돌아가기");
+		choose = receive();
+		if(choose.contentEquals("0"))
+			return;
+		switch(choose) {
+		case "1":
+			menu.setMenuId("me7");
+			menu.setName("베이글");
+			
+			break;
+		case"2":
+			menu.setMenuId("me8");
+			menu.setName("스콘");
+			break;
+		case "0":
+			send("이전 메뉴로 돌아갑니다");
+			return;
+		default:
+			send("잘 못 입력하였습니다");
+			return;
+		}
+		choiceCount(menu);
+	}
+
+	public void choiceCount(MenuDTO menu) {
+		int count = 0;
+		do {
+		send("몇개 주문하시겠습니까?");
+		choose = receive();
+		if(choose.equals("")) {
+			send("주문 갯수를 입력하세요");
+			continue;
+		}
+		count = Integer.parseInt(choose);
+		if(count<1) {
+			send("주문 갯수는 1보다 작을 수 없습니다");
+		}
+		}while(count<1);
+		
+		menu.setAmount(count);
+		menu.putOrder(menu);
+		
+		send(menu.getName()+" "+menu.getAmount()+"개를 주문서에 추가했습니다");
+		send("1. 계속 주문하기	2. 결제하기" );
+		choose = receive();
+		switch(choose) {
+		case "1":
+			break;
+		case "2":
+			showOrderedMenu();
+			break;
+		default:
+			send("잘못 입력하셨습니다");
+			break;
+		}
+		
+	}
+	
+	public void showOrderedMenu() {
+		posControl.calcualteOrder();
+		
+		send("주문메뉴\t주문개수\t주문금액");
+		int orderPrice = 0;
+		for(MenuDTO menu : MenuDTO.getOrderedMenu()) {
+			send(menu.getName()+"\t"+menu.getAmount()+"\t"+menu.getSumprice());
+			orderPrice += menu.getSumprice();
+		}
+		send("*************");
+		send("총 결제 금액 : "+orderPrice);
+		send("이대로 결제하시겠습니까? y/n");
+		choose = receive();
+		switch(choose) {
+		case "y":
+			
+			posControl.createPayment(pointPlus());
+			break;
+		case "n":
+			send("결제를 취소합니다");
+			MenuDTO.resetOrder();
+			return;
+		default:
+			break;
+		}
+		send("결제가 완료되었습니다");
+		paycheck = true;
+	}
+	
+	public MemberDTO pointPlus() {
+		send("포인트를 적립하십니까? y/n");
+		choose = receive();
+		switch(choose) {
+		case "y":
+			send("고객의 전화번호를 입력하세요");
+			member.setPhone(Integer.parseInt(receive()));
+			break;
+		case "n":
+			member.setMemberID("0");
+			member.setPhone(0);
+			break;
+		default :
+			break;
+		}
+		return member;
+	}
 /////////////////////////////////////////////////////////////////////내꺼
 
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
@@ -383,15 +587,14 @@ public class Scripts {
 		case staffMenu.STAFFINFO:
 			staffMenuFirst();
 			break;
-			
+
 		case staffMenu.STAFFENROLL:
 			staffEnroll();
 			break;
-			
+
 		case staffMenu.PAY:
 			staffSalaryManage();
 			break;
-			
 
 		default:
 			break;
@@ -703,7 +906,6 @@ public class Scripts {
 		send("등록이 완료되었습니다");
 	}
 
-
 	// 직원관리>급여관리 내부 메뉴
 	public void staffSalaryManage() {
 		send("1. 현재 직원들의 급여설정을 본다");
@@ -1007,7 +1209,7 @@ public class Scripts {
 			break;
 
 		}
-		
+
 	};
 
 	public void changePayHour(StaffDTO staff) {
@@ -1046,7 +1248,7 @@ public class Scripts {
 
 		}
 	}
-	
+
 	public void changePayMonth(StaffDTO staff) {
 		send("월급 액수를 변경하겠습니까? y/n");
 		choose = receive();
@@ -1083,7 +1285,7 @@ public class Scripts {
 
 		}
 	}
-	
+
 	// ==2차메뉴
 	// 메서드=====================================================================
 	// 매장관리 > 매장정보
@@ -1120,7 +1322,6 @@ public class Scripts {
 	public void saleInfo() {
 		send("1. 기본정보"); // salesInfoDefault()
 		send("2. 기간별 검색"); // salesSearchTimes()
-
 		send("3. 메뉴별 검색"); // salesSearchMenus()
 		send("선택 :");
 		choose = receive();
@@ -1262,9 +1463,7 @@ public class Scripts {
 	public void storeInfoMotify() {
 		// 매장 정보 수정 합니다~
 		StoreDTO sDto = new StoreDTO();
-		send("매장 정보 수정해주세요.");
-		send("지점번호 : ");
-		sDto.setStoreId(receive());
+		sDto.setStoreId(store.getStoreId());
 		send("지점명 : ");
 		sDto.setName(receive());
 		send("지점담당자 : ");
@@ -1278,7 +1477,6 @@ public class Scripts {
 		send("매장주소 : ");
 		sDto.setAddress(receive());
 		send("입력완료");
-
 		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
 		posControl.storeInfoMotify(sDto);
 
@@ -1497,11 +1695,8 @@ public class Scripts {
 		MemberDTO[] showMembersList = posControl.showMember();
 		send("=======회원정보 모두보기=======");
 		for (int i = 0; i < showMembersList.length; i++) {
-			send("" + showMembersList[i].getMemberID());
-			send("" + showMembersList[i].getName());
-			send("" + showMembersList[i].getPhone());
-			send("" + showMembersList[i].getSex());
-			send("" + showMembersList[i].getBirth());
+			send("" + showMembersList[i].getMemberID()+"\t"+ showMembersList[i].getName()+"\t"+ showMembersList[i].getPhone()+"\t"+showMembersList[i].getSex()+"\t"+showMembersList[i].getBirth());
+			send("포인트 :"+showMembersList[i].getPoint());
 		}
 	}
 
