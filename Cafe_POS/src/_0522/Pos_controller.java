@@ -161,41 +161,62 @@ public class Pos_controller {
 	}
 
 	// 혜영
-	// =============================================================================
-	// 매장정보>기본정보
-	public StoreDTO storeInfoDefault() {
-		return query.storeInfoDefault();
-	}
+		// =============================================================================
 
-	// 매장정보>정보수정
-	public void storeInfoMotify(StoreDTO sDto) {
-		query.storeInfoMotify(sDto);
-	}
+		// 매장정보>기본정보
+		public StoreDTO storeInfoDefault() {
+			return query.storeInfoDefault();
+		}
 
-	// 매장관리>재고관리>현재비품현황
-	public void showstockList() {
-		query.showstockList();
-	}
+		// 매장정보>정보수정
+		public void storeInfoMotify(StoreDTO sDto) {
+			query.storeInfoMotify(sDto);
+		}
 
+		// 매장관리>재고관리>현재비품현황
+		public void showstockList() {
+			query.showstockList();
+		}
 
-	// 매장관리>재고관리>입고(원재료)
-	public void temp(RawMaterialDTO raw) {
-		query.rawstock(raw);
-	}
+		// 매장관리>재고관리>입고(원재료)
+		public void temp(RawMaterialDTO raw) {
+			query.rawstock(raw);
+		}
 
-	// 매장관리>재고관리>입고(비품)
-	public void matestock(MaterialDTO raw) {
-		query.matestock(raw);
-	}
+		// 매장관리>재고관리>입고(비품)
+		public void matestock(MaterialDTO raw) {
+			query.matestock(raw);
+		}
 
-	// 메뉴관리>메뉴정보>수정
-	public void menuModify(MenuItemDTO mDto) {
-		query.menuModify(mDto);
-	}
+		// 메뉴관리>메뉴정보>수정
+		public void menuModify(MenuItemDTO mDto) {
+			query.menuModify(mDto);
+		}
 
-	public void menuEnroll(MenuItemDTO eDto) {
-		query.menuEnroll(eDto);
-	}
+		// 메뉴관리>메뉴등록
+		public void menuEnroll(MenuItemDTO eDto) {
+			query.menuEnroll(eDto);
+		}
+
+		// 메뉴관리>메뉴정보>삭제
+		public void menuDelete(MenuDTO menu) {
+			query.menuDelete(menu);
+		}
+
+		// 메뉴관리>메뉴정보>활성화
+		public void menuActivation(String n) {
+			query.menuActivation(n);
+		}
+
+		// 메뉴관리>메뉴검색>이름
+		public void searchMenuName(String str) {
+			query.searchMenuName(str);
+		}
+		
+		// 메뉴관리>메뉴검색>종류
+		public void searchMenuCategory(String str) {
+			query.searchMenuCategory(str);
+		}
 
 // ============================================================================
 	public void updateStaffInfo(StaffDTO staff) {

@@ -1,4 +1,3 @@
-
 package _0522;
 
 import java.sql.Connection;
@@ -314,232 +313,307 @@ public class QueryList {
 		return null;
 	}
 
-
 	// 혜영===========================================
 
-	// 매장관리>매장정보>기본정보
-	public StoreDTO storeInfoDefault() {
-		StoreDTO sDto = new StoreDTO();
-		try {
-			pps = con.prepareStatement("SELECT * FROM STOREINFO WHERE storeno = ?");
-			pps.setString(1, store.getStoreId());
-			rs = pps.executeQuery();
-			while (rs.next()) {
-				sDto.setStoreId(rs.getString(1));
-				sDto.setName(rs.getString(2));
-				sDto.setOwner(rs.getString(3));
-				sDto.setOpendate(rs.getString(4));
-				sDto.setClosedate(rs.getString(5));
-				sDto.setPhone(rs.getInt(6));
-				sDto.setAddress(rs.getString(7));
+		// 매장관리>매장정보>기본정보
+		public StoreDTO storeInfoDefault() {
+			StoreDTO sDto = new StoreDTO();
+			try {
+				pps = con.prepareStatement("SELECT * FROM STOREINFO WHERE storeno = ?");
+				pps.setString(1, store.getStoreId());
+				rs = pps.executeQuery();
+				while (rs.next()) {
+					sDto.setStoreId(rs.getString(1));
+					sDto.setName(rs.getString(2));
+					sDto.setOwner(rs.getString(3));
+					sDto.setOpendate(rs.getString(4));
+					sDto.setClosedate(rs.getString(5));
+					sDto.setPhone(rs.getInt(6));
+					sDto.setAddress(rs.getString(7));
+				}
+				return sDto;
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			return sDto;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}// storeInfoDefault
+			return null;
+		}// storeInfoDefault
 
-	// 매장관리>매장정보>정보수정
-	public void storeInfoMotify(StoreDTO sDto) {
-		int resultInt = 0;
-		StoreDTO orgDto = new StoreDTO();
-		try {
-			pps = con.prepareStatement("select storeno from STOREINFO where storeno = ?");
-			pps.setString(1, orgDto.getStoreId());
-			rs = pps.executeQuery();
-			while (rs.next()) {
-				orgDto.setStoreId(rs.getString(1));
+		// 매장관리>매장정보>정보수정
+		public void storeInfoMotify(StoreDTO sDto) {
+			int resultInt = 0;
+			StoreDTO orgDto = new StoreDTO();
+			try {
+				pps = con.prepareStatement("select storeno from STOREINFO where storeno = ?");
+				pps.setString(1, orgDto.getStoreId());
+				rs = pps.executeQuery();
+				while (rs.next()) {
+					orgDto.setStoreId(rs.getString(1));
+				}
+
+				if (sDto.getStoreId().equals(orgDto.getStoreId())) {
+					pps = con.prepareStatement(
+							"UPDATE STOREINFO SET name = ? , owner = ?, opendate = TO_CHAR(?,'YYYYMMDD') ,closedate = TO_CHAR(?,'YYYYMMDD'), phone = ? ,address = ? WHERE storeno = ?");
+					pps.setString(1, sDto.getName());
+					pps.setString(2, sDto.getOwner());
+					pps.setString(3, sDto.getOpendate());
+					pps.setString(4, sDto.getClosedate());
+					pps.setInt(5, sDto.getPhone());
+					pps.setString(6, sDto.getAddress());
+					pps.setString(7, sDto.getStoreId());
+					resultInt = pps.executeUpdate();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
+		}// storeInfoMotify
 
-			if (sDto.getStoreId().equals(orgDto.getStoreId())) {
-				pps = con.prepareStatement(
-						"UPDATE STOREINFO SET name = ? , owner = ?, opendate = TO_CHAR(?,'YYYYMMDD') ,closedate = TO_CHAR(?,'YYYYMMDD'), phone = ? ,address = ? WHERE storeno = ?");
-				pps.setString(1, sDto.getName());
-				pps.setString(2, sDto.getOwner());
-				pps.setString(3, sDto.getOpendate());
-				pps.setString(4, sDto.getClosedate());
-				pps.setInt(5, sDto.getPhone());
-				pps.setString(6, sDto.getAddress());
-				pps.setString(7, sDto.getStoreId());
-				resultInt = pps.executeUpdate();
+		// 매장관리>재고관리>현재비품 현황
+		public void showstockList() {
+			try {
+				stmt = con.createStatement();
+
+				String getStockInfo = "SELECT * FROM stockview";
+				rs = stmt.executeQuery(getStockInfo);
+
+				for (int i = 0; rs.next(); i++) {
+					scripts.send("" + rs.getString(1) + "|" + rs.getString(2) + "|" + rs.getInt(3) + "|" + rs.getInt(4));
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}// storeInfoMotify
+		}// showstockList
 
-	// 매장관리>재고관리>현재비품 현황
-	public void showstockList() {
-		try {
-			stmt = con.createStatement();
+		// 메뉴관리>메뉴등록
+		public void menuEnroll(MenuItemDTO eDto) {
+			int resultInt = 0;
+			MenuItemDTO orgMe = new MenuItemDTO();
 
-			String getStockInfo = "SELECT * FROM stockview";
-			rs = stmt.executeQuery(getStockInfo);
-
-			for (int i = 0; rs.next(); i++) {
-				scripts.send("" + rs.getString(1) + "|" + rs.getString(2) + "|" + rs.getInt(3) + "|" + rs.getInt(4));
-				// stockList[i] = new StockDTO();
-			}
-			// return stockList;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}// showstockList
-
-	// 메뉴관리>메뉴등록
-	public void menuEnroll(MenuItemDTO eDto) {
-		int resultInt = 0;
-		MenuItemDTO orgMe = new MenuItemDTO();
-
-		try {
-			pps = con.prepareStatement("SELECT * FROM menu WHERE menuid = ?");
-			pps.setString(1, eDto.getMenuId());
-			rs = pps.executeQuery();
-			rs.next();
-
-			// 입력한 내용이 기존에 있는 데이터라면... update
-			if (eDto.getMenuId().equals(orgMe.getMenuId())) {
-				System.out.println("기존에 있는 메뉴입니다.");
-				System.out.println("메뉴정보에서 수정해주세요.");
-			} else {
-				pps = con.prepareStatement(
-						"INSERT INTO menu (menuid,name,price,category,activation) VALUES (?,?,?,?,?)");
+			try {
+				pps = con.prepareStatement("SELECT * FROM menu WHERE menuid = ?");
 				pps.setString(1, eDto.getMenuId());
-				pps.setString(2, eDto.getName());
-				pps.setInt(3, eDto.getPrice());
-				pps.setString(4, eDto.getCategory());
-				pps.setString(5, eDto.getActivation());
-				resultInt = pps.executeUpdate();
-			}
+				rs = pps.executeQuery();
+				rs.next();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+				// 입력한 내용이 기존에 있는 데이터라면... update
+				if (eDto.getMenuId().equals(orgMe.getMenuId())) {
+					System.out.println("기존에 있는 메뉴입니다.");
+					System.out.println("메뉴정보에서 수정해주세요.");
+				} else {
+					pps = con.prepareStatement(
+							"INSERT INTO menu (menuid,name,price,category,activation) VALUES (?,?,?,?,?)");
+					pps.setString(1, eDto.getMenuId());
+					pps.setString(2, eDto.getName());
+					pps.setInt(3, eDto.getPrice());
+					pps.setString(4, eDto.getCategory());
+					pps.setString(5, eDto.getActivation());
+					resultInt = pps.executeUpdate();
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}// menuEnroll
+
+		// 메뉴관리>메뉴정보>수정
+		public void menuModify(MenuItemDTO mDto) {
+			int resultInt = 0;
+			MenuItemDTO orgMe = new MenuItemDTO();
+			// 바로 받아와서 바로 수정
+			try {
+				pps = con.prepareStatement("SELECT menuid FROM menu WHERE menuid = ?");
+				pps.setString(1, mDto.getMenuId());
+				rs = pps.executeQuery();
+				while (rs.next()) {
+					orgMe.setMenuId(rs.getString(1));
+				}
+				// 기존에 있는거 수정
+				if (mDto.getMenuId().equals(orgMe.getMenuId())) {
+					pps = con.prepareStatement("UPDATE menu SET price = ?, activation = ? WHERE menuid = ?");
+					pps.setInt(1, mDto.getPrice());
+					pps.setString(2, mDto.getActivation());
+					pps.setString(3, mDto.getMenuId());
+					resultInt = pps.executeUpdate();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-	}// menuEnroll
-	/*
-	 * int resultInt = 0; StoreDTO orgDto = new StoreDTO(); try { pps =
-	 * con.prepareStatement("select storeno from STOREINFO where storeno = ?");
-	 * pps.setString(1, orgDto.getStoreId()); rs = pps.executeQuery(); while
-	 * (rs.next()) { orgDto.setStoreId(rs.getString(1)); }
-	 * 
-	 * if (sDto.getStoreId().equals(orgDto.getStoreId())) { pps =
-	 * con.prepareStatement(
-	 * "UPDATE STOREINFO SET name = ? , owner = ?, opendate = TO_CHAR(?,'YYYYMMDD') ,closedate = TO_CHAR(?,'YYYYMMDD'), phone = ? ,address = ? WHERE storeno = ?"
-	 * ); pps.setString(1, sDto.getName()); pps.setString(2, sDto.getOwner());
-	 * pps.setString(3, sDto.getOpendate()); pps.setString(4, sDto.getClosedate());
-	 * pps.setInt(5, sDto.getPhone()); pps.setString(6, sDto.getAddress());
-	 * pps.setString(7, sDto.getStoreId()); resultInt = pps.executeUpdate(); }
-	 * 
-	 * 
-	 */
-	// 메뉴관리>메뉴정보>수정
 
-	public void menuModify(MenuItemDTO mDto) {
-		int resultInt = 0;
-		MenuItemDTO orgMe = new MenuItemDTO();
-		// 바로 받아와서 바로 수정
-		try {
-			pps = con.prepareStatement("SELECT menuid FROM menu WHERE menuid = ?");
-			pps.setString(1, mDto.getMenuId());
-			rs = pps.executeQuery();
-			while (rs.next()) {
-				orgMe.setMenuId(rs.getString(1));
+		// 메뉴관리>메뉴정보>삭제
+		public void menuDelete(MenuDTO menu) {
+			int resultInt = 0;
+			MenuDTO orgmenu = new MenuDTO();
+
+			try {
+				// 입력한 id와 쿼리에 있는거와 같은지 찾아
+				pps = con.prepareStatement("SELECT menuid FROM menu where menuid= ?");
+				pps.setString(1, menu.getMenuId());
+				rs = pps.executeQuery();
+				rs.next();
+				orgmenu.setMenuId(rs.getString(1));
+
+				if (menu.getMenuId().equals(orgmenu.getMenuId())) {
+					pps = con.prepareStatement("DELETE FROM menu WHERE menuid = ?");
+					pps.setString(1, menu.getMenuId());
+					resultInt = pps.executeUpdate();
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			// 기존에 있는거 수정
-			if (mDto.getMenuId().equals(orgMe.getMenuId())) {
+		}// menuDelete
 
-//				mDto.setPrice(orgMe.getPrice());
-//				mDto.setActivation(orgMe.getActivation());
+		// 메뉴관리>메뉴정보>활성화
+		public void menuActivation(String n) {
 
-				pps = con.prepareStatement("UPDATE menu SET price = ?, activation = ? WHERE menuid = ?");
-				pps.setInt(1, mDto.getPrice());
-				pps.setString(2, mDto.getActivation());
-				pps.setString(3, mDto.getMenuId());
-				resultInt = pps.executeUpdate();
+			String actY = "SELECT * FROM menu WHERE activation = 'Y'";
+			String actN = "SELECT * FROM menu WHERE activation = 'N'";
+			try {
+				if (n.equals("y")) {
+					rs = stmt.executeQuery(actY);
+					while (rs.next()) {
+						scripts.send("" + rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t"
+								+ rs.getString(4));
+					}
+				} else if (n.equals("n")) {
+					rs = stmt.executeQuery(actN);
+					while (rs.next()) {
+						scripts.send("" + rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t"
+								+ rs.getString(4));
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			// 새로 입력해야한다?
+		}// menuActivation();
 
-//         else {
-//            System.out.println("기존의 메뉴가 없습니다.");
-//            System.out.println("메뉴관리에서 메뉴등록을 해주세요.");
-//         }
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// 매장관리>재고관리>입고(원재료)
-	public void rawstock(RawMaterialDTO raw) {
-		int resultInt = 0;
-		RawMaterialDTO orgRaw = new RawMaterialDTO();
-		try {
-			pps = con.prepareStatement("SELECT * FROM RAWMATERIAL WHERE RAWMATEID = ?");
-			pps.setString(1, raw.getId());
-			rs = pps.executeQuery();
-			while (rs.next()) {
-				orgRaw.setId(rs.getString(1));
-				orgRaw.setStock(rs.getInt(4));
-				orgRaw.setCost(rs.getInt(5));
-			}
-			if (raw.getId().equals(orgRaw.getId())) {
-				raw.setStock(orgRaw.getStock() + raw.getStock());
-				raw.setCost(orgRaw.getCost() + raw.getCost());
-				pps = con.prepareStatement("update RAWMATERIAL set STOCK = ? , COST = ? where RAWMATEID = ?");
-				pps.setInt(1, raw.getStock());
-				pps.setInt(2, raw.getCost());
-				pps.setString(3, raw.getId());
-				resultInt = pps.executeUpdate();
-			} else {
+		// 메뉴관리>메뉴검색>이름
+		public void searchMenuName(String str) {
+			try {
 				pps = con.prepareStatement(
-						"insert into RAWMATERIAL (RAWMATEID, NAME, CATEGORY, STOCK, COST) values (?, ?, ?, ?, ?)");
-				pps.setString(1, raw.getId());
-				pps.setString(2, raw.getName());
-				pps.setString(3, raw.getCategory());
-				pps.setInt(4, raw.getStock());
-				pps.setInt(5, raw.getCost());
-				resultInt = pps.executeUpdate();
-			}
+						"SELECT name FROM recipe WHERE menuid = (SELECT menuid FROM menu WHERE name = ?)");
+				pps.setString(1, str); // 가져온 단어 넣었어
+				rs = pps.executeQuery();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+				while (rs.next()) {
+					scripts.send(rs.getString(1));
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-	}// rawstock
 
-	// 매장관리>재고관리>입고(비품)
-	public void matestock(MaterialDTO raw) {
-		int resultInt = 0;
-		MaterialDTO orgMat = new MaterialDTO();
-
-		try {
-			pps = con.prepareStatement("SELECT * FROM material WHERE mateid=?");
-			pps.setString(1, raw.getId());
-			rs = pps.executeQuery();
-			while (rs.next()) {
-				orgMat.setId(rs.getString(1));
-				orgMat.setStock(rs.getInt(3));
-				orgMat.setCost(rs.getInt(4));
+		// 메뉴관리>메뉴검색>종류
+		public void searchMenuCategory(String str) {
+			String coffee = "SELECT menuid, name, price, category FROM menu WHERE category = '커피음료'";
+			String noncoffee = "SELECT menuid, name, price, category FROM menu WHERE category = '음료'";
+			String bakery = "SELECT menuid, name, price, category FROM menu WHERE category = '베이커리'";
+			String tea = "SELECT menuid, name, price, category FROM menu WHERE category = '차'";
+			try {
+				if (str.equals("커피음료")) {
+					rs = stmt.executeQuery(coffee);
+					while (rs.next()) {
+						scripts.send("" + rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t"
+								+ rs.getString(4));
+					}
+				} else if (str.equals("음료")) {
+					rs = stmt.executeQuery(noncoffee);
+					while (rs.next()) {
+						scripts.send("" + rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t"
+								+ rs.getString(4));
+					}
+				} else if (str.equals("베이커리")) {
+					rs = stmt.executeQuery(bakery);
+					while (rs.next()) {
+						scripts.send("" + rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t"
+								+ rs.getString(4));
+					}
+				} else if (str.equals("차")) {
+					rs = stmt.executeQuery(bakery);
+					while (rs.next()) {
+						scripts.send("" + rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t"
+								+ rs.getString(4));
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			if (raw.getId().equals(orgMat.getId())) {
-				raw.setStock(orgMat.getStock() + raw.getStock());
-				raw.setCost(orgMat.getCost() + raw.getCost());
-				pps = con.prepareStatement("UPDATE material SET stock = ?, cost = ? WHERE mateID = ?");
-				pps.setInt(1, raw.getStock());
-				pps.setInt(2, raw.getCost());
-				pps.setString(3, raw.getId());
-				resultInt = pps.executeUpdate();
-			} else {
-				pps = con.prepareStatement("insert into MATERIAL (MATEID, NAME, STOCK, COST) values (?, ?, ?, ?)");
+		}// searchMenuCategory
+
+		// 매장관리>재고관리>입고(원재료)
+		public void rawstock(RawMaterialDTO raw) {
+			int resultInt = 0;
+			RawMaterialDTO orgRaw = new RawMaterialDTO();
+			try {
+				pps = con.prepareStatement("SELECT * FROM RAWMATERIAL WHERE RAWMATEID = ?");
 				pps.setString(1, raw.getId());
-				pps.setString(2, raw.getName());
-				pps.setInt(3, raw.getStock());
-				pps.setInt(4, raw.getCost());
-				resultInt = pps.executeUpdate();
+				rs = pps.executeQuery();
+				while (rs.next()) {
+					orgRaw.setId(rs.getString(1));
+					orgRaw.setStock(rs.getInt(4));
+					orgRaw.setCost(rs.getInt(5));
+				}
+				if (raw.getId().equals(orgRaw.getId())) {
+					raw.setStock(orgRaw.getStock() + raw.getStock());
+					raw.setCost(orgRaw.getCost() + raw.getCost());
+					pps = con.prepareStatement("update RAWMATERIAL set STOCK = ? , COST = ? where RAWMATEID = ?");
+					pps.setInt(1, raw.getStock());
+					pps.setInt(2, raw.getCost());
+					pps.setString(3, raw.getId());
+					resultInt = pps.executeUpdate();
+				} else {
+					pps = con.prepareStatement(
+							"insert into RAWMATERIAL (RAWMATEID, NAME, CATEGORY, STOCK, COST) values (?, ?, ?, ?, ?)");
+					pps.setString(1, raw.getId());
+					pps.setString(2, raw.getName());
+					pps.setString(3, raw.getCategory());
+					pps.setInt(4, raw.getStock());
+					pps.setInt(5, raw.getCost());
+					resultInt = pps.executeUpdate();
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}// matestock
+		}// rawstock
+
+		// 매장관리>재고관리>입고(비품)
+		public void matestock(MaterialDTO raw) {
+			int resultInt = 0;
+			MaterialDTO orgMat = new MaterialDTO();
+
+			try {
+				pps = con.prepareStatement("SELECT * FROM material WHERE mateid=?");
+				pps.setString(1, raw.getId());
+				rs = pps.executeQuery();
+				while (rs.next()) {
+					orgMat.setId(rs.getString(1));
+					orgMat.setStock(rs.getInt(3));
+					orgMat.setCost(rs.getInt(4));
+				}
+				if (raw.getId().equals(orgMat.getId())) {
+					raw.setStock(orgMat.getStock() + raw.getStock());
+					raw.setCost(orgMat.getCost() + raw.getCost());
+					pps = con.prepareStatement("UPDATE material SET stock = ?, cost = ? WHERE mateID = ?");
+					pps.setInt(1, raw.getStock());
+					pps.setInt(2, raw.getCost());
+					pps.setString(3, raw.getId());
+					resultInt = pps.executeUpdate();
+				} else {
+					pps = con.prepareStatement("insert into MATERIAL (MATEID, NAME, STOCK, COST) values (?, ?, ?, ?)");
+					pps.setString(1, raw.getId());
+					pps.setString(2, raw.getName());
+					pps.setInt(3, raw.getStock());
+					pps.setInt(4, raw.getCost());
+					resultInt = pps.executeUpdate();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}// matestock
+
 
 	public void updateStaffInfo(StaffDTO staff) {
 		sb = "UPDATE staff SET name = ?, joindate = ?, leavedate = ?, phone = ?, birth = ?, sex = ?, workstyle = ? WHERE staffno = ?";
@@ -849,3 +923,4 @@ public class QueryList {
 	}
 
 }
+
