@@ -176,6 +176,7 @@ public class Scripts {
 		send("로그인에 실패했습니다");
 		send("id 또는 password를 확인해주세요");
 	}
+
 // 1차==========================================================================
 	// 유저에게서 메인메뉴를 보여주고 선택받는다
 	public void mainMenu() {
@@ -288,97 +289,189 @@ public class Scripts {
 			}
 		}
 	}
-	//직원관리
-		public void staffMenu() {
-			send("1.직원정보 확인  |  2.직원등록  |  3.급여관리  |  4.돌아가기");
-			send("선택 >>");
-			choose = receive();
 
-			switch (choose) {
-			case staffMenu.STAFFINFO:
-				staffMenuFirst();
-				break;
-			case staffMenu.STAFFENROLL:
-				staffEnroll();
-				break;
-			case staffMenu.PAY:
-				staffSalaryManage();
-				break;
-			case "4":
-				mainMenu();
-				break;
-			default:
-				send("잘못 입력하셨습니다");
-				staffMenu();
-				break;
-			}
-		}	
-	
-	
-//2차=======================================================
-		// 매장관리 > 매장정보
-		public void storeInfo() {
-			send("1. 기본정보"); // storeInfoDefault()
-			send("2. 수정");// storeInfoMotify()
-			send("3. 수입확인");// checkIncome()
-			send("4. 지출확인");// checkOutcome()
-			send("선택 : ");
-			choose = receive();
+	// 직원관리
+	public void staffMenu() {
+		send("1.직원정보 확인  |  2.직원등록  |  3.급여관리  |  4.돌아가기");
+		send("선택 >>");
+		choose = receive();
 
-			switch (choose) {
-			case "1":
-				storeInfoDefault();
-				break;
-			case "2":
-				storeInfoMotify();
-				break;
-			case "3":
-				checkIncome();
-				break;
-			case "4":
-				checkOutcome();
-				break;
-			default:
-				send("다시선택하세요.");
-				mainMenu();
-				break;
-			}// switch
-		}// storeInfo
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	//고객관리>회원정보
+		switch (choose) {
+		case staffMenu.STAFFINFO:
+			staffMenuFirst();
+			break;
+		case staffMenu.STAFFENROLL:
+			staffEnroll();
+			break;
+		case staffMenu.PAY:
+			staffSalaryManage();
+			break;
+		case "4":
+			mainMenu();
+			break;
+		default:
+			send("다시선택하세요.");
+			staffMenu();
+			break;
+		}
+	}
+
+//2차=메뉴======================================================
+	// 매장관리 > 매장정보
+	public void storeInfo() {
+		send("1.매장기본정보  |  2.매장수정   |  3.돌아가기");
+		send("선택 >>");
+		choose = receive();
+
+		switch (choose) {
+		case "1":
+			storeInfoDefault();
+			break;
+		case "2":
+			storeInfoMotify();
+			break;
+		case "3":
+			storeMenu();
+			break;
+		default:
+			send("다시선택하세요.");
+			storeInfo();
+			break;
+		}// switch
+	}// storeInfo
+
+	// 매장관리>매출정보
+	public void saleInfo() {
+		send("1.매출기본정보  |  2.기간별검색  |  3.메뉴별검색  |  4.돌아가기");
+		send("선택 >>");
+		choose = receive();
+
+		switch (choose) {
+		case "1":
+			salesInfoDefault();
+			break;
+		case "2":
+			salesSearchTimes();
+			break;
+		case "3":
+			salesSearchMenus();
+			break;
+		case "4":
+			storeMenu();
+			break;
+		default:
+			send("다시선택하세요.");
+			saleInfo();
+			break;
+		}// switch
+	}// saleInfo
+
+	// 매장관리 > 재고관리
+	public void stock() {
+		send("1.현재재고현황  |  2.입고관리  |  3.돌아가기 ");
+		send("선택 >>");
+		choose = receive();
+
+		switch (choose) {
+		case "1":
+			stockNow();
+			break;
+		case "2":
+			stockManage();
+			break;
+		case "3":
+			storeMenu();
+			break;
+		default:
+			send("다시선택하세요.");
+			stock();
+			break;
+		}// switch
+	}// stock
+
+	// 메뉴관리 > 메뉴정보
+	public void menuInfo() {
+		send("1.메뉴기본정보  |  2.메뉴수정  |  3.메뉴삭제  |  4.메뉴활성화  |  5.돌아가기");
+		send("선택 >>");
+		choose = receive();
+
+		switch (choose) {
+		case "1":
+			menuInfoDefault();
+			break;
+		case "2":
+			menuModify();
+			break;
+		case "3":
+			menuDelete();
+			break;
+		case "4":
+			menuActivation();
+			break;
+		case "5":
+			menuMenu();
+			break;
+		default:
+			send("다시선택하세요.");
+			menuInfo();
+			break;
+		}// switch
+	}// menuInfo
+
+	// 메뉴관리 > 메뉴등록
+	public void menuEnroll() {
+		MenuItemDTO eDto = new MenuItemDTO();
+
+		send("====메뉴입력====");
+		send("메뉴번호 : ");
+		eDto.setMenuId(receive());
+		send("메뉴명 : ");
+		eDto.setName(receive());
+		send("가격 : ");
+		eDto.setPrice(Integer.parseInt(receive()));
+		send("분류 : ");
+		eDto.setCategory(receive());
+		send("활성화 여부 (Y,N) : ");
+		eDto.setActivation(receive());
+		send("입력완료됐습니다.");
+
+		posControl.menuEnroll(eDto);
+
+		send("1.추가입력  |  2.돌아가기");
+		choose = receive();
+		if (choose.equals("1")) {
+			menuEnroll();
+		} else if (choose.equals("2")) {
+			menuMenu();
+		}
+	}// menuEnroll
+
+	// 메뉴관리 > 메뉴검색
+	public void search() {
+		send("1.메뉴명 검색  |  2.메뉴종류 검색  |  3.돌아가기");
+		send("선택 >>");
+		choose = receive();
+
+		switch (choose) {
+		case "1":
+			searchMenuName();
+			break;
+		case "2":
+			searchMenuCategory();
+			break;
+		case "3":
+			menuMenu();
+			break;
+		default:
+			send("다시선택하세요.");
+			search();
+			break;
+		}// switch
+	}// search
+
+	// 고객관리>회원정보
 	public void custInfo() {
+		send("1.회원모두보기  |  2.고객검색  |  3.돌아가기");
 		send("2. 고객 검색");
 		send("3. 상세 고객 정보");
 		send("4. 되돌아가기");
@@ -404,16 +497,18 @@ public class Scripts {
 			break;
 		}
 	}
+
 	// 고객관리>회원등록
 	public void custenroll() {
 
 	}
-	//고객관리>고객구매이력
+
+	// 고객관리>고객구매이력
 	public void history() {
 		send("1.최신 구매이력  |  2.최다 구매이력  |  3.돌아가기");
 		send("선택>>");
 		choose = receive();
-		
+
 		switch (choose) {
 		case "1":
 			lastBuyingRecord();
@@ -430,14 +525,13 @@ public class Scripts {
 			break;
 		}
 	}
-
-	//직원관리>직원정보
-
+	
+	// 직원관리>직원정보
 	public void staffMenuFirst() {
 		send("1.직원기본정보  |  2.직원정보수정  |  3.직원정보삭제  |  4.돌아가기 ");
 		send("선택>>");
 		choose = receive();
-		
+
 		switch (choose) {
 		case "1":
 			staffDefaultInfo();
@@ -457,7 +551,389 @@ public class Scripts {
 			break;
 		}
 	}
-	//직원관리>직원정보>기본정보
+	
+	//직원관리>직원등록
+	public void staffEnroll() {
+		send("새로운 직원을 등록합니다");
+		send("아래의 정보를 맞게 입력하세요");
+		send(" * 이 붙은 항목은 필수 입력사항입니다");
+		while (true) {
+			send("* 이름 : ");
+			choose = receive();
+			if (choose.contentEquals(""))
+				send("이름은 필수 입력사항입니다. 다시 입력하세요");
+			else {
+				staff.setName(choose);
+				break;
+			}
+		}
+		while (true) {
+			send("* 입사일: ");
+			send("(yy/mm/dd 형식으로 입력하세요)");
+			choose = receive();
+			if (choose.contentEquals(""))
+				send("입사일은 필수 입력사항입니다. 다시 입력하세요");
+			else {
+				staff.setJoinDate(choose);
+				break;
+			}
+		}
+		send("퇴사일 : ");
+		send("(yy/mm/dd 형식으로 입력하세요)");
+		choose = receive();
+		if (choose.contentEquals(""))
+			staff.setLeaveDate("");
+		else {
+			staff.setLeaveDate(choose);
+		}
+		send("전화번호 : ");
+		choose = receive();
+		if (choose.contentEquals("")) {
+			staff.setPhone(1000000000);
+		} else {
+			int phoneNumber = Integer.parseInt(choose);
+			staff.setPhone(phoneNumber);
+		}
+		send("생년월일 : ");
+		choose = receive();
+		if (choose.contentEquals("")) {
+			staff.setBirth(900101);
+		} else {
+			int birth = Integer.parseInt(choose);
+			staff.setBirth(birth);
+		}
+		send("성별 : ");
+		send("'남' 또는 '여' 로 입력하세요");
+		choose = receive();
+		if (choose.contentEquals("")) {
+			staff.setSex("");
+		} else {
+			staff.setSex(choose);
+		}
+
+		while (true) {
+			send("* 고용형태 : ");
+			send("'정직원' 또는 '파트타임'으로 입력하세요");
+			choose = receive();
+			if (choose.contentEquals("")) {
+				send("고용형태는 필수 입력사항입니다. 다시 입력하세요");
+			} else {
+				staff.setWorkstyle(choose);
+				break;
+			}
+		}
+		staff.setStoreId(store.getStoreId());
+
+		posControl.staffEnroll(staff);
+		send("등록이 완료되었습니다");
+	}
+
+	//직원관리>급여관리 내부 메뉴
+	public void staffSalaryManage() {
+		send("1.직원급여현황  |  2.직원급여수정  |  3.돌아가기");
+		send("선택>>");
+		choose = receive();
+
+		switch (choose) {
+		case "1":
+			showSalaryOption();
+			break;
+		case "2":
+			updateSalaryOption();
+			break;
+		case "3":
+			staffMenu();
+			break;
+		default:
+			send("잘못 입력하셨습니다");
+			staffSalaryManage();
+			break;
+		}
+	}	
+	
+//3차=메뉴========================================================================
+	// 매장관리>매장정보>기본정보
+	public void storeInfoDefault() {
+		StoreDTO showStoreList = posControl.storeInfoDefault();
+
+		send("======= 매장 정보 =======");
+		send("" + showStoreList.getName());
+		send("" + showStoreList.getOwner());
+		send("" + showStoreList.getOpendate());
+		send("" + showStoreList.getClosedate());
+		send("" + showStoreList.getPhone());
+		send("" + showStoreList.getAddress());
+		
+		send("메뉴로 돌아가기 1.예  |  2.아니오");
+		choose = receive();
+		if (choose.equals("1")) {
+			storeMenu();
+		} else if (choose.equals("2")) {
+			storeInfoDefault();
+		}
+	}
+	
+	// 매장관리>매장정보>수정
+	public void storeInfoMotify() {
+		// 매장 정보 수정 합니다~
+		StoreDTO sDto = new StoreDTO();
+		send("매장 정보 수정해주세요.");
+//		send("지점 ID");
+//		sDto.setStoreId(receive());
+		send("지점명 : ");
+		sDto.setName(receive());
+		send("지점담당자 : ");
+		sDto.setOwner(receive());
+		send("개업일 : ");
+		sDto.setOpendate(receive()); // *** int로 입력되야함
+		send("폐업일 : ");
+		sDto.setClosedate(receive()); // *** int로 입력되야함
+		send("매장전화번호 : ");
+		sDto.setPhone(Integer.parseInt(receive())); // *** int로 입력되야함
+		send("매장주소 : ");
+		sDto.setAddress(receive());
+
+		
+
+		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
+		posControl.storeInfoMotify(sDto);
+		send("입력완료");
+		storeMenu();
+	}	
+	
+	// 매장관리>매출정보>기본정보
+	public void salesInfoDefault() {// 쿼리에서 작성해서 보여야함
+
+		send("최근 7일간의 매출입니다");
+		String[][] salesData = posControl.salesInfoDefault();
+		send("날짜\t\t총 매출액");
+		for (String[] data : salesData) {
+			send(data[0] + "\t" + data[1]);
+		}
+		send("=================================");
+		storeMenu();
+	}	
+	
+	// 매장관리>매출정보>시간별 검색
+	public void salesSearchTimes() {// 쿼리에서 작성해서 보여야함
+		send("기간별 검색을 시작합니다");
+		send("검색 시작 날짜를 입력하세요(yy/mm/dd)");
+		String startDate = receive();
+		send("검색 마지막 날짜를 입력하세요(yy/mm/dd)");
+		String finishDate = receive();
+		String[] searchDate = { startDate, finishDate };
+		ArrayList<String[]> salesData = posControl.salesInfoDefault(searchDate);
+		send("날짜\t\t총 매출액");
+		String sum = null;
+		for (String[] data : salesData) {
+			send(data[0] + "\t" + data[1]);
+			sum = data[2];
+		}
+		send("=============================");
+		send("매출 총 합계  : " + sum);
+		send("=============================");
+
+		storeMenu();
+	}
+	
+	// 매장관리>매출정보>메뉴별 검색
+	public void salesSearchMenus() {// 쿼리에서 작성해서 보여야함
+
+		send("메뉴별 검색을 시작합니다");
+		send("검색할 메뉴 이름을 입력하세요");
+		choose = receive();
+		String[][] salesData = posControl.salesMenuDate(choose);
+		send("최근 7일간 판매량==================");
+		send("날짜\t\t판매량\t수입");
+		String sum = null;
+		for (String[] data : salesData) {
+			send(data[0] + "\t" + data[1] + "\t" + data[2]);
+			sum = data[3];
+		}
+		send("=============================");
+		send("최근 7일간 매출	:" + sum);
+		send("최근 30일 간 매출\t:" + posControl.salesMenuDate30(choose));
+		send("전 기간 매출\t\t:" + posControl.salesMenuDate365(choose));
+		send("=============================");
+
+		storeMenu();
+	}
+	
+	// 매장관리>재고관리>현재 비품 재고
+	public void stockNow() {
+		send("===재고 List====");
+		send(" ID | 이름 | 갯수 | 원가 ");
+		posControl.showstockList();
+		
+		storeMenu();
+	}
+	
+	// 매장관리>매출정보>입고관리
+	public void stockManage() {
+		send("1. 원재료 입고");
+		send("2. 비품입고");
+		choose = receive();
+
+		if (choose.equals("1")) {
+			RawMaterialDTO temp = new RawMaterialDTO();
+			send("원재료 입고를 작성하세요.");
+			send("원재료 ID : ");
+			temp.setId(receive());
+			send("원재료명 : ");
+			temp.setName(receive());
+			send("분류 : ");
+			temp.setCategory(receive());
+			send("수량 : ");
+			temp.setStock(Integer.parseInt(receive()));
+			send("원가 : ");
+			temp.setCost(Integer.parseInt(receive()));
+
+			posControl.temp(temp);
+
+		} else if (choose.equals("2")) {
+			MaterialDTO temp = new MaterialDTO();
+			send("비품 입고를 작성하세요.");
+			send("비품 ID : ");
+			temp.setId(receive());
+			send("비품명 : ");
+			temp.setName(receive());
+			send("수량 : ");
+			temp.setStock(Integer.parseInt(receive())); 
+			send("원가 : ");
+			temp.setCost(Integer.parseInt(receive()));
+
+			posControl.matestock(temp);
+		}
+
+		send("1.추가입력  |  2.돌아가기");
+		choose = receive();
+		if (choose.equals("1")) {
+			this.stockManage();
+		} else if (choose.equals("2")) {
+			storeMenu();
+		}
+	}// stockManage	
+	
+	// 메뉴관리>메뉴정보>기본정보
+	public void menuInfoDefault() {
+
+		send("메뉴번호\t메뉴이름\t가격\t카테고리");
+		MenuItemDTO[] menuList = posControl.menuInfoDefault();
+		for (MenuItemDTO menu : menuList) {
+			send(menu.getMenuId() + "\t" + menu.getName() + "\t" + menu.getPrice() + "\t" + menu.getCategory());
+		}
+		menuMenu();
+	}// menuInfoDefault	
+	
+	// 메뉴관리>메뉴정보>수정
+	public void menuModify() {
+
+		MenuItemDTO mDto = new MenuItemDTO();
+		menuInfoDefault();
+		send("====메뉴수정====");
+		send("메뉴번호 : ");
+		mDto.setMenuId(receive());
+		send("메뉴명 : ");
+		mDto.setName(receive());
+		send("가격 : ");
+		mDto.setPrice(Integer.parseInt(receive()));
+		send("분류 : ");
+		mDto.setCategory(receive());
+		send("활성화 여부 (Y,N) : ");
+		mDto.setActivation(receive());
+		send("입력완료");
+
+		posControl.menuModify(mDto);
+
+		send("1.추가수정  |  2.돌아가기");
+		choose = receive();
+		if (choose.equals("1")) {
+			menuModify();
+		} else if (choose.equals("2")) {
+			menuMenu();
+		}
+	} // menuModify	
+	
+	// 메뉴관리>메뉴정보>삭제
+	public void menuDelete() {
+		MenuDTO menu = new MenuDTO();
+		menuInfoDefault();
+		send("삭제할 메뉴ID을 입력하세요.");
+		menu.setMenuId(receive());
+
+		posControl.menuDelete(menu);
+
+		send("1.추가삭제 |  2.돌아가기");
+		choose = receive();
+		if (choose.equals("1")) {
+			menuDelete();
+		} else if (choose.equals("2")) {
+			menuMenu();
+		}
+	}	
+	
+	// 메뉴관리>메뉴정보>활성화,비활성화
+	public void menuActivation() {
+
+		send("====판매가능한 메뉴확인====");
+		send("1. 판매가능한 메뉴  |  2.시즌메뉴");
+		choose = receive();
+
+		if (choose.equals("1")) {
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.menuActivation("y");
+
+		} else if (choose.equals("2")) {
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.menuActivation("n");
+
+		} else {
+			menuInfo();
+		}
+	}	
+	
+	// 메뉴관리>메뉴검색>이름
+	public void searchMenuName() {
+		menuInfoDefault();
+		send("확인할 메뉴명을 입력하세요.");
+		choose = receive();
+
+		posControl.searchMenuName(choose);
+		
+		send("1.추가확인  |  2.돌아가기");
+		choose = receive();
+		if (choose.equals("1")) {
+			searchMenuName();
+		} else if (choose.equals("2")) {
+			menuMenu();
+		}
+	}	
+	
+	// 메뉴관리>메뉴검색>종류
+	public void searchMenuCategory() {
+		send("1.커피음료  |  2.음료  |  3.베이커리  |  4.차");
+		choose = receive();
+
+		if (choose.equals("1")) {
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.searchMenuCategory("커피음료");
+		} else if (choose.equals("2")) {
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.searchMenuCategory("음료");
+		} else if (choose.equals("3")) {
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.searchMenuCategory("베이커리");
+		} else if (choose.equals("4")) {
+			send("메뉴번호\t메뉴이름\t가격\t카테고리");
+			posControl.searchMenuCategory("차");
+		} else {
+			send("다시선택하세요.");
+			searchMenuCategory();
+		}
+	}
+
+
+	// 직원관리>직원정보>기본정보
 	public void staffDefaultInfo() {
 		StaffDTO[] staffList = posControl.showStaffList();
 
@@ -468,7 +944,6 @@ public class Scripts {
 					+ "\t" + staffList[i].getWorkstyle());
 		}
 	}
-	
 
 	public void staffInfoModify() {
 		send("수정 할 직원의 이름을 입력하세요");
@@ -484,7 +959,6 @@ public class Scripts {
 			choose = receive();
 			switch (choose) {
 			case "y":
-
 				staffInfoModifyDetail();
 				break;
 			case "n":
@@ -530,7 +1004,6 @@ public class Scripts {
 	}
 
 	public void staffInfoModifyDetail() {
-
 		send("새로운 정보를 입력하세요(변경을 원치 않으시면 enter를 입력하세요)");
 		String newData = null;
 		send("이름: ");
@@ -570,9 +1043,8 @@ public class Scripts {
 			int newBirth = Integer.parseInt(newData);
 			staff.setBirth(newBirth);
 			System.out.println("해당 직원의 생일을 " + staff.getBirth() + "로 변경완료");
-
 		}
-
+		
 		send("성별: ");
 		do {
 			newData = receive();
@@ -584,7 +1056,6 @@ public class Scripts {
 					staff.setSex(newData);
 					System.out.println("해당 직원의 성별을" + staff.getSex() + "로 변경완료");
 				}
-
 			}
 		} while (!(newData.contentEquals("") || newData.equals("여") || newData.equals("남")));
 
@@ -668,104 +1139,7 @@ public class Scripts {
 
 	}
 
-	public void staffEnroll() {
-		send("새로운 직원을 등록합니다");
-		send("아래의 정보를 맞게 입력하세요");
-		send(" * 이 붙은 항목은 필수 입력사항입니다");
-		while (true) {
-			send("* 이름 : ");
-			choose = receive();
-			if (choose.contentEquals(""))
-				send("이름은 필수 입력사항입니다. 다시 입력하세요");
-			else {
-				staff.setName(choose);
-				break;
-			}
-		}
-		while (true) {
-			send("* 입사일: ");
-			send("(yy/mm/dd 형식으로 입력하세요)");
-			choose = receive();
-			if (choose.contentEquals(""))
-				send("입사일은 필수 입력사항입니다. 다시 입력하세요");
-			else {
-				staff.setJoinDate(choose);
-				break;
-			}
-		}
-		send("퇴사일 : ");
-		send("(yy/mm/dd 형식으로 입력하세요)");
-		choose = receive();
-		if (choose.contentEquals(""))
-			staff.setLeaveDate("");
-		else {
-			staff.setLeaveDate(choose);
-		}
-		send("전화번호 : ");
-		choose = receive();
-		if (choose.contentEquals("")) {
-			staff.setPhone(1000000000);
-		} else {
-			int phoneNumber = Integer.parseInt(choose);
-			staff.setPhone(phoneNumber);
-		}
-		send("생년월일 : ");
-		choose = receive();
-		if (choose.contentEquals("")) {
-			staff.setBirth(900101);
-		} else {
-			int birth = Integer.parseInt(choose);
-			staff.setBirth(birth);
-		}
-		send("성별 : ");
-		send("'남' 또는 '여' 로 입력하세요");
-		choose = receive();
-		if (choose.contentEquals("")) {
-			staff.setSex("");
-		} else {
-			staff.setSex(choose);
-		}
-
-		while (true) {
-			send("* 고용형태 : ");
-			send("'정직원' 또는 '파트타임'으로 입력하세요");
-			choose = receive();
-			if (choose.contentEquals("")) {
-				send("고용형태는 필수 입력사항입니다. 다시 입력하세요");
-			} else {
-				staff.setWorkstyle(choose);
-				break;
-			}
-		}
-		staff.setStoreId(store.getStoreId());
-
-		posControl.staffEnroll(staff);
-		send("등록이 완료되었습니다");
-	}
-
-	// 직원관리>급여관리 내부 메뉴
-	public void staffSalaryManage() {
-		send("1.직원급여현황  |  2.직원급여수정  |  3.돌아가기");
-		send("선택>>");
-		choose = receive();
-		
-		switch (choose) {
-		case "1":
-			showSalaryOption();
-			break;
-		case "2":
-			updateSalaryOption();
-			break;
-		case "3":
-			staffMenu();
-			break;
-		default:
-			send("잘못 입력하셨습니다");
-			staffSalaryManage();
-			break;
-		}
-	}
-	//직원관리>직원급여현황
+	// 직원관리>직원급여현황
 	public void showSalaryOption() {
 		ArrayList<String[]> optionList = posControl.showSalaryOption();
 		send("직원번호\t직원명\t고용형태\t근무일수\t근무시간\t환산시급\t환산월급");
@@ -1125,419 +1499,6 @@ public class Scripts {
 		}
 	}
 
-	// ==2차메뉴 메서드=====================================================================
-
-
-	// 매장관리 > 매출정보
-	public void saleInfo() {
-		send("1. 기본정보"); // salesInfoDefault()
-		send("2. 기간별 검색"); // salesSearchTimes()
-		send("3. 메뉴별 검색"); // salesSearchMenus()
-		send("선택 :");
-		choose = receive();
-
-		switch (choose) {
-		case "1":
-			salesInfoDefault();
-			break;
-		case "2":
-			salesSearchTimes();
-			break;
-		case "3":
-			salesSearchMenus();
-			break;
-		default:
-			send("다시선택하세요.");
-			mainMenu();
-			break;
-		}// switch
-
-	}// saleInfo
-
-	// 매장관리 > 재고관리
-	public void stock() {
-		send("1. 비품 재고"); // stockNow()
-		send("2. 입고 관리"); // stockManage()
-		send("선택 :");
-		String choose = receive();
-
-		switch (choose) {
-		case "1":
-			stockNow();
-			break;
-		case "2":
-			stockManage();
-			break;
-		default:
-			send("다시 선택하세요.");
-			mainMenu();
-			break;
-		}// switch
-
-	}// stock
-
-	// 메뉴관리 > 메뉴정보
-	public void menuInfo() {
-
-		send("1. 기본정보"); // menuInfoDefault()
-		send("2. 수정"); // menuModify()
-		send("3. 삭제"); // menuDelete()
-		send("4. 메뉴활성화");// menuOnOff
-		send("선택 :");
-		choose = receive();
-
-		switch (choose) {
-		case "1":
-			menuInfoDefault();
-			break;
-		case "2":
-			menuModify();
-			break;
-		case "3":
-			menuDelete();
-			break;
-		case "4":
-			menuActivation();
-			break;
-		default:
-			send("다시 선택하세요.");
-			mainMenu();
-			break;
-		}// switch
-	}// menuInfo
-
-	// 메뉴관리 > 메뉴등록
-	public void menuEnroll() {
-
-		MenuItemDTO eDto = new MenuItemDTO();
-
-		send("====메뉴입력====");
-		send("메뉴번호 : ");
-		eDto.setMenuId(receive());
-		send("메뉴명 : ");
-		eDto.setName(receive());
-		send("가격 : ");
-		eDto.setPrice(Integer.parseInt(receive()));
-		send("분류 : ");
-		eDto.setCategory(receive());
-		send("활성화 여부 (Y,N) : ");
-		eDto.setActivation(receive());
-		send("입력완료");
-
-		posControl.menuEnroll(eDto);
-
-		// 상위 메뉴로 돌아가기
-		menuMenu();
-
-	}// menuEnroll
-
-	// 메뉴관리 > 메뉴검색
-	public void search() {
-		send("1. 메뉴명");
-		send("2. 메뉴 종류");
-		send("선택 :");
-		choose = receive();
-
-		switch (choose) {
-		case "1":
-			searchMenuName();
-			break;
-		case "2":
-			searchMenuCategory();
-			break;
-		default:
-			send("다시선택하세요.");
-			mainMenu();
-			break;
-
-		}// switch
-
-	}// search
-
-	// -----------------------------여기부터 3차메뉴 관리
-	// 매장관리>매장정보>기본정보
-	public void storeInfoDefault() {
-		StoreDTO showStoreList = posControl.storeInfoDefault();
-
-		send("======= 매장 정보 =======");
-		send("" + showStoreList.getName());
-		send("" + showStoreList.getOwner());
-		send("" + showStoreList.getOpendate());
-		send("" + showStoreList.getClosedate());
-		send("" + showStoreList.getPhone());
-		send("" + showStoreList.getAddress());
-	}
-
-	// 매장관리>매장정보>수정
-	public void storeInfoMotify() {
-		// 매장 정보 수정 합니다~
-		StoreDTO sDto = new StoreDTO();
-		send("매장 정보 수정해주세요.");
-		send("지점번호 : ");
-		sDto.setStoreId(receive());
-		send("지점명 : ");
-		sDto.setName(receive());
-		send("지점담당자 : ");
-		sDto.setOwner(receive());
-		send("개업일 : ");
-		sDto.setOpendate(receive()); // *** int로 입력되야함
-		send("폐업일 : ");
-		sDto.setClosedate(receive()); // *** int로 입력되야함
-		send("매장전화번호 : ");
-		sDto.setPhone(Integer.parseInt(receive())); // *** int로 입력되야함
-		send("매장주소 : ");
-		sDto.setAddress(receive());
-
-		send("입력완료");
-
-		// 유저의 입력을 store 소속의 적절한 메소드로 넘긴다
-		posControl.storeInfoMotify(sDto);
-
-		// 메뉴로 다시 돌아가기
-		storeMenu();
-	}
-
-	// 매장관리>매장정보>수입확인
-	public void checkIncome() {// 쿼리에서 작성해서 보여야함
-
-	}
-
-	// 매장관리>매장정보>지출확인
-	public void checkOutcome() {// 쿼리에서 작성해서 보여야함
-
-	}
-
-	// 매장관리>매출정보>기본정보
-	public void salesInfoDefault() {// 쿼리에서 작성해서 보여야함
-
-		send("최근 7일간의 매출입니다");
-		String[][] salesData = posControl.salesInfoDefault();
-		send("날짜\t\t총 매출액");
-		for (String[] data : salesData) {
-			send(data[0] + "\t" + data[1]);
-		}
-		send("=================================");
-
-	}
-
-	// 매장관리>매출정보>시간별 검색
-	public void salesSearchTimes() {// 쿼리에서 작성해서 보여야함
-
-		send("기간별 검색을 시작합니다");
-		send("검색 시작 날짜를 입력하세요(yy/mm/dd)");
-		String startDate = receive();
-		send("검색 마지막 날짜를 입력하세요(yy/mm/dd)");
-		String finishDate = receive();
-		String[] searchDate = { startDate, finishDate };
-		ArrayList<String[]> salesData = posControl.salesInfoDefault(searchDate);
-		send("날짜\t\t총 매출액");
-		String sum = null;
-		for (String[] data : salesData) {
-			send(data[0] + "\t" + data[1]);
-			sum = data[2];
-		}
-		send("=============================");
-		send("매출 총 합계  : " + sum);
-		send("=============================");
-
-	}
-
-	// 매장관리>매출정보>메뉴별 검색
-	public void salesSearchMenus() {// 쿼리에서 작성해서 보여야함
-
-		send("메뉴별 검색을 시작합니다");
-		send("검색할 메뉴 이름을 입력하세요");
-		choose = receive();
-		String[][] salesData = posControl.salesMenuDate(choose);
-		send("최근 7일간 판매량==================");
-		send("날짜\t\t판매량\t수입");
-		String sum = null;
-		for (String[] data : salesData) {
-			send(data[0] + "\t" + data[1] + "\t" + data[2]);
-			sum = data[3];
-		}
-		send("=============================");
-		send("최근 7일간 매출	:" + sum);
-		send("최근 30일 간 매출\t:" + posControl.salesMenuDate30(choose));
-		send("전 기간 매출\t\t:" + posControl.salesMenuDate365(choose));
-		send("=============================");
-
-	}
-
-	// 매장관리>재고관리>현재 비품 재고
-	public void stockNow() {
-		send("===재고 List====");
-		send(" ID | 이름 | 갯수 | 원가 ");
-		posControl.showstockList();
-		send("뒤로가까? y/n");
-		String yon = receive();
-		if (yon == "y")
-			storeMenu();
-		else
-			storeMenu();
-
-	}
-
-	// 매장관리>매출정보>입고관리
-	public void stockManage() {
-		send("1. 원재료 입고");
-		send("2. 비품입고");
-		choose = receive();
-
-		if (choose.equals("1")) {
-			RawMaterialDTO temp = new RawMaterialDTO();
-			send("원재료 입고를 작성하세요.");
-			send("원재료 ID : ");
-			temp.setId(receive());
-
-			send("원재료명 : ");
-			temp.setName(receive());
-
-			send("분류 : ");
-			temp.setCategory(receive());
-
-			send("수량 : ");
-			temp.setStock(Integer.parseInt(receive()));
-
-			send("원가 : ");
-			temp.setCost(Integer.parseInt(receive()));
-
-			posControl.temp(temp);
-
-		} else if (choose.equals("2")) {
-			MaterialDTO temp = new MaterialDTO();
-			send("비품 입고를 작성하세요.");
-			send("비품 ID : ");
-			temp.setId(receive());
-
-			send("비품명 : ");
-			temp.setName(receive());
-
-			send("수량 : ");
-			temp.setStock(Integer.parseInt(receive())); // *** int로 입력되야함
-
-			send("원가 : ");
-			temp.setCost(Integer.parseInt(receive())); // *** int로 입력되야함
-
-			posControl.matestock(temp);
-		}
-
-		send("더 추가하시겠습니까?  y/n");
-		choose = receive();
-		if (choose.equals("Y") || choose.equals("y")) {
-			this.stockManage();
-		} else if (choose.equals("N") || choose.equals("n")) {
-			mainMenu();
-		}
-	}// stockManage
-
-	// 메뉴관리>메뉴정보>기본정보
-	public void menuInfoDefault() {
-
-		send("메뉴번호\t메뉴이름\t가격\t카테고리");
-		MenuItemDTO[] menuList = posControl.menuInfoDefault();
-		for (MenuItemDTO menu : menuList) {
-			send(menu.getMenuId() + "\t" + menu.getName() + "\t" + menu.getPrice() + "\t" + menu.getCategory());
-		}
-	}// menuInfoDefault
-
-	// 메뉴관리>메뉴정보>수정
-	public void menuModify() {
-
-		MenuItemDTO mDto = new MenuItemDTO();
-		menuInfoDefault();
-		send("====메뉴수정====");
-		send("메뉴번호 : ");
-		mDto.setMenuId(receive());
-		send("메뉴명 : ");
-		mDto.setName(receive());
-		send("가격 : ");
-		mDto.setPrice(Integer.parseInt(receive()));
-		send("분류 : ");
-		mDto.setCategory(receive());
-		send("활성화 여부 (Y,N) : ");
-		mDto.setActivation(receive());
-		send("입력완료");
-
-		posControl.menuModify(mDto);
-
-//			send("계속 하시겠습니까?");
-//			choose = receive();
-//			if (choose.equals("Y") || choose.equals("y")) {
-//				menuModify();
-//			} else if (choose.equals("N") || choose.equals("n")) {
-		menuMenu();
-//			}
-	} // menuModify
-
-	// 메뉴관리>메뉴정보>삭제
-	public void menuDelete() {
-		MenuDTO menu = new MenuDTO();
-		menuInfoDefault();
-		send("삭제할 메뉴ID을 입력하세요.");
-		menu.setMenuId(receive());
-
-		posControl.menuDelete(menu);
-
-		menuMenu();
-	}
-
-	// 메뉴관리>메뉴정보>활성화,비활성화
-	public void menuActivation() {
-
-		send("====판매가능한 메뉴확인====");
-		send("1. 판매가능한 메뉴\t| 2.시즌메뉴");
-		choose = receive();
-
-		if (choose.equals("1")) {
-			send("메뉴번호\t메뉴이름\t가격\t카테고리");
-			posControl.menuActivation("y");
-
-		} else if (choose.equals("2")) {
-			send("메뉴번호\t메뉴이름\t가격\t카테고리");
-			posControl.menuActivation("n");
-
-		} else {
-			menuInfo();
-		}
-	}
-
-	// 메뉴관리>메뉴검색>이름
-	public void searchMenuName() {
-
-		menuInfoDefault();
-		send("메뉴를 입력하세요(원재료확인)");
-		choose = receive();
-
-		posControl.searchMenuName(choose);
-	}
-
-	// 메뉴관리>메뉴검색>종류
-	public void searchMenuCategory() {
-		send("====종류검색====");
-		send("1.커피음료 \t| 2.음료\t| 3.베이커리\t| 4.차");
-		choose = receive();
-
-		if (choose.equals("1")) {
-			send("메뉴번호\t메뉴이름\t가격\t카테고리");
-			posControl.searchMenuCategory("커피음료");
-		} else if (choose.equals("2")) {
-			send("메뉴번호\t메뉴이름\t가격\t카테고리");
-			posControl.searchMenuCategory("음료");
-		} else if (choose.equals("3")) {
-			send("메뉴번호\t메뉴이름\t가격\t카테고리");
-			posControl.searchMenuCategory("베이커리");
-		} else if (choose.equals("4")) {
-			send("메뉴번호\t메뉴이름\t가격\t카테고리");
-			posControl.searchMenuCategory("차");
-		} else {
-			send("잘못입력했습니다~");
-			searchMenuCategory();
-		}
-
-	}
-
-///////////////////////////////////////////////////////소미 파트 
 	// 고객관리>회원정보 내부 메뉴
 	public void showMembers() {// 1.모두보기
 		MemberDTO[] showMembersList = posControl.showMember();
@@ -1556,7 +1517,7 @@ public class Scripts {
 	}
 
 	public void showMemberDetail() {// 3.정보보기
-
+		
 	}
 
 	// 고객관리>회원정보>정보보기 내부 메뉴(1.수정)
