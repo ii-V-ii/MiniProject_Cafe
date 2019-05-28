@@ -83,6 +83,7 @@ class ReceiveThread extends Thread{
 				System.exit(0);
 				break;
 			}
+			
 		}
 		
 	}
