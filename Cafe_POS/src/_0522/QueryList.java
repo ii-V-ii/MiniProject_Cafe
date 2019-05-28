@@ -1,3 +1,4 @@
+
 package _0522;
 
 import java.sql.Connection;
@@ -207,7 +208,45 @@ public class QueryList {
 		return null;
 
 	}
-
+	//고객관리수정,소미파트
+	public  MemberDTO[] modifyshowMember(MemberDTO modifymember)  {
+		sb="UPDATE member SET name = ?, phone = ?, sex = ?, birth = ? WHERE memberid = ?";
+		MemberDTO[] modifyshowMember = null;
+		try {
+			pps = con.prepareStatement(sb);
+			System.out.println(modifymember.getName()+modifymember.getPhone()+modifymember.getSex()+modifymember.getBirth()+modifymember.getMemberID());
+			pps.setString(1, modifymember.getName());
+			pps.setInt(2, modifymember.getPhone());
+			pps.setString(3,modifymember.getSex());
+			pps.setInt(4, modifymember.getBirth());
+			pps.setString(5,modifymember.getMemberID());
+			pps.executeUpdate();
+			System.out.println("member_info modify finish~");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			//System.out.println("format 불일치로인한 error.");
+		}return modifyshowMember;
+	}
+	
+	//고객관리삭제, 소미파트
+	public MemberDTO[] deleteshowMember(MemberDTO deletemember){
+		sb="DELETE member SET name = ?, phone = ?, sex = ?, birth = ? WHERE memberid =?";
+		MemberDTO[]deleteshowMember = null;
+		try {
+			pps = con.prepareStatement(sb);
+			System.out.println(deletemember.getName()+deletemember.getPhone()+deletemember.getSex()+deletemember.getBirth()+deletemember.getMemberID());
+			pps.setString(1,deletemember.getName());
+			pps.setInt(2,deletemember.getPhone());
+			pps.setString(3,deletemember.getSex());
+			pps.setInt(4,deletemember.getBirth());
+			pps.setString(5,deletemember.getMemberID());
+			System.out.println("member_info delete finish~");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}return deleteshowMember;
+	}
+	
 	public MemberDTO[] searchMember(String memberName) {// 일단주석처리
 		MemberDTO[] memberList = null;
 		try {
@@ -984,5 +1023,4 @@ public class QueryList {
 	}
 
 }
-
 

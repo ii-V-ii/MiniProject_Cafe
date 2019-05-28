@@ -1,4 +1,3 @@
-
 package _0522;
 
 // 동기화 확인용 주석
@@ -32,7 +31,7 @@ import oracle.sql.DATE;
 
 // 유저에게 보여줄 메뉴 인터페이스(1차, 2차 메뉴)
 interface MainMenu {
-	String SALES = "0", STORE="1",MENU="2",CUSTOMER="3",STAFF="4";
+	String SALES = "0", STORE = "1", MENU = "2", CUSTOMER = "3", STAFF = "4";
 }
 
 /* 매장관리 */
@@ -473,6 +472,7 @@ public class Scripts {
 		}
 		return member;
 	}
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	// 유저에게서 고객관리 메뉴를 보여주고 선택받는다
 	public void customerMenu() {
@@ -1731,25 +1731,185 @@ public class Scripts {
 			send("" + showMembersList[i].getPhone());
 			send("" + showMembersList[i].getSex());
 			send("" + showMembersList[i].getBirth());
-			send("포인트 :"+showMembersList[i].getPoint());
+			send("포인트 :" + showMembersList[i].getPoint());
 		}
+
+		send("========회원정보 변경========");
+		send("1.수정");
+		send("2.삭제");
+		send("선택 >> ");
+		choose = receive();
+		switch (choose) {
+		case "1":
+			showMemberDetailModify();// 1.수정
+			send("회원정보 수정메뉴로 이동합니다.");
+			send("");
+			break;
+		case "2":
+			showMemberDetailDelete();// 2.삭제
+			send("회원정보 삭제메뉴로 이동합니다.");
+			send("");
+			break;
+		default:
+			send("다시선택하세요>> ");
+			// showMembers();
+			break;
+		}// switch
 	}
 
-	public void searchMember() {// 2.고객검색
-
-	}
-
-	public void showMemberDetail() {// 3.정보보기
-
-	}
-
+	/////////////////////////////////////////////////////////////////소미파트
 	// 고객관리>회원정보>정보보기 내부 메뉴(1.수정)
 	public void showMemberDetailModify() {
+		send("고객님의 수정할 회원정보 선택하세요.");
+		choose=receive();
+		MemberDTO[]memberDetailModifyList=posControl.searchMember(choose);
+		for (MemberDTO member : memberDetailModifyList) {
+			send("" + member.getName() + "\t" + member.getPhone()+ "\t" + member.getSex() + "\t" + member.getBirth() + "\t" + member.getMemberID());
+		}
+		if(memberDetailModifyList.length==1) {
+			member=memberDetailModifyList[0];
+			send("정보를 수정하겠습니까?"+"\t"+"yes 또는 no를 입력해주세요");
+			send("선택>> ");
+			choose=receive();
+			switch(choose) {
+			case "y":
+				showMemberDetail();
+				break;
+			case "n":
+				send("취소하셨습니다");
+				break;
+			default:
+				send("다시 입력하세요");
+				break;
+			}
+		}else if(memberDetailModifyList.length >1) {
+			send("동명이인이 있습니다. 수정하려는 고객의 고객번호를 입력하세요>>");
+			choose = receive();
+			boolean check = false;
+			member=null;
+			for (MemberDTO temp : memberDetailModifyList) {
+				if (choose.contentEquals(temp.getMemberID())) {
+					member = temp;
+					check = true;
+				}
+			}
+			if (!check) {
+				send("고객 번호를 다시 확인해주세요");
+			}
+			else if (check) {
+				send("위 고객의 정보를 수정하시겠습니까? y/n");
+				choose = receive();
+				switch (choose) {
+				case "y":
+					showMemberDetail();
+					break;
+				case "n":
+					send("변경을 취소했습니다");
+					break;
+//				default:
+//					send("잘 못 입력하셨습니다");
+//					break;
+				}
+			} else
+				send("error:입력을 다시 확인해주세요");
 
+		} else {
+			send("일치하는 고객의 정보가 없습니다");
+		}
 	}
-
+	
+	//고객정보 수정할내용//////////////////////////////////////////////////소미파트
+	public void showMemberDetail() {
+		send("고객님의 새로운 정보를 입력해주세요>>");
+		String newData = null;
+		send("이름: ");
+		newData = receive();
+		if(!newData.contentEquals("")) {
+			member.setName(newData);
+			System.out.println("해당 고객님의 이름을" + member.getName() + "로 변경되었습니다.");
+		}
+		send("전화번호: ");
+		newData = receive();
+		if(!newData.contentEquals("")) {
+			member.setPhone(Integer.parseInt(newData));
+			System.out.println("해당 고객님의 전화번호를" + member.getPhone() + "로 변경되었습니다.");
+		}
+		send("성별: ");
+		newData = receive();
+		if(!newData.equals("여") && !newData.equals("남")){
+			member.setSex(newData);
+			System.out.println("해당 고객님의 성별을" + member.getSex() + "로 변경되었습니다.");
+		}
+		send("생년월일: ");
+		newData = receive();
+		if(!newData.contentEquals("")) {
+			member.setBirth(Integer.parseInt(newData));
+			System.out.println("해당 고객님의 생년월일을"+ member.getBirth() + "로 변경되었습니다.");
+		}
+		posControl.modifyshowMember(member);
+		send("등록완료");
+		
+	}
+	// 고객관리>회원정보>정보보기 내부 메뉴(2.삭제)////////////////////////////////////////////소미파트
+	
 	public void showMemberDetailDelete() {
 
+		send("삭제 할 고객님의 이름을 입력하세요");
+		choose = receive();
+		member = null;
+		MemberDTO[] deletememberList = posControl.deleteshowMember(choose);
+		for (MemberDTO member : deletememberList) {
+			send("" + member.getName() + "\t" + member.getPhone() + "\t" + member.getSex() + "\t" + member.getBirth() + "\t" +member.getMemberID());
+		}
+		if (deletememberList.length == 1) {
+			member = deletememberList[0];
+			send("위 고객 정보를 삭제하시겠습니까? y/n");
+			choose = receive();
+			switch (choose) {
+			case "y":
+				posControl.deleteshowMember(member);
+				send("해당 직원의 정보가 삭제되었습니다");
+				break;
+			case "n":
+				send("취소하셨습니다");
+				break;
+			default:
+				send("다시 입력하세요");
+				break;
+			}
+		} else if (deletememberList.length > 1) {
+			send("동명이인이 있습니다. 삭제하려는 고객의 고객번호를 입력하세요");
+			choose = receive();
+			boolean check = false;
+			for (MemberDTO temp : deletememberList) {
+				if (choose.contentEquals(temp.getMemberID())) {
+					member = temp;
+					check = true;
+				}
+			}
+			if (!check)
+				send("고객번호를 다시 확인해주세요");
+			else if (check) {
+				send("위 고객의 정보를 삭제하시겠습니까? y/n");
+				choose = receive();
+				switch (choose) {
+				case "y":
+					posControl.deleteshowMember(member);
+					send("해당 고객 정보가 삭제되었습니다");
+					break;
+				case "n":
+					send("변경을 취소했습니다");
+					break;
+				default:
+					send("잘 못 입력하셨습니다");
+					break;
+				}
+			} else
+				send("error:입력을 다시 확인해주세요");
+
+		} else {
+			send("일치하는 고객이 없습니다");
+		}
 	}
 
 	// 고객관리>고객구매이력 내부 메뉴
@@ -1863,5 +2023,4 @@ public class Scripts {
 		}
 	}
 
-	
 }
