@@ -5,8 +5,9 @@ public class MenuItemDTO {
 	private String name;
 	private int price;
 	private String category;
+	private String activation;
 	
-	
+
 	public String getMenuId() {
 		return menuId;
 	}
@@ -30,6 +31,12 @@ public class MenuItemDTO {
 	}
 	public void setCategory(String category) {
 		this.category = category;
+	}
+	public String getActivation() {
+		return activation;
+	}
+	public void setActivation(String activation) {
+		this.activation = activation;
 	}
 	
 	

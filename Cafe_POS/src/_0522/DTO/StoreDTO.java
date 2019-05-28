@@ -9,7 +9,23 @@ public class StoreDTO {
 	private int phone;
 	private String address;
 
+	public StoreDTO() {
+	}
 	
+	public StoreDTO(String storeId, String name, String owner, String opendate, String closedate, int phone,
+			String address) {
+		super();
+		this.storeId = storeId;
+		this.name = name;
+		this.owner = owner;
+		this.opendate = opendate;
+		this.closedate = closedate;
+		this.phone = phone;
+		this.address = address;
+	}
+	
+	
+
 	public String getStoreId() {
 		return storeId;
 	}
