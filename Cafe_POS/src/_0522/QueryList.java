@@ -110,8 +110,8 @@ public class QueryList {
 		}
 
 	}
-
-	public MemberDTO[] showMembers()  {
+////////////////////////////////////////////소미파트 
+	public MemberDTO[] showMembers()  {//고객정보 >모두보기 에서 수정,삭제파트 추가하기
 
 
 		try {
@@ -138,7 +138,46 @@ public class QueryList {
 		return null;
 
 	}
+	//고객관리수정,소미파트
+	public  MemberDTO[] modifyshowMember(MemberDTO modifymember)  {
+		sb="UPDATE member SET name = ?, phone = ?, sex = ?, birth = ? WHERE memberid = ?";
+		MemberDTO[] modifyshowMember = null;
+		try {
+			pps = con.prepareStatement(sb);
+			System.out.println(modifymember.getName()+modifymember.getPhone()+modifymember.getSex()+modifymember.getBirth()+modifymember.getMemberID());
+			pps.setString(1, modifymember.getName());
+			pps.setInt(2, modifymember.getPhone());
+			pps.setString(3,modifymember.getSex());
+			pps.setInt(4, modifymember.getBirth());
+			pps.setString(5,modifymember.getMemberID());
+			pps.executeUpdate();
+			System.out.println("member_info modify finish~");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			//System.out.println("format 불일치로인한 error.");
+		}return modifyshowMember;
+	}
 	
+	//고객관리삭제, 소미파트
+	public MemberDTO[] deleteshowMember(MemberDTO deletemember){
+		sb="DELETE member SET name = ?, phone = ?, sex = ?, birth = ? WHERE memberid =?";
+		MemberDTO[]deleteshowMember = null;
+		try {
+			pps = con.prepareStatement(sb);
+			System.out.println(deletemember.getName()+deletemember.getPhone()+deletemember.getSex()+deletemember.getBirth()+deletemember.getMemberID());
+			pps.setString(1,deletemember.getName());
+			pps.setInt(2,deletemember.getPhone());
+			pps.setString(3,deletemember.getSex());
+			pps.setInt(4,deletemember.getBirth());
+			pps.setString(5,deletemember.getMemberID());
+			System.out.println("member_info delete finish~");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}return deleteshowMember;
+	}
+	
+	//고객검색
 	public MemberDTO[] searchMember(String memberName) {//일단주석처리 
 		MemberDTO[] memberList = null;
 		try {
@@ -266,7 +305,7 @@ sb="select * from (select mn.menuid, mn.name, sum(od.count) \"총 주문 갯수\
 		return null;
 	}
 
-
+	
 	public StaffDTO[] searchStaff(String staffName){
 		try {
 			staff.setName(staffName);
@@ -303,7 +342,7 @@ sb="select * from (select mn.menuid, mn.name, sum(od.count) \"총 주문 갯수\
 		return null;
 	}
 
-	
+	//직원정보수정(소미가주석담)추후공부하고주석삭제할예정
 	public void updateStaffInfo(StaffDTO staff) {
 		sb = "UPDATE staff SET name = ?, joindate = ?, leavedate = ?, phone = ?, birth = ?, sex = ?, workstyle = ? WHERE staffno = ?";
 		try {
@@ -325,7 +364,7 @@ sb="select * from (select mn.menuid, mn.name, sum(od.count) \"총 주문 갯수\
 		
 	}
 	
-	
+	//직원정보 삭제(소미가주석담)추후공부하고주석삭제할예정
 	public void deleteStaffInfo(StaffDTO staff) {
 		sb = ("DELETE FROM staff WHERE staffno = ?");
 		try {
@@ -336,7 +375,7 @@ sb="select * from (select mn.menuid, mn.name, sum(od.count) \"총 주문 갯수\
 			e.printStackTrace();
 		}		
 	}
-	
+	//새로운직원등록(소미가주석담)추후공부하고주석삭제할예정
 	public void staffEnroll(StaffDTO staff) {
 		sb="INSERT INTO staff VALUES (staff_seq.nextval, ?, ?,?,?,?,?,?,?)";
 		try {

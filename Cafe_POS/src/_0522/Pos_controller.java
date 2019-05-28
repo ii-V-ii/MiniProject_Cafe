@@ -167,11 +167,15 @@ public class Pos_controller {
 	}
 
 	
-	
-	
-	
-	public MemberDTO[] showMember() {
+	public MemberDTO[] showMember() {//고객관리모두보기
 		return query.showMembers();
+	}
+	
+	public MemberDTO[] modifyshowMember(MemberDTO modifymember) {//고객관리>수정
+		return query.modifyshowMember(modifymember);
+	}
+	public MemberDTO[] deleteshowMember(MemberDTO deletemember) {//고객관리>삭제
+		return query.deleteshowMember(deletemember);
 	}
 	
 	public MemberDTO[] searchMember(String memberName) {//일단주석처리
